@@ -1,0 +1,88 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: dp-mellom-barken-og-veden
+  namespace: teamdagpenger
+  labels:
+    team: teamdagpenger
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  image: "{{ image }}"
+  port: 8080
+  liveness:
+    path: /isalive
+  readiness:
+    path: /isready
+  leaderElection: true
+  prometheus:
+    enabled: true
+    path: /metrics
+  replicas:
+    min: 2
+    max: 2
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      cpu: 10m
+      memory: 304Mi
+  env:
+    - name: JDK_JAVA_OPTIONS
+      value: -XX:+UseParallelGC -XX:MaxRAMPercentage=25.0 -XX:ActiveProcessorCount=4
+    - name: KAFKA_CONSUMER_GROUP_ID
+      value: dp-mellom-barken-og-veden
+    - name: KAFKA_RAPID_TOPIC
+      value: teamdagpenger.rapid.v1
+    - name: KAFKA_RESET_POLICY
+      value: EARLIEST
+  {{#if ingresses}}
+  ingresses:
+    {{#each ingresses as |url|}}
+     - {{url}}
+    {{/each}}
+  {{/if}}
+  secureLogs:
+    enabled: true
+  azure:
+    application:
+      enabled: true
+      tenant: {{azure.tenant}}
+      claims:
+        extra:
+          - NAVident
+        groups:
+          - id: 7e7a9ef8-d9ba-445b-bb91-d2b3c10a0c13
+  observability:
+    logging:
+      destinations:
+        - id: loki
+        - id: elastic
+    autoInstrumentation:
+      enabled: true
+      runtime: java
+  gcp:
+    sqlInstances:
+      - type: POSTGRES_16
+        highAvailability: true
+        diskAutoresize: true
+        pointInTimeRecovery: true
+        tier: {{gcp.sql.tier}}
+        databases:
+          - name: mellom-barken-og-veden
+            envVarPrefix: DB
+  kafka:
+    pool: "{{ kafka.pool }}"
+  accessPolicy:
+    inbound:
+      rules:
+        - application: dp-utbetaling
+        {{#if wonderwalled}}
+        - application: wonderwalled-idporten
+          namespace: aura
+        - application: wonderwalled-azure
+          namespace: aura
+        - application: azure-token-generator
+          namespace: aura
+        {{/if}}

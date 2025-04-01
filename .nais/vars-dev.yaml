@@ -1,0 +1,14 @@
+kafka:
+  pool: nav-dev
+
+ingresses:
+  - https://dp-mellom-barken-og-veden.intern.dev.nav.no
+
+gcp:
+  sql:
+    tier: db-custom-1-3840
+
+azure:
+  tenant: nav.no
+
+wonderwalled: true
