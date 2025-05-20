@@ -10,6 +10,7 @@ import mu.KotlinLogging
 import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
 import no.nav.dagpenger.mellom.barken.og.veden.api.authenticationConfig
 import no.nav.dagpenger.mellom.barken.og.veden.api.utbetalingApi
+import no.nav.dagpenger.mellom.barken.og.veden.jobber.BehandleMottatteUtbetalinger
 import no.nav.dagpenger.mellom.barken.og.veden.leaderelection.LeaderElectionClient
 import no.nav.dagpenger.mellom.barken.og.veden.mottak.MeldingOmUtbetalingVedtakMottak
 import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingPostgresRepository
@@ -52,6 +53,9 @@ internal class ApplicationBuilder(
                     }
                 },
             ).apply {
+                BehandleMottatteUtbetalinger(
+                    createLeaderElectionClient(),
+                ).start()
                 MeldingOmUtbetalingVedtakMottak(
                     rapidsConnection = this,
                     service = utbetalingService,
