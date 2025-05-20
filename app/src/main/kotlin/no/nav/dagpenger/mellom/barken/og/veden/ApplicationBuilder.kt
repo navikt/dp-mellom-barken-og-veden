@@ -7,46 +7,56 @@ import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import io.prometheus.metrics.model.registry.PrometheusRegistry
 import mu.KotlinLogging
+import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
 import no.nav.dagpenger.mellom.barken.og.veden.api.authenticationConfig
 import no.nav.dagpenger.mellom.barken.og.veden.api.utbetalingApi
 import no.nav.dagpenger.mellom.barken.og.veden.leaderelection.LeaderElectionClient
+import no.nav.dagpenger.mellom.barken.og.veden.mottak.MeldingOmUtbetalingVedtakMottak
+import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingPostgresRepository
+import no.nav.dagpenger.mellom.barken.og.veden.service.UtbetalingServiceImpl
 import no.nav.helse.rapids_rivers.RapidApplication
 
 internal class ApplicationBuilder(
     config: Map<String, String>,
 ) : RapidsConnection.StatusListener {
+    private val repo = UtbetalingPostgresRepository(dataSource)
+    private val utbetalingService = UtbetalingServiceImpl(repo)
+
     companion object {
         private val logger = KotlinLogging.logger { }
     }
 
     private val rapidsConnection: RapidsConnection =
-        RapidApplication.create(
-            env = config,
-            builder = {
-                withKtor { preStopHook, rapid ->
-                    naisApp(
-                        meterRegistry =
-                            PrometheusMeterRegistry(
-                                PrometheusConfig.DEFAULT,
-                                PrometheusRegistry.defaultRegistry,
-                                Clock.SYSTEM,
-                            ),
-                        objectMapper = objectMapper,
-                        applicationLogger = KotlinLogging.logger("ApplicationLogger"),
-                        callLogger = KotlinLogging.logger("CallLogger"),
-                        aliveCheck = rapid::isReady,
-                        readyCheck = rapid::isReady,
-                        preStopHook = preStopHook::handlePreStopRequest,
-                    ) {
-                        authenticationConfig()
-                        utbetalingApi()
+        RapidApplication
+            .create(
+                env = config,
+                builder = {
+                    withKtor { preStopHook, rapid ->
+                        naisApp(
+                            meterRegistry =
+                                PrometheusMeterRegistry(
+                                    PrometheusConfig.DEFAULT,
+                                    PrometheusRegistry.defaultRegistry,
+                                    Clock.SYSTEM,
+                                ),
+                            objectMapper = objectMapper,
+                            applicationLogger = KotlinLogging.logger("ApplicationLogger"),
+                            callLogger = KotlinLogging.logger("CallLogger"),
+                            aliveCheck = rapid::isReady,
+                            readyCheck = rapid::isReady,
+                            preStopHook = preStopHook::handlePreStopRequest,
+                        ) {
+                            authenticationConfig()
+                            utbetalingApi()
+                        }
                     }
-                }
-            },
-        ) { engine, rapidsConnection ->
-            engine.start()
-            rapidsConnection.start()
-        }
+                },
+            ).apply {
+                MeldingOmUtbetalingVedtakMottak(
+                    rapidsConnection = this,
+                    service = utbetalingService,
+                )
+            }
 
     init {
         rapidsConnection.register(this)
