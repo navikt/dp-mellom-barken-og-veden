@@ -36,20 +36,13 @@ internal class MeldingOmUtbetalingVedtakMottak(
                         "virkningsdato",
                         "fastsatt",
                         "ident",
-                        "behandletAv",
                         "vilkår",
                         "utbetalinger",
                         "opplysninger",
                         "behandletHendelse",
                     )
                 }
-                validate {
-                    it.interestedIn(
-                        "gjenstående",
-                        "automatisk",
-                    )
-                }
-                validate { it.interestedIn("@id", "@opprettet") }
+                validate { it.interestedIn("@id", "@opprettet", "behandletAv") }
             }.register(this)
     }
 
@@ -80,7 +73,11 @@ internal class MeldingOmUtbetalingVedtakMottak(
                             .lastOrNull(),
                     meldekortId = meldekortId.toString(),
                     ident = packet["ident"].asText(),
-                    behandletAv = packet["behandletAv"].asText(),
+                    behandletAv =
+                        packet["behandletAv"]
+                            .map {
+                                it.asText()
+                            }.lastOrNull(),
                     utbetalinger =
                         packet["utbetalinger"].map {
                             Utbetalingsdag(

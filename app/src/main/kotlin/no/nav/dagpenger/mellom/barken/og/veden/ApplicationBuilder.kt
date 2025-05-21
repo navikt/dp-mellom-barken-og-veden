@@ -54,7 +54,8 @@ internal class ApplicationBuilder(
                 },
             ).apply {
                 BehandleMottatteUtbetalinger(
-                    createLeaderElectionClient(),
+                    leaderElection = createLeaderElectionClient(),
+                    utbetalingService = utbetalingService,
                 ).start()
                 MeldingOmUtbetalingVedtakMottak(
                     rapidsConnection = this,

@@ -3,11 +3,13 @@ package no.nav.dagpenger.mellom.barken.og.veden.jobber
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import no.nav.dagpenger.mellom.barken.og.veden.leaderelection.LeaderElectionClient
+import no.nav.dagpenger.mellom.barken.og.veden.service.UtbetalingService
 import kotlin.concurrent.fixedRateTimer
 import kotlin.time.Duration.Companion.minutes
 
 class BehandleMottatteUtbetalinger(
     private val leaderElection: LeaderElectionClient,
+    private val utbetalingService: UtbetalingService,
 ) {
     private val logger = KotlinLogging.logger { }
 
@@ -32,7 +34,7 @@ class BehandleMottatteUtbetalinger(
             try {
                 if (System.getenv("NAIS_CLUSTER_NAME") == "dev-gcp") {
                     logger.info { "Behandle utbetalinger kjører i dev" }
-//                        meldekortBehandlingskø.sendMeldekortTilBehandling()
+                    utbetalingService.behandleUtbetalingVedtak()
                 } else {
                     logger.info { "Behandle utbetalinger kjører ikke i prod" }
                 }

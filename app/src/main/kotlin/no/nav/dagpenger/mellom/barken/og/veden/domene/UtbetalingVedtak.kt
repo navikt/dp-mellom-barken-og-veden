@@ -9,9 +9,9 @@ data class UtbetalingVedtak(
     val basertPåBehandlingId: UUID?,
     val meldekortId: String,
     val ident: String,
-    val behandletAv: String,
+    val behandletAv: String?,
     val utbetalinger: List<Utbetalingsdag>,
-    val status: UtbetalingStatus,
+    var status: UtbetalingStatus,
     val opprettet: LocalDateTime,
 )
 
@@ -24,6 +24,7 @@ data class Utbetalingsdag(
 
 enum class UtbetalingStatus {
     MOTTATT,
+    SENDER_TIL_UTBETALING,
     SENDT,
     UTBETALT,
     FEIL,

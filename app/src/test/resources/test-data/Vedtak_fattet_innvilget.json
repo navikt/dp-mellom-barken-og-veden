@@ -7,7 +7,7 @@
   "ident" : "11109233444",
   "vedtakstidspunkt" : "2025-05-16T09:37:17.336661",
   "virkningsdato" : "2021-05-06",
-  "behandletAv" : [ ],
+  "behandletAv" : null,
   "behandletHendelse" : {
     "datatype" : "Long",
     "id" : "5",
