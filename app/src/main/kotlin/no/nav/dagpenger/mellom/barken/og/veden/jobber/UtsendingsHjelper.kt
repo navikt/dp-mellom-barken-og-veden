@@ -1,48 +1,35 @@
-package no.nav.dagpenger.mellom.barken.og.veden.service
+package no.nav.dagpenger.mellom.barken.og.veden.jobber
 
 import mu.KotlinLogging
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingRepo
+import java.util.UUID
 
-class UtbetalingServiceImpl(
+class UtsendingsHjelper(
     val repo: UtbetalingRepo,
-) : UtbetalingService {
+) {
     companion object {
         private val logger = KotlinLogging.logger { }
     }
 
-    override fun mottaUtbetalingVedtak(vedtak: UtbetalingVedtak) {
-        repo.lagreVedtak(vedtak)
-    }
+    fun behandleUtbetalingVedtak() {
+        val vedtakDTO =
+            repo.hentAlleVedtakMedStatus(UtbetalingStatus.MOTTATT).map {
+                mapToVedtakDTO(it)
+            }
 
-    override fun behandleUtbetalingVedtak() {
-        var vedtak = hentNesteVedtak()
-
-        while (vedtak != null) {
-            val dto = mapToVedtakDTO(vedtak)
-
-            repo.oppdaterStatus(vedtak.behandlingId, UtbetalingStatus.SENDER_TIL_UTBETALING)
+        vedtakDTO.forEach { vedtak ->
             // send dto til Kafka
-            logger.info { "Sender vedtak til Kafka: $dto" }
+            logger.info { "Sender vedtak til Kafka: $vedtak" }
 
-            vedtak.status = UtbetalingStatus.SENDT
-            repo.oppdaterStatus(vedtak.behandlingId, vedtak.status)
-
-            vedtak = hentNesteVedtak()
+            repo.oppdaterStatus(vedtak.behandlingId, UtbetalingStatus.SENDT)
         }
     }
-
-    private fun hentNesteVedtak(): UtbetalingVedtak? =
-        repo.hentNesteVedtakMedStatus(UtbetalingStatus.MOTTATT)?.let { vedtak ->
-            vedtak.status = UtbetalingStatus.SENDER_TIL_UTBETALING
-            repo.oppdaterStatus(vedtak.behandlingId, vedtak.status)
-            vedtak
-        }
 
     private fun mapToVedtakDTO(vedtak: UtbetalingVedtak): VedtakDTO =
         VedtakDTO(
-            behandlingId = vedtak.behandlingId.toString(),
+            behandlingId = vedtak.behandlingId,
             meldekortId = vedtak.meldekortId,
             ident = vedtak.ident,
             utbetalinger =
@@ -58,7 +45,7 @@ class UtbetalingServiceImpl(
 }
 
 data class VedtakDTO(
-    val behandlingId: String,
+    val behandlingId: UUID,
     val meldekortId: String,
     val ident: String,
     val utbetalinger: List<UtbetalingsdagDTO>,

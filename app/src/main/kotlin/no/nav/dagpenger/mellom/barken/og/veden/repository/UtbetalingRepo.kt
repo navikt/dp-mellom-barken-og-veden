@@ -7,7 +7,7 @@ import java.util.UUID
 interface UtbetalingRepo {
     fun lagreVedtak(vedtak: UtbetalingVedtak)
 
-    fun hentNesteVedtakMedStatus(status: UtbetalingStatus): UtbetalingVedtak?
+    fun hentAlleVedtakMedStatus(status: UtbetalingStatus): List<UtbetalingVedtak>
 
     fun hentVedtak(behandlingId: UUID): UtbetalingVedtak?
 

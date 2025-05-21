@@ -8,20 +8,20 @@ import io.mockk.slot
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.domene.Utbetalingsdag
-import no.nav.dagpenger.mellom.barken.og.veden.service.UtbetalingService
+import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingRepo
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
 
 class MeldingOmUtbetalingVedtakMottakTest {
-    private val service = mockk<UtbetalingService>(relaxed = true)
+    private val repo = mockk<UtbetalingRepo>(relaxed = true)
 
     private val rapid =
         TestRapid().apply {
             MeldingOmUtbetalingVedtakMottak(
                 rapidsConnection = this,
-                service = service,
+                repo = repo,
             )
         }
 
@@ -30,7 +30,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
         val json = javaClass.getResource("/test-data/Vedtak_fattet_innvilget.json")!!.readText()
 
         val capturedVedtak = slot<UtbetalingVedtak>()
-        every { service.mottaUtbetalingVedtak(capture(capturedVedtak)) } returns Unit
+        every { repo.lagreVedtak(capture(capturedVedtak)) } returns Unit
 
         rapid.sendTestMessage(json)
 

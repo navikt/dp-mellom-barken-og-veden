@@ -24,8 +24,8 @@ data class Utbetalingsdag(
 
 enum class UtbetalingStatus {
     MOTTATT,
-    SENDER_TIL_UTBETALING,
     SENDT,
+    KVITTERT,
     UTBETALT,
     FEIL,
 }

@@ -11,17 +11,17 @@ import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
 import no.nav.dagpenger.mellom.barken.og.veden.api.authenticationConfig
 import no.nav.dagpenger.mellom.barken.og.veden.api.utbetalingApi
 import no.nav.dagpenger.mellom.barken.og.veden.jobber.BehandleMottatteUtbetalinger
+import no.nav.dagpenger.mellom.barken.og.veden.jobber.UtsendingsHjelper
 import no.nav.dagpenger.mellom.barken.og.veden.leaderelection.LeaderElectionClient
 import no.nav.dagpenger.mellom.barken.og.veden.mottak.MeldingOmUtbetalingVedtakMottak
 import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingPostgresRepository
-import no.nav.dagpenger.mellom.barken.og.veden.service.UtbetalingServiceImpl
 import no.nav.helse.rapids_rivers.RapidApplication
 
 internal class ApplicationBuilder(
     config: Map<String, String>,
 ) : RapidsConnection.StatusListener {
     private val repo = UtbetalingPostgresRepository(dataSource)
-    private val utbetalingService = UtbetalingServiceImpl(repo)
+    private val utsendingsHjelper = UtsendingsHjelper(repo)
 
     companion object {
         private val logger = KotlinLogging.logger { }
@@ -55,11 +55,11 @@ internal class ApplicationBuilder(
             ).apply {
                 BehandleMottatteUtbetalinger(
                     leaderElection = createLeaderElectionClient(),
-                    utbetalingService = utbetalingService,
+                    utsendingsHjelper = utsendingsHjelper,
                 ).start()
                 MeldingOmUtbetalingVedtakMottak(
                     rapidsConnection = this,
-                    service = utbetalingService,
+                    repo = repo,
                 )
             }
 

@@ -14,11 +14,11 @@ import no.nav.dagpenger.mellom.barken.og.veden.asUUID
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.domene.Utbetalingsdag
-import no.nav.dagpenger.mellom.barken.og.veden.service.UtbetalingService
+import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingRepo
 
 internal class MeldingOmUtbetalingVedtakMottak(
     rapidsConnection: RapidsConnection,
-    private val service: UtbetalingService,
+    private val repo: UtbetalingRepo,
 ) : River.PacketListener {
     init {
         River(rapidsConnection)
@@ -91,7 +91,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                     opprettet = packet["vedtakstidspunkt"].asLocalDateTime(),
                 )
 
-            service.mottaUtbetalingVedtak(utbetalingVedtak)
+            repo.lagreVedtak(utbetalingVedtak)
             logger.info { "Utbetaling vedtak lagret" }
         }
     }

@@ -13,7 +13,7 @@ import javax.sql.DataSource
 internal class UtbetalingPostgresRepository(
     private val dataSource: DataSource,
 ) : UtbetalingRepo {
-    override fun hentNesteVedtakMedStatus(status: UtbetalingStatus): UtbetalingVedtak? {
+    override fun hentAlleVedtakMedStatus(status: UtbetalingStatus): List<UtbetalingVedtak> {
         sessionOf(dataSource).use { session ->
             return session.transaction { tx ->
                 tx.run(
@@ -24,14 +24,13 @@ internal class UtbetalingPostgresRepository(
                         from utbetaling
                         where status = :status
                         order by opprettet asc
-                        limit 1
                         """.trimIndent(),
                         mapOf(
                             "status" to status.name,
                         ),
                     ).map { row ->
                         row.toUtbetalingVedtak(tx)
-                    }.asSingle,
+                    }.asList,
                 )
             }
         }
