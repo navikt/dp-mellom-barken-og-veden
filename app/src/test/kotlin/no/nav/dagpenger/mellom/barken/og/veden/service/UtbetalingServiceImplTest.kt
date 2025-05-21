@@ -1,19 +1,18 @@
+package no.nav.dagpenger.mellom.barken.og.veden.service
 
 import io.kotest.matchers.shouldBe
+import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.domene.Utbetalingsdag
 import no.nav.dagpenger.mellom.barken.og.veden.repository.Postgres.withMigratedDb
 import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingPostgresRepository
-import no.nav.dagpenger.mellom.barken.og.veden.service.UtbetalingServiceImpl
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
 
 class UtbetalingServiceImplTest {
-    val dataSource = withMigratedDb()
-
     @Test
     fun `kan lagre og hente utbetalinger i basen via servicen`() {
         withMigratedDb {

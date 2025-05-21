@@ -73,6 +73,7 @@ internal class ApplicationBuilder(
 
     override fun onStartup(rapidsConnection: RapidsConnection) {
         logger.info { "Starter opp dp-mellom-barken-og-veden" }
+        PostgresConfiguration.clean()
         PostgresConfiguration.runMigration()
     }
 }
