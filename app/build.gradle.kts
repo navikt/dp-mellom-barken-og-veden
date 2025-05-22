@@ -20,7 +20,7 @@ dependencies {
     testImplementation("io.ktor:ktor-server-test-host-jvm:3.0.1")
     testImplementation(libs.mockk)
     testImplementation(libs.kotest.assertions.core)
-    testImplementation("com.github.navikt.tbd-libs:naisful-test-app:2024.12.18-11.39-73f8eecb")
+    testImplementation("com.github.navikt.tbd-libs:naisful-test-app:2025.04.04-09.18-7cc3badf")
     testImplementation(libs.rapids.and.rivers.test)
     testImplementation(libs.bundles.postgres.test)
 }
