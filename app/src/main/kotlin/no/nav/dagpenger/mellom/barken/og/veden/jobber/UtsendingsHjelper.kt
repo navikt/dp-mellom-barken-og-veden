@@ -4,7 +4,8 @@ import mu.KotlinLogging
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingRepo
-import java.util.UUID
+import no.nav.helved.kontrakt.api.models.UtbetalingVedtakDTO
+import no.nav.helved.kontrakt.api.models.UtbetalingsdagDTO
 
 class UtsendingsHjelper(
     val repo: UtbetalingRepo,
@@ -27,8 +28,8 @@ class UtsendingsHjelper(
         }
     }
 
-    private fun mapToVedtakDTO(vedtak: UtbetalingVedtak): VedtakDTO =
-        VedtakDTO(
+    private fun mapToVedtakDTO(vedtak: UtbetalingVedtak): UtbetalingVedtakDTO =
+        UtbetalingVedtakDTO(
             behandlingId = vedtak.behandlingId,
             meldekortId = vedtak.meldekortId,
             ident = vedtak.ident,
@@ -36,24 +37,10 @@ class UtsendingsHjelper(
                 vedtak.utbetalinger.map { dag ->
                     UtbetalingsdagDTO(
                         meldeperiode = dag.meldeperiode,
-                        dato = dag.dato.toString(),
+                        dato = dag.dato,
                         sats = dag.sats,
                         utbetaltBeløp = dag.utbetaltBeløp,
                     )
                 },
         )
 }
-
-private data class VedtakDTO(
-    val behandlingId: UUID,
-    val meldekortId: String,
-    val ident: String,
-    val utbetalinger: List<UtbetalingsdagDTO>,
-)
-
-private data class UtbetalingsdagDTO(
-    val meldeperiode: String,
-    val dato: String,
-    val sats: Int,
-    val utbetaltBeløp: Int,
-)
