@@ -2,18 +2,19 @@ package no.nav.dagpenger.mellom.barken.og.veden.mottak
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
-import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDate
-import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDateTime
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.micrometer.core.instrument.MeterRegistry
 import mu.KotlinLogging.logger
 import mu.withLoggingContext
+import no.nav.dagpenger.behandling.api.models.BehandletAvDTORolleDTO
+import no.nav.dagpenger.behandling.api.models.VedtakDTO
 import no.nav.dagpenger.mellom.barken.og.veden.asUUID
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.domene.Utbetalingsdag
+import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingRepo
 
 internal class MeldingOmUtbetalingVedtakMottak(
@@ -61,34 +62,35 @@ internal class MeldingOmUtbetalingVedtakMottak(
         ) {
             logger.info { "Mottok melding om utbetaling for meldekort" }
             sikkerlogg.info { "Mottok utbetaling vedtak ${packet.toJson()} " }
-
             // her kan vi kalle dp-behandling for å hente utbetalinger
+            val vedtakDto: VedtakDTO =
+                objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), VedtakDTO::class.java)
+
+
 
             val utbetalingVedtak =
                 UtbetalingVedtak(
                     behandlingId = behandlingId,
-                    basertPåBehandlingId =
-                        packet["basertPåBehandlinger"]
-                            .map { it.asUUID() }
-                            .lastOrNull(),
-                    meldekortId = meldekortId.toString(),
-                    ident = packet["ident"].asText(),
-                    behandletAv =
-                        packet["behandletAv"]
-                            .map {
-                                it.asText()
-                            }.lastOrNull(),
+                    basertPåBehandlingId = vedtakDto.basertPåBehandlinger?.lastOrNull(),
+                    meldekortId = vedtakDto.behandletHendelse.id,
+                    ident = vedtakDto.ident,
+                    saksbehandletAv =
+                        vedtakDto.behandletAv.singleOrNull { it.rolle == BehandletAvDTORolleDTO.SAKSBEHANDLER }?.behandler?.ident
+                            ?: "dp-behandling",
+                    besluttetAv =
+                        vedtakDto.behandletAv.singleOrNull { it.rolle == BehandletAvDTORolleDTO.BESLUTTER }?.behandler?.ident
+                            ?: "dp-behandling",
                     utbetalinger =
-                        packet["utbetalinger"].map {
+                        vedtakDto.utbetalinger.map { utbetaling ->
                             Utbetalingsdag(
-                                meldeperiode = it["meldeperiode"].asText(),
-                                dato = it["dato"].asLocalDate(),
-                                sats = it["sats"].asInt(),
-                                utbetaltBeløp = it["utbetaling"].asInt(),
+                                meldeperiode = utbetaling.meldeperiode,
+                                dato = utbetaling.dato,
+                                sats = utbetaling.sats,
+                                utbetaltBeløp = utbetaling.utbetaling,
                             )
                         },
                     status = UtbetalingStatus.MOTTATT,
-                    opprettet = packet["vedtakstidspunkt"].asLocalDateTime(),
+                    opprettet = vedtakDto.vedtakstidspunkt,
                 )
 
             repo.lagreVedtak(utbetalingVedtak)

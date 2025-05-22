@@ -1,32 +1,33 @@
 CREATE TABLE IF NOT EXISTS utbetaling
 (
     behandling_id    uuid PRIMARY KEY,
-    basert_paa_id    uuid null references utbetaling(behandling_id),
-    meldekort_id     text not NULL,
+    basert_paa_id    uuid                     NULL REFERENCES utbetaling (behandling_id),
+    meldekort_id     text                     NOT NULL,
     ident            TEXT                     NOT NULL,
     status           TEXT                     NOT NULL,
-    behandlet_av     TEXT                     NULL,
-    opprettet        TIMESTAMP WITH TIME ZONE not null
+    saksbehandlet_av TEXT                     NULL,
+    besluttet_av     TEXT                     NULL,
+    opprettet        TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS utbetalingsdag
 (
-    behandling_id    uuid NOT NULL REFERENCES utbetaling (behandling_id),
-    meldeperiode     text NOT NULL,
-    dato             DATE NOT NULL,
-    sats             int not null,
-    utbetalt_beløp   int not null,
+    behandling_id  uuid NOT NULL REFERENCES utbetaling (behandling_id),
+    meldeperiode   text NOT NULL,
+    dato           DATE NOT NULL,
+    sats           int  NOT NULL,
+    utbetalt_beløp int  NOT NULL,
 
-    primary key (behandling_id, dato)
+    PRIMARY KEY (behandling_id, dato)
 );
 
-create table status
+CREATE TABLE status
 (
-    behandling_id       uuid NOT NULL REFERENCES utbetaling (behandling_id),
-    status              TEXT not null ,
-    opprettet           timestamp WITH TIME ZONE not null DEFAULT NOW(),
+    behandling_id uuid                     NOT NULL REFERENCES utbetaling (behandling_id),
+    status        TEXT                     NOT NULL,
+    opprettet     timestamp WITH TIME ZONE NOT NULL DEFAULT NOW(),
 
-    primary key (behandling_id, status, opprettet)
+    PRIMARY KEY (behandling_id, status, opprettet)
 );
 
 -- tabell for kvitteringer

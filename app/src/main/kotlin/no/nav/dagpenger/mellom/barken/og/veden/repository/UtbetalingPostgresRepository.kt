@@ -65,10 +65,11 @@ internal class UtbetalingPostgresRepository(
             basertPåBehandlingId = uuidOrNull("basert_paa_id"),
             meldekortId = string("meldekort_id"),
             ident = string("ident"),
-            behandletAv = stringOrNull("behandlet_av"),
+            besluttetAv = string("besluttet_av"),
+            saksbehandletAv = string("saksbehandlet_av"),
+            utbetalinger = hentDager(behandlingId, tx),
             status = UtbetalingStatus.valueOf(string("status")),
             opprettet = localDateTime("opprettet"),
-            utbetalinger = hentDager(behandlingId, tx),
         )
     }
 
@@ -139,7 +140,8 @@ internal class UtbetalingPostgresRepository(
                                 meldekort_id,
                                 ident,
                                 status,
-                                behandlet_av,
+                                saksbehandlet_av,
+                                besluttet_av,
                                 opprettet
                             ) values (
                                 :behandlingId,
@@ -147,7 +149,8 @@ internal class UtbetalingPostgresRepository(
                                 :meldekortId,
                                 :ident,
                                 :status,
-                                :behandletAv,
+                                :saksbehandletAv,
+                                :besluttetAv,
                                 :opprettet
                             )
                             """.trimIndent(),
@@ -157,7 +160,8 @@ internal class UtbetalingPostgresRepository(
                                 "meldekortId" to vedtak.meldekortId,
                                 "ident" to vedtak.ident,
                                 "status" to vedtak.status.name,
-                                "behandletAv" to vedtak.behandletAv,
+                                "saksbehandletAv" to vedtak.saksbehandletAv,
+                                "besluttetAv" to vedtak.besluttetAv,
                                 "opprettet" to vedtak.opprettet,
                             ),
                         ).asUpdate,

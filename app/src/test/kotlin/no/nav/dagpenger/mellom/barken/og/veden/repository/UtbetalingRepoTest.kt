@@ -29,8 +29,11 @@ class UtbetalingRepoTest {
 fun vedtak() =
     UtbetalingVedtak(
         behandlingId = UUID.randomUUID(),
+        basertPåBehandlingId = null,
         meldekortId = "m1",
         ident = "123",
+        saksbehandletAv = "saksbehandler",
+        besluttetAv = "beslutter",
         utbetalinger =
             listOf(
                 Utbetalingsdag(
@@ -41,7 +44,5 @@ fun vedtak() =
                 ),
             ),
         status = UtbetalingStatus.MOTTATT,
-        basertPåBehandlingId = null,
-        behandletAv = "saksbehandler",
         opprettet = LocalDateTime.now(),
     )

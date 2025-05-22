@@ -38,7 +38,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
         capturedVedtak.captured.basertPåBehandlingId shouldBe UUID.fromString("0196d806-86aa-74f1-be56-00c952d40eb3")
         capturedVedtak.captured.meldekortId shouldBe "5"
         capturedVedtak.captured.ident shouldBe "11109233444"
-        capturedVedtak.captured.behandletAv shouldBe "saksbehandler"
+        capturedVedtak.captured.saksbehandletAv shouldBe "dp-behandling"
         capturedVedtak.captured.utbetalinger.minBy { it.dato } shouldBe
             Utbetalingsdag(
                 meldeperiode = "132460781",

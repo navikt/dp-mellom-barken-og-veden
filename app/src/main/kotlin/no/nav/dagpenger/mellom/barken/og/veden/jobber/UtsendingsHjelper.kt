@@ -44,14 +44,14 @@ class UtsendingsHjelper(
         )
 }
 
-data class VedtakDTO(
+private data class VedtakDTO(
     val behandlingId: UUID,
     val meldekortId: String,
     val ident: String,
     val utbetalinger: List<UtbetalingsdagDTO>,
 )
 
-data class UtbetalingsdagDTO(
+private data class UtbetalingsdagDTO(
     val meldeperiode: String,
     val dato: String,
     val sats: Int,
