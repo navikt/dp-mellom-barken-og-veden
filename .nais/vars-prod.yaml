@@ -10,3 +10,6 @@ gcp:
 
 azure:
   tenant: nav.no
+
+flyway:
+  cleanDisabled: true

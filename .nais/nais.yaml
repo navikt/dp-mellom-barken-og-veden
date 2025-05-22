@@ -37,6 +37,10 @@ spec:
       value: teamdagpenger.rapid.v1
     - name: KAFKA_RESET_POLICY
       value: EARLIEST
+    - name: flyway.cleanDisabled
+      value: '{{flyway.cleanDisabled}}'
+    - name: CLEAN_ON_STARTUP
+      value: "true"
   {{#if ingresses}}
   ingresses:
     {{#each ingresses as |url|}}

@@ -12,3 +12,7 @@ azure:
   tenant: nav.no
 
 wonderwalled: true
+
+
+flyway:
+  cleanDisabled: false

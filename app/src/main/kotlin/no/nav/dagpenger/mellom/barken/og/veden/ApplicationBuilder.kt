@@ -7,6 +7,7 @@ import io.micrometer.prometheusmetrics.PrometheusConfig
 import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import io.prometheus.metrics.model.registry.PrometheusRegistry
 import mu.KotlinLogging
+import no.nav.dagpenger.mellom.barken.og.veden.Configuration.config
 import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
 import no.nav.dagpenger.mellom.barken.og.veden.api.authenticationConfig
 import no.nav.dagpenger.mellom.barken.og.veden.api.utbetalingApi
@@ -73,7 +74,10 @@ internal class ApplicationBuilder(
 
     override fun onStartup(rapidsConnection: RapidsConnection) {
         logger.info { "Starter opp dp-mellom-barken-og-veden" }
-        PostgresConfiguration.clean()
+        if (config["CLEAN_ON_STARTUP"] == "true") {
+            logger.info { "Starter med en tom database" }
+            PostgresConfiguration.clean()
+        }
         PostgresConfiguration.runMigration()
     }
 }
