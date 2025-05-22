@@ -66,8 +66,6 @@ internal class MeldingOmUtbetalingVedtakMottak(
             val vedtakDto: VedtakDTO =
                 objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), VedtakDTO::class.java)
 
-
-
             val utbetalingVedtak =
                 UtbetalingVedtak(
                     behandlingId = behandlingId,
@@ -75,10 +73,16 @@ internal class MeldingOmUtbetalingVedtakMottak(
                     meldekortId = vedtakDto.behandletHendelse.id,
                     ident = vedtakDto.ident,
                     saksbehandletAv =
-                        vedtakDto.behandletAv.singleOrNull { it.rolle == BehandletAvDTORolleDTO.SAKSBEHANDLER }?.behandler?.ident
+                        vedtakDto.behandletAv
+                            .singleOrNull { it.rolle == BehandletAvDTORolleDTO.SAKSBEHANDLER }
+                            ?.behandler
+                            ?.ident
                             ?: "dp-behandling",
                     besluttetAv =
-                        vedtakDto.behandletAv.singleOrNull { it.rolle == BehandletAvDTORolleDTO.BESLUTTER }?.behandler?.ident
+                        vedtakDto.behandletAv
+                            .singleOrNull { it.rolle == BehandletAvDTORolleDTO.BESLUTTER }
+                            ?.behandler
+                            ?.ident
                             ?: "dp-behandling",
                     utbetalinger =
                         vedtakDto.utbetalinger.map { utbetaling ->
