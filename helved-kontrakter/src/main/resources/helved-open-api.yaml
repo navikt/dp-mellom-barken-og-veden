@@ -1,11 +1,11 @@
 openapi: 3.0.3
 info:
-  title: Vedtak API
+  title: Utbetalingsdetaljer mot utbetaling/helved
   version: 1.0.0
 paths: {}
 components:
   schemas:
-    UtbetalingVedtakDTO:
+    Utbetaling:
       type: object
       required:
         - behandlingId
@@ -23,8 +23,8 @@ components:
         utbetalinger:
           type: array
           items:
-            $ref: '#/components/schemas/UtbetalingsdagDTO'
-    UtbetalingsdagDTO:
+            $ref: '#/components/schemas/Utbetalingsdag'
+    Utbetalingsdag:
       type: object
       required:
         - meldeperiode

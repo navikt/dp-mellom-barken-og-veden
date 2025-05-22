@@ -53,6 +53,7 @@ fabrikt {
             ignoreUnknownProperties = disabled
             nonNullMapValues = enabled
             serializationLibrary = Jackson
+            suffix = "DTO"
         }
     }
 }

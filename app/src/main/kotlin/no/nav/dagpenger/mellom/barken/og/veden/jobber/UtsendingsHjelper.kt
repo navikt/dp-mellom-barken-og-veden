@@ -4,7 +4,7 @@ import mu.KotlinLogging
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingRepo
-import no.nav.helved.kontrakt.api.models.UtbetalingVedtakDTO
+import no.nav.helved.kontrakt.api.models.UtbetalingDTO
 import no.nav.helved.kontrakt.api.models.UtbetalingsdagDTO
 
 class UtsendingsHjelper(
@@ -28,8 +28,8 @@ class UtsendingsHjelper(
         }
     }
 
-    private fun mapToVedtakDTO(vedtak: UtbetalingVedtak): UtbetalingVedtakDTO =
-        UtbetalingVedtakDTO(
+    private fun mapToVedtakDTO(vedtak: UtbetalingVedtak): UtbetalingDTO =
+        UtbetalingDTO(
             behandlingId = vedtak.behandlingId,
             meldekortId = vedtak.meldekortId,
             ident = vedtak.ident,
