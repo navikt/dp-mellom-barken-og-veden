@@ -16,7 +16,6 @@ import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.domene.Utbetalingsdag
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingRepo
-import java.util.UUID
 
 internal class MeldingOmUtbetalingVedtakMottak(
     rapidsConnection: RapidsConnection,
@@ -61,10 +60,6 @@ internal class MeldingOmUtbetalingVedtakMottak(
             "behandlingId" to behandlingId.toString(),
             "meldekortId" to meldekortId.toString(),
         ) {
-            if (behandlingId == UUID.fromString("0196d806-87f2-73dd-84a3-afb2dcd7f05e")) {
-                logger.info { "Skipper behandling" }
-                return
-            }
             logger.info { "Mottok melding om utbetaling for meldekort" }
             sikkerlogg.info { "Mottok utbetaling vedtak ${packet.toJson()} " }
             // her kan vi kalle dp-behandling for å hente utbetalinger

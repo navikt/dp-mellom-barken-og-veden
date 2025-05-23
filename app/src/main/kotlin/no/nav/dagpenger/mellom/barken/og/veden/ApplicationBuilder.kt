@@ -13,7 +13,7 @@ import no.nav.dagpenger.mellom.barken.og.veden.Configuration.config
 import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
 import no.nav.dagpenger.mellom.barken.og.veden.api.authenticationConfig
 import no.nav.dagpenger.mellom.barken.og.veden.api.utbetalingApi
-import no.nav.dagpenger.mellom.barken.og.veden.helved.HelvedProducer
+import no.nav.dagpenger.mellom.barken.og.veden.helved.HelvedUtsender
 import no.nav.dagpenger.mellom.barken.og.veden.jobber.BehandleMottatteUtbetalinger
 import no.nav.dagpenger.mellom.barken.og.veden.jobber.UtsendingsHjelper
 import no.nav.dagpenger.mellom.barken.og.veden.leaderelection.LeaderElectionClient
@@ -27,8 +27,8 @@ internal class ApplicationBuilder(
     private val repo = UtbetalingPostgresRepository(dataSource)
     private val consumerProducerFactory = ConsumerProducerFactory(AivenConfig.default)
     private val producer = consumerProducerFactory.createProducer()
-    private val helvedProducer = HelvedProducer(producer)
-    private val utsendingsHjelper = UtsendingsHjelper(repo, helvedProducer)
+    private val helvedUtsender = HelvedUtsender(Configuration.utbetalingTopic, producer)
+    private val utsendingsHjelper = UtsendingsHjelper(repo, helvedUtsender)
 
     companion object {
         private val logger = KotlinLogging.logger { }

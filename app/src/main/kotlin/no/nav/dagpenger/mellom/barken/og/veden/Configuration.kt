@@ -19,6 +19,7 @@ object Configuration {
                 "KAFKA_RAPID_TOPIC" to "teamdagpenger.rapid.v1",
                 "KAFKA_EXTRA_TOPIC" to "",
                 "KAFKA_RESET_POLICY" to "LATEST",
+                "UTBETALING_TOPIC" to "teamdagpenger.utbetaling.beta",
             ),
         )
 
@@ -29,6 +30,8 @@ object Configuration {
         properties.list().reversed().fold(emptyMap()) { map, pair ->
             map + pair.second
         }
+
+    val utbetalingTopic: String = properties[Key("UTBETALING_TOPIC", stringType)]
 
     fun electorPath(): String = properties[Key("ELECTOR_GET_URL", stringType)]
 }

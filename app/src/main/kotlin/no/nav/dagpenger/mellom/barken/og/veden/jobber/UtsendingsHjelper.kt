@@ -4,14 +4,14 @@ import mu.KLogger
 import mu.KotlinLogging
 import mu.withLoggingContext
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
-import no.nav.dagpenger.mellom.barken.og.veden.helved.HelvedProducer
+import no.nav.dagpenger.mellom.barken.og.veden.helved.HelvedUtsender
 import no.nav.dagpenger.mellom.barken.og.veden.helved.mapToVedtakDTO
 import no.nav.dagpenger.mellom.barken.og.veden.helved.toJson
 import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingRepo
 
 class UtsendingsHjelper(
     val repo: UtbetalingRepo,
-    val producer: HelvedProducer,
+    val producer: HelvedUtsender,
 ) {
     companion object {
         private val logger = KotlinLogging.logger { }
