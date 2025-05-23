@@ -8,16 +8,17 @@ components:
     Utbetaling:
       type: object
       required:
+        - sakId
         - behandlingId
-        - meldekortId
         - ident
         - utbetalinger
       properties:
+        sakId:
+          type: string
+          maximum: 30
         behandlingId:
           type: string
-          format: uuid
-        meldekortId:
-          type: string
+          maximum: 30
         ident:
           type: string
         utbetalinger:

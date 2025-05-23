@@ -1,6 +1,7 @@
 package no.nav.dagpenger.mellom.barken.og.veden.jobber
 
 import mu.KotlinLogging
+import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingId
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingRepo
@@ -15,14 +16,12 @@ class UtsendingsHjelper(
     }
 
     fun behandleUtbetalingVedtak() {
-        val vedtakDTO =
-            repo.hentAlleVedtakMedStatus(UtbetalingStatus.MOTTATT).map {
-                mapToVedtakDTO(it)
-            }
-
-        vedtakDTO.forEach { vedtak ->
+        val vedtak =
+            repo.hentAlleVedtakMedStatus(UtbetalingStatus.MOTTATT)
+        vedtak.forEach { vedtak ->
+            val dto = mapToVedtakDTO(vedtak)
             // send dto til Kafka
-            logger.info { "Sender vedtak til Kafka: $vedtak" }
+            logger.info { "Sender vedtak til Kafka: $dto" }
 
             repo.oppdaterStatus(vedtak.behandlingId, UtbetalingStatus.SENDT)
         }
@@ -30,8 +29,9 @@ class UtsendingsHjelper(
 
     private fun mapToVedtakDTO(vedtak: UtbetalingVedtak): UtbetalingDTO =
         UtbetalingDTO(
-            behandlingId = vedtak.behandlingId,
-            meldekortId = vedtak.meldekortId,
+            behandlingId = UtbetalingId(vedtak.behandlingId).toString(),
+            // TODO: Vi må hente sakId fra et annet sted
+            sakId = "123",
             ident = vedtak.ident,
             utbetalinger =
                 vedtak.utbetalinger.map { dag ->
