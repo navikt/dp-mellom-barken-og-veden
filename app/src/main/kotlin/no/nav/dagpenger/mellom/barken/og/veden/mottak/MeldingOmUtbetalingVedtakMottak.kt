@@ -71,6 +71,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                     behandlingId = behandlingId,
                     basertPåBehandlingId = vedtakDto.basertPåBehandlinger?.lastOrNull(),
                     meldekortId = vedtakDto.behandletHendelse.id,
+                    sakId = vedtakDto.fagsakId,
                     ident = vedtakDto.ident,
                     saksbehandletAv =
                         vedtakDto.behandletAv

@@ -16,9 +16,7 @@ class UtsendingsHjelper(
     }
 
     fun behandleUtbetalingVedtak() {
-        val vedtak =
-            repo.hentAlleVedtakMedStatus(UtbetalingStatus.MOTTATT)
-        vedtak.forEach { vedtak ->
+        repo.hentAlleVedtakMedStatus(UtbetalingStatus.MOTTATT).forEach { vedtak ->
             val dto = mapToVedtakDTO(vedtak)
             // send dto til Kafka
             logger.info { "Sender vedtak til Kafka: $dto" }
@@ -30,8 +28,7 @@ class UtsendingsHjelper(
     private fun mapToVedtakDTO(vedtak: UtbetalingVedtak): UtbetalingDTO =
         UtbetalingDTO(
             behandlingId = UtbetalingId(vedtak.behandlingId).toString(),
-            // TODO: Vi må hente sakId fra et annet sted
-            sakId = "123",
+            sakId = vedtak.sakId,
             ident = vedtak.ident,
             utbetalinger =
                 vedtak.utbetalinger.map { dag ->

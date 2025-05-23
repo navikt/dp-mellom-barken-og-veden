@@ -31,6 +31,7 @@ fun vedtak() =
         behandlingId = UUID.randomUUID(),
         basertPåBehandlingId = null,
         meldekortId = "m1",
+        sakId = "s1",
         ident = "123",
         saksbehandletAv = "saksbehandler",
         besluttetAv = "beslutter",

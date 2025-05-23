@@ -8,6 +8,7 @@ data class UtbetalingVedtak(
     val behandlingId: UUID,
     val basertPåBehandlingId: UUID?,
     val meldekortId: String,
+    val sakId: String,
     val ident: String,
     val saksbehandletAv: String,
     val besluttetAv: String,

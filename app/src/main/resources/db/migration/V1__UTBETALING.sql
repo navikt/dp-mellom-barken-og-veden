@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS utbetaling
     behandling_id    uuid PRIMARY KEY,
     basert_paa_id    uuid                     NULL REFERENCES utbetaling (behandling_id),
     meldekort_id     text                     NOT NULL,
+    sak_id           text                     NOT NULL,
     ident            TEXT                     NOT NULL,
     status           TEXT                     NOT NULL,
     saksbehandlet_av TEXT                     NULL,
