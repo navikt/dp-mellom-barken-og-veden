@@ -34,8 +34,8 @@ class MeldingOmUtbetalingVedtakMottakTest {
 
         rapid.sendTestMessage(json)
 
-        capturedVedtak.captured.behandlingId shouldBe UUID.fromString("0196d806-87f2-73dd-84a3-afb2dcd7f05e")
-        capturedVedtak.captured.basertPåBehandlingId shouldBe UUID.fromString("0196d806-86aa-74f1-be56-00c952d40eb3")
+        capturedVedtak.captured.behandlingId shouldBe UUID.fromString("76755FC9-592A-46A1-88C9-1B9AE622E5F2")
+        capturedVedtak.captured.basertPåBehandlingId shouldBe UUID.fromString("A421B97A-EDC8-4DB7-BCC0-3F87B2DBDB1D")
         capturedVedtak.captured.meldekortId shouldBe "5"
         capturedVedtak.captured.ident shouldBe "11109233444"
         capturedVedtak.captured.saksbehandletAv shouldBe "dp-behandling"

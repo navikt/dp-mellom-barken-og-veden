@@ -1,9 +1,11 @@
 package no.nav.dagpenger.mellom.barken.og.veden.jobber
 
+import mu.KLogger
 import mu.KotlinLogging
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingId
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
+import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingRepo
 import no.nav.helved.kontrakt.api.models.UtbetalingDTO
 import no.nav.helved.kontrakt.api.models.UtbetalingsdagDTO
@@ -15,11 +17,14 @@ class UtsendingsHjelper(
         private val logger = KotlinLogging.logger { }
     }
 
+    private fun KLogger.sikkerlogg() = KotlinLogging.logger("tjenestekall.$name")
+
     fun behandleUtbetalingVedtak() {
         repo.hentAlleVedtakMedStatus(UtbetalingStatus.MOTTATT).forEach { vedtak ->
             val dto = mapToVedtakDTO(vedtak)
             // send dto til Kafka
-            logger.info { "Sender vedtak til Kafka: $dto" }
+            logger.info { "Sender vedtak til helved" }
+            logger.sikkerlogg().info { "Sender vedtak til helved: ${objectMapper.writeValueAsString(dto)}" }
 
             repo.oppdaterStatus(vedtak.behandlingId, UtbetalingStatus.SENDT)
         }

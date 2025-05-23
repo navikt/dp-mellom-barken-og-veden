@@ -1,7 +1,7 @@
 {
   "@event_name" : "vedtak_fattet",
-  "behandlingId" : "0196d806-87f2-73dd-84a3-afb2dcd7f05e",
-  "basertPåBehandlinger" : [ "0196d806-86aa-74f1-be56-00c952d40eb3" ],
+  "behandlingId" : "76755FC9-592A-46A1-88C9-1B9AE622E5F2",
+  "basertPåBehandlinger" : [ "A421B97A-EDC8-4DB7-BCC0-3F87B2DBDB1D" ],
   "fagsakId" : "123",
   "automatisk" : true,
   "ident" : "11109233444",
