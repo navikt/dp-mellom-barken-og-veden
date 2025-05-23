@@ -17,4 +17,4 @@ rootProject.name = "dp-mellom-barken-og-veden"
 include("app")
 include("utbetaling-api")
 include("helved-kontrakter")
-include("vedtak-kontrakter")
+include("behandling-kontrakter")

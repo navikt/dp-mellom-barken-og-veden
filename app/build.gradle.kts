@@ -6,7 +6,7 @@ plugins {
 dependencies {
     implementation(project(":utbetaling-api"))
     implementation(project(":helved-kontrakter"))
-    implementation(project(":vedtak-kontrakter"))
+    implementation(project(":behandling-kontrakter"))
 
     implementation(libs.rapids.and.rivers)
     implementation(libs.konfig)
