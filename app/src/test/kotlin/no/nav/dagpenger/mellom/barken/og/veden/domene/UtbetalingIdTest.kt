@@ -1,5 +1,6 @@
 package no.nav.dagpenger.mellom.barken.og.veden.domene
 
+import no.nav.dagpenger.mellom.barken.og.veden.helved.UtbetalingId
 import org.junit.jupiter.api.Assertions.assertEquals
 import java.util.UUID
 import kotlin.test.Test

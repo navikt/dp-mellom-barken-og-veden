@@ -1,5 +1,6 @@
-package no.nav.dagpenger.mellom.barken.og.veden.domene
+package no.nav.dagpenger.mellom.barken.og.veden.helved
 
+import java.lang.Long
 import java.nio.ByteBuffer
 import java.util.Base64
 import java.util.UUID
@@ -8,7 +9,7 @@ data class UtbetalingId(
     val uuid: UUID,
 ) {
     private val byteBuffer =
-        ByteBuffer.allocate(java.lang.Long.BYTES * 2).apply {
+        ByteBuffer.allocate(Long.BYTES * 2).apply {
             // 128 bits
             putLong(uuid.mostSignificantBits) // første 64 bits
             putLong(uuid.leastSignificantBits) // siste 64 bits

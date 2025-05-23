@@ -2,16 +2,16 @@ package no.nav.dagpenger.mellom.barken.og.veden.jobber
 
 import mu.KLogger
 import mu.KotlinLogging
-import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingId
+import mu.withLoggingContext
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
-import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
-import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
+import no.nav.dagpenger.mellom.barken.og.veden.helved.HelvedProducer
+import no.nav.dagpenger.mellom.barken.og.veden.helved.mapToVedtakDTO
+import no.nav.dagpenger.mellom.barken.og.veden.helved.toJson
 import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingRepo
-import no.nav.helved.kontrakt.api.models.UtbetalingDTO
-import no.nav.helved.kontrakt.api.models.UtbetalingsdagDTO
 
 class UtsendingsHjelper(
     val repo: UtbetalingRepo,
+    val producer: HelvedProducer,
 ) {
     companion object {
         private val logger = KotlinLogging.logger { }
@@ -21,28 +21,20 @@ class UtsendingsHjelper(
 
     fun behandleUtbetalingVedtak() {
         repo.hentAlleVedtakMedStatus(UtbetalingStatus.MOTTATT).forEach { vedtak ->
-            val dto = mapToVedtakDTO(vedtak)
-            // send dto til Kafka
-            logger.info { "Sender vedtak til helved" }
-            logger.sikkerlogg().info { "Sender vedtak til helved: ${objectMapper.writeValueAsString(dto)}" }
+            withLoggingContext(
+                mapOf(
+                    "behandlingId" to vedtak.behandlingId.toString(),
+                    "sakId" to vedtak.sakId,
+                ),
+            ) {
+                val json = vedtak.mapToVedtakDTO().toJson()
+                logger.info { "Sender utbetaling til helved" }
+                producer.send(vedtak.sakId, json)
+                logger.info { "Har sendt utbetaling til helved" }
+                logger.sikkerlogg().info { "Utbetaling som er sendt til helved: $json" }
 
-            repo.oppdaterStatus(vedtak.behandlingId, UtbetalingStatus.SENDT)
+                repo.oppdaterStatus(vedtak.behandlingId, UtbetalingStatus.SENDT)
+            }
         }
     }
-
-    private fun mapToVedtakDTO(vedtak: UtbetalingVedtak): UtbetalingDTO =
-        UtbetalingDTO(
-            behandlingId = UtbetalingId(vedtak.behandlingId).toString(),
-            sakId = vedtak.sakId,
-            ident = vedtak.ident,
-            utbetalinger =
-                vedtak.utbetalinger.map { dag ->
-                    UtbetalingsdagDTO(
-                        meldeperiode = dag.meldeperiode,
-                        dato = dag.dato,
-                        sats = dag.sats,
-                        utbetaltBeløp = dag.utbetaltBeløp,
-                    )
-                },
-        )
 }

@@ -1,5 +1,7 @@
 package no.nav.dagpenger.mellom.barken.og.veden
 
+import com.github.navikt.tbd_libs.kafka.AivenConfig
+import com.github.navikt.tbd_libs.kafka.ConsumerProducerFactory
 import com.github.navikt.tbd_libs.naisful.naisApp
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.micrometer.core.instrument.Clock
@@ -11,6 +13,7 @@ import no.nav.dagpenger.mellom.barken.og.veden.Configuration.config
 import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
 import no.nav.dagpenger.mellom.barken.og.veden.api.authenticationConfig
 import no.nav.dagpenger.mellom.barken.og.veden.api.utbetalingApi
+import no.nav.dagpenger.mellom.barken.og.veden.helved.HelvedProducer
 import no.nav.dagpenger.mellom.barken.og.veden.jobber.BehandleMottatteUtbetalinger
 import no.nav.dagpenger.mellom.barken.og.veden.jobber.UtsendingsHjelper
 import no.nav.dagpenger.mellom.barken.og.veden.leaderelection.LeaderElectionClient
@@ -22,7 +25,10 @@ internal class ApplicationBuilder(
     config: Map<String, String>,
 ) : RapidsConnection.StatusListener {
     private val repo = UtbetalingPostgresRepository(dataSource)
-    private val utsendingsHjelper = UtsendingsHjelper(repo)
+    private val consumerProducerFactory = ConsumerProducerFactory(AivenConfig.default)
+    private val producer = consumerProducerFactory.createProducer()
+    private val helvedProducer = HelvedProducer(producer)
+    private val utsendingsHjelper = UtsendingsHjelper(repo, helvedProducer)
 
     companion object {
         private val logger = KotlinLogging.logger { }
