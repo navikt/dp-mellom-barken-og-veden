@@ -19,7 +19,7 @@ object Configuration {
                 "KAFKA_RAPID_TOPIC" to "teamdagpenger.rapid.v1",
                 "KAFKA_EXTRA_TOPIC" to "",
                 "KAFKA_RESET_POLICY" to "LATEST",
-                "UTBETALING_TOPIC" to "teamdagpenger.utbetaling.beta",
+                "UTBETALING_TOPIC" to "teamdagpenger.utbetaling.v1",
             ),
         )
 
