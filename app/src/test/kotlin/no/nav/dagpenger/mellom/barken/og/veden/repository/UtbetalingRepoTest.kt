@@ -1,6 +1,7 @@
 package no.nav.dagpenger.mellom.barken.og.veden.repository
 
-import io.kotest.matchers.shouldBe
+import io.kotest.matchers.equals.shouldBeEqual
+import io.kotest.matchers.nulls.shouldNotBeNull
 import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
@@ -9,6 +10,7 @@ import no.nav.dagpenger.mellom.barken.og.veden.repository.Postgres.withMigratedD
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 class UtbetalingRepoTest {
@@ -21,7 +23,8 @@ class UtbetalingRepoTest {
             repo.lagreVedtak(vedtak)
             val lagretVedtak = repo.hentVedtak(vedtak.behandlingId)
 
-            lagretVedtak shouldBe vedtak
+            lagretVedtak.shouldNotBeNull()
+            lagretVedtak shouldBeEqual vedtak
         }
     }
 }
@@ -45,5 +48,5 @@ fun vedtak() =
                 ),
             ),
         status = UtbetalingStatus.MOTTATT,
-        opprettet = LocalDateTime.now(),
+        opprettet = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS),
     )

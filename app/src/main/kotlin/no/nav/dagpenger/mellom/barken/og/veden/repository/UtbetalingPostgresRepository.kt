@@ -7,6 +7,7 @@ import kotliquery.sessionOf
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.domene.Utbetalingsdag
+import java.time.temporal.ChronoUnit
 import java.util.UUID
 import javax.sql.DataSource
 
@@ -70,7 +71,7 @@ internal class UtbetalingPostgresRepository(
             saksbehandletAv = string("saksbehandlet_av"),
             utbetalinger = hentDager(behandlingId, tx),
             status = UtbetalingStatus.valueOf(string("status")),
-            opprettet = localDateTime("opprettet"),
+            opprettet = localDateTime("opprettet").truncatedTo(ChronoUnit.MILLIS),
         )
     }
 
