@@ -22,7 +22,7 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.kotest.assertions.core)
     testImplementation(libs.kotest.assertions.json)
-    testImplementation("com.github.navikt.tbd-libs:naisful-test-app:2025.05.26-17.31-d368ccc9")
+    testImplementation("com.github.navikt.tbd-libs:naisful-test-app:2025.05.27-07.38-d5cd9804")
     testImplementation(libs.rapids.and.rivers.test)
     testImplementation(libs.bundles.postgres.test)
 }
