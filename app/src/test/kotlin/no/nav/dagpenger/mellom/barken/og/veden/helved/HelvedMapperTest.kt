@@ -14,10 +14,12 @@ class HelvedMapperTest {
     fun `vi kan mappe utbetaling til json`() {
         val behandlingId = UUID.randomUUID()
         val utbetalingId = UtbetalingId(behandlingId).toString()
+        val vedtakstidspunkt = LocalDateTime.now()
         val utbetaling =
             UtbetalingVedtak(
                 behandlingId = behandlingId,
                 basertPåBehandlingId = UUID.randomUUID(),
+                vedtakstidspunkt = vedtakstidspunkt,
                 meldekortId = "meldekort1",
                 sakId = "sakId",
                 ident = "12345678901",
@@ -41,6 +43,7 @@ class HelvedMapperTest {
             {
               "sakId": "sakId",
               "behandlingId": "$utbetalingId",
+              "vedtakstidspunktet": "$vedtakstidspunkt",
               "ident": "12345678901",
               "utbetalinger": [
                 {

@@ -33,6 +33,7 @@ fun vedtak() =
     UtbetalingVedtak(
         behandlingId = UUID.randomUUID(),
         basertPåBehandlingId = null,
+        vedtakstidspunkt = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS),
         meldekortId = "m1",
         sakId = "s1",
         ident = "123",

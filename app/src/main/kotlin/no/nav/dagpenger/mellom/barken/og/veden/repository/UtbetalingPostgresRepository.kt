@@ -7,7 +7,6 @@ import kotliquery.sessionOf
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.domene.Utbetalingsdag
-import java.time.temporal.ChronoUnit
 import java.util.UUID
 import javax.sql.DataSource
 
@@ -64,6 +63,7 @@ internal class UtbetalingPostgresRepository(
         return UtbetalingVedtak(
             behandlingId = behandlingId,
             basertPåBehandlingId = uuidOrNull("basert_paa_id"),
+            vedtakstidspunkt = localDateTime("vedtakstidspunkt"),
             meldekortId = string("meldekort_id"),
             sakId = string("sak_id"),
             ident = string("ident"),
@@ -71,7 +71,7 @@ internal class UtbetalingPostgresRepository(
             saksbehandletAv = string("saksbehandlet_av"),
             utbetalinger = hentDager(behandlingId, tx),
             status = UtbetalingStatus.valueOf(string("status")),
-            opprettet = localDateTime("opprettet").truncatedTo(ChronoUnit.MILLIS),
+            opprettet = localDateTime("opprettet"),
         )
     }
 
@@ -139,6 +139,7 @@ internal class UtbetalingPostgresRepository(
                             insert into utbetaling (
                                 behandling_id,
                                 basert_paa_id,
+                                vedtakstidspunkt,
                                 meldekort_id,
                                 sak_id,
                                 ident,
@@ -149,6 +150,7 @@ internal class UtbetalingPostgresRepository(
                             ) values (
                                 :behandlingId,
                                 :basertPaaId,
+                                :vedtakstidspunkt,
                                 :meldekortId,
                                 :sakId,
                                 :ident,
@@ -161,6 +163,7 @@ internal class UtbetalingPostgresRepository(
                             mapOf(
                                 "behandlingId" to vedtak.behandlingId,
                                 "basertPaaId" to vedtak.basertPåBehandlingId,
+                                "vedtakstidspunkt" to vedtak.vedtakstidspunkt,
                                 "meldekortId" to vedtak.meldekortId,
                                 "sakId" to vedtak.sakId,
                                 "ident" to vedtak.ident,

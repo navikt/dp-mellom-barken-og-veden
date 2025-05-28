@@ -34,27 +34,31 @@ class MeldingOmUtbetalingVedtakMottakTest {
 
         rapid.sendTestMessage(json)
 
-        capturedVedtak.captured.behandlingId shouldBe UUID.fromString("76755FC9-592A-46A1-88C9-1B9AE622E5F2")
-        capturedVedtak.captured.basertPåBehandlingId shouldBe UUID.fromString("A421B97A-EDC8-4DB7-BCC0-3F87B2DBDB1D")
-        capturedVedtak.captured.meldekortId shouldBe "5"
-        capturedVedtak.captured.ident shouldBe "11109233444"
-        capturedVedtak.captured.saksbehandletAv shouldBe "dp-behandling"
-        capturedVedtak.captured.utbetalinger.minBy { it.dato } shouldBe
-            Utbetalingsdag(
-                meldeperiode = "132460781",
-                dato = LocalDate.of(2021, 6, 7),
-                sats = 1077,
-                utbetaltBeløp = 553,
-            )
-        capturedVedtak.captured.utbetalinger.maxBy { it.dato } shouldBe
-            Utbetalingsdag(
-                meldeperiode = "132463246",
-                dato = LocalDate.of(2021, 8, 1),
-                sats = 1077,
-                utbetaltBeløp = 0,
-            )
-        capturedVedtak.captured.utbetalinger.size shouldBe 56
-        capturedVedtak.captured.status shouldBe UtbetalingStatus.MOTTATT
-        capturedVedtak.captured.opprettet shouldBe LocalDateTime.of(2025, 5, 16, 9, 37, 17, 336661000)
+        val vedtak = capturedVedtak.captured
+        with(vedtak) {
+            behandlingId shouldBe UUID.fromString("76755FC9-592A-46A1-88C9-1B9AE622E5F2")
+            basertPåBehandlingId shouldBe UUID.fromString("A421B97A-EDC8-4DB7-BCC0-3F87B2DBDB1D")
+            vedtakstidspunkt shouldBe LocalDateTime.parse("2025-05-16T09:37:17.336661")
+            meldekortId shouldBe "5"
+            ident shouldBe "11109233444"
+            saksbehandletAv shouldBe "dp-behandling"
+            utbetalinger.minBy { it.dato } shouldBe
+                Utbetalingsdag(
+                    meldeperiode = "132460781",
+                    dato = LocalDate.of(2021, 6, 7),
+                    sats = 1077,
+                    utbetaltBeløp = 553,
+                )
+            utbetalinger.maxBy { it.dato } shouldBe
+                Utbetalingsdag(
+                    meldeperiode = "132463246",
+                    dato = LocalDate.of(2021, 8, 1),
+                    sats = 1077,
+                    utbetaltBeløp = 0,
+                )
+            utbetalinger.size shouldBe 56
+            status shouldBe UtbetalingStatus.MOTTATT
+            opprettet shouldBe LocalDateTime.parse("2025-05-16T09:37:17.338979")
+        }
     }
 }

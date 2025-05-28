@@ -2,13 +2,14 @@ openapi: 3.0.3
 info:
   title: Utbetalingsdetaljer mot utbetaling/helved
   version: 1.0.0
-paths: {}
+paths: { }
 components:
   schemas:
     Utbetaling:
       type: object
       required:
         - sakId
+        - vedtakstidspunktet
         - behandlingId
         - ident
         - utbetalinger
@@ -21,6 +22,9 @@ components:
           maximum: 30
         ident:
           type: string
+        vedtakstidspunktet:
+          type: string
+          format: date-time
         utbetalinger:
           type: array
           items:

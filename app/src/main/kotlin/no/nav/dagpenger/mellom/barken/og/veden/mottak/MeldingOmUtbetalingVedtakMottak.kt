@@ -2,6 +2,7 @@ package no.nav.dagpenger.mellom.barken.og.veden.mottak
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
+import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDateTime
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
@@ -71,6 +72,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                     behandlingId = behandlingId,
                     basertPåBehandlingId = vedtakDto.basertPåBehandlinger?.lastOrNull(),
                     meldekortId = vedtakDto.behandletHendelse.id,
+                    vedtakstidspunkt = vedtakDto.vedtakstidspunkt,
                     sakId = vedtakDto.fagsakId,
                     ident = vedtakDto.ident,
                     saksbehandletAv =
@@ -95,7 +97,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                             )
                         },
                     status = UtbetalingStatus.MOTTATT,
-                    opprettet = vedtakDto.vedtakstidspunkt,
+                    opprettet = packet["@opprettet"].asLocalDateTime(),
                 )
 
             repo.lagreVedtak(utbetalingVedtak)

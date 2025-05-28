@@ -7,6 +7,7 @@ import java.util.UUID
 data class UtbetalingVedtak(
     val behandlingId: UUID,
     val basertPåBehandlingId: UUID?,
+    val vedtakstidspunkt: LocalDateTime,
     val meldekortId: String,
     val sakId: String,
     val ident: String,
