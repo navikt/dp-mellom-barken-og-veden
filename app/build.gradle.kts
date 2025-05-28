@@ -16,7 +16,7 @@ dependencies {
     implementation(libs.bundles.postgres)
     implementation("io.ktor:ktor-server-sse:${libs.versions.ktor.get()}")
     implementation("com.github.navikt.tbd-libs:naisful-app:2025.05.27-07.38-d5cd9804")
-    implementation("com.github.navikt.tbd-libs:kafka:2025.05.26-17.31-d368ccc9")
+    implementation("com.github.navikt.tbd-libs:kafka:2025.05.27-07.38-d5cd9804")
 
     testImplementation("io.ktor:ktor-server-test-host-jvm:3.0.1")
     testImplementation(libs.mockk)
