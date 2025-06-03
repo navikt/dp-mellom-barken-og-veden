@@ -4,7 +4,7 @@ import kotliquery.Row
 import kotliquery.TransactionalSession
 import kotliquery.queryOf
 import kotliquery.sessionOf
-import no.nav.dagpenger.mellom.barken.og.veden.domene.Ident
+import no.nav.dagpenger.mellom.barken.og.veden.domene.Person
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.domene.Utbetalingsdag
@@ -67,7 +67,7 @@ internal class UtbetalingPostgresRepository(
             vedtakstidspunkt = localDateTime("vedtakstidspunkt"),
             meldekortId = string("meldekort_id"),
             sakId = string("sak_id"),
-            ident = Ident(string("ident")),
+            ident = Person(string("ident")),
             besluttetAv = string("besluttet_av"),
             saksbehandletAv = string("saksbehandlet_av"),
             utbetalinger = hentDager(behandlingId, tx),
@@ -167,7 +167,7 @@ internal class UtbetalingPostgresRepository(
                                 "vedtakstidspunkt" to vedtak.vedtakstidspunkt,
                                 "meldekortId" to vedtak.meldekortId,
                                 "sakId" to vedtak.sakId,
-                                "ident" to vedtak.ident.verdi,
+                                "ident" to vedtak.ident.ident,
                                 "status" to vedtak.status.name,
                                 "saksbehandletAv" to vedtak.saksbehandletAv,
                                 "besluttetAv" to vedtak.besluttetAv,

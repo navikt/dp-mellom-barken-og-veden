@@ -3,7 +3,7 @@ package no.nav.dagpenger.mellom.barken.og.veden.repository
 import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.nulls.shouldNotBeNull
 import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
-import no.nav.dagpenger.mellom.barken.og.veden.domene.Ident
+import no.nav.dagpenger.mellom.barken.og.veden.domene.Person
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.domene.Utbetalingsdag
@@ -37,7 +37,7 @@ fun vedtak() =
         vedtakstidspunkt = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS),
         meldekortId = "m1",
         sakId = "s1",
-        ident = Ident("12345678910"),
+        ident = Person("12345678910"),
         saksbehandletAv = "saksbehandler",
         besluttetAv = "beslutter",
         utbetalinger =

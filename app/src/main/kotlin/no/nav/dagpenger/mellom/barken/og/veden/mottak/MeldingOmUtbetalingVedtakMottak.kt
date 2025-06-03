@@ -12,7 +12,7 @@ import mu.withLoggingContext
 import no.nav.dagpenger.behandling.api.models.BehandletAvDTORolleDTO
 import no.nav.dagpenger.behandling.api.models.VedtakDTO
 import no.nav.dagpenger.mellom.barken.og.veden.asUUID
-import no.nav.dagpenger.mellom.barken.og.veden.domene.Ident
+import no.nav.dagpenger.mellom.barken.og.veden.domene.Person
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.domene.Utbetalingsdag
@@ -75,7 +75,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                     meldekortId = vedtakDto.behandletHendelse.id,
                     vedtakstidspunkt = vedtakDto.vedtakstidspunkt,
                     sakId = vedtakDto.fagsakId,
-                    ident = Ident(vedtakDto.ident),
+                    ident = Person(vedtakDto.ident),
                     saksbehandletAv =
                         vedtakDto.behandletAv
                             .singleOrNull { it.rolle == BehandletAvDTORolleDTO.SAKSBEHANDLER }
