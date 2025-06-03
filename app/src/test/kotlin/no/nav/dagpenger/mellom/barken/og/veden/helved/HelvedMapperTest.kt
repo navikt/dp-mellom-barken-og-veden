@@ -50,7 +50,10 @@ class HelvedMapperTest {
                   "meldeperiode": "1234567",
                   "dato": "2025-05-23",
                   "sats": 1000,
-                  "utbetaltBeløp": 1000
+                  "utbetaltBeløp": 1000,
+                  "utbetalingstype": "Dagpenger",
+                  "rettighetstype": "Ordinær"
+
                 }
               ]
             }

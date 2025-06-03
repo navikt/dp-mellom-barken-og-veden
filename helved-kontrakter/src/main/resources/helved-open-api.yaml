@@ -48,3 +48,15 @@ components:
         utbetaltBeløp:
           type: integer
           format: int32
+        utbetalingstype:
+          type: string
+          enum:
+            - DagpengerFerietillegg
+            - Dagpenger
+        rettighetstype:
+          type: string
+          enum:
+            - Ordinær
+            - Permittering
+            - PermitteringFiskeindustrien
+            - EØS

@@ -4,6 +4,8 @@ import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.helved.kontrakt.api.models.UtbetalingDTO
 import no.nav.helved.kontrakt.api.models.UtbetalingsdagDTO
+import no.nav.helved.kontrakt.api.models.UtbetalingsdagDTORettighetstypeDTO.ORDINÆR
+import no.nav.helved.kontrakt.api.models.UtbetalingsdagDTOUtbetalingstypeDTO.DAGPENGER
 
 fun UtbetalingVedtak.mapToVedtakDTO(): UtbetalingDTO =
     UtbetalingDTO(
@@ -18,6 +20,8 @@ fun UtbetalingVedtak.mapToVedtakDTO(): UtbetalingDTO =
                     dato = dag.dato,
                     sats = dag.sats,
                     utbetaltBeløp = dag.utbetaltBeløp,
+                    rettighetstype = ORDINÆR,
+                    utbetalingstype = DAGPENGER,
                 )
             },
     )
