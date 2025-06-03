@@ -1,5 +1,6 @@
 package no.nav.dagpenger.mellom.barken.og.veden.helved
 
+import no.nav.dagpenger.mellom.barken.og.veden.domene.Ident
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 
@@ -8,13 +9,13 @@ class HelvedUtsender(
     private val producer: Producer<String, String>,
 ) {
     fun send(
-        sakId: String,
+        ident: Ident,
         utbetaling: String,
     ) {
         val record =
             ProducerRecord(
                 topic,
-                sakId,
+                ident.verdi,
                 utbetaling,
             )
         producer.send(record)

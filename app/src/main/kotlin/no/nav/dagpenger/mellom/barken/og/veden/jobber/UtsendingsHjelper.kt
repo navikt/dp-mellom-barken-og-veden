@@ -29,7 +29,7 @@ class UtsendingsHjelper(
             ) {
                 val json = vedtak.mapToVedtakDTO().toJson()
                 logger.info { "Sender utbetaling til helved" }
-                producer.send(vedtak.sakId, json)
+                producer.send(vedtak.ident, json)
                 logger.info { "Har sendt utbetaling til helved" }
                 logger.sikkerlogg().info { "Utbetaling som er sendt til helved: $json" }
 

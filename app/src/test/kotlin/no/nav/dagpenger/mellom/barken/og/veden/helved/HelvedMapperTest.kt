@@ -1,6 +1,7 @@
 package no.nav.dagpenger.mellom.barken.og.veden.helved
 
 import io.kotest.assertions.json.shouldEqualJson
+import no.nav.dagpenger.mellom.barken.og.veden.domene.Ident
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.domene.Utbetalingsdag
@@ -22,7 +23,7 @@ class HelvedMapperTest {
                 vedtakstidspunkt = vedtakstidspunkt,
                 meldekortId = "meldekort1",
                 sakId = "sakId",
-                ident = "12345678901",
+                ident = Ident("12345678901"),
                 saksbehandletAv = "saksbehandler",
                 besluttetAv = "beslutter",
                 utbetalinger =

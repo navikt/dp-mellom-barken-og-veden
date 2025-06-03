@@ -12,7 +12,7 @@ fun UtbetalingVedtak.mapToVedtakDTO(): UtbetalingDTO =
         behandlingId = UtbetalingId(behandlingId).toString(),
         vedtakstidspunktet = vedtakstidspunkt,
         sakId = sakId,
-        ident = ident,
+        ident = ident.verdi,
         utbetalinger =
             utbetalinger.map { dag ->
                 UtbetalingsdagDTO(
