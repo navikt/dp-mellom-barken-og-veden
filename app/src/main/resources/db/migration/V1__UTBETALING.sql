@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS utbetaling
 (
     behandling_id    uuid PRIMARY KEY,
-    basert_paa_id    uuid                     NULL REFERENCES utbetaling (behandling_id),
+    basert_paa_id    uuid                     NULL,
     vedtakstidspunkt TIMESTAMP WITH TIME ZONE NOT NULL,
     meldekort_id     text                     NOT NULL,
     sak_id           text                     NOT NULL,
