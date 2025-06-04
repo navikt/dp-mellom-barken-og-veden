@@ -36,7 +36,7 @@ spec:
     - name: KAFKA_RAPID_TOPIC
       value: teamdagpenger.rapid.v1
     - name: KAFKA_RESET_POLICY
-      value: EARLIEST
+      value: LATEST
     - name: flyway.cleanDisabled
       value: '{{flyway.cleanDisabled}}'
     - name: CLEAN_ON_STARTUP
@@ -68,7 +68,7 @@ spec:
       runtime: java
   gcp:
     sqlInstances:
-      - type: POSTGRES_16
+      - type: POSTGRES_17
         highAvailability: true
         diskAutoresize: true
         pointInTimeRecovery: true
