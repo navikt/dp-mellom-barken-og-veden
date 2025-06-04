@@ -1,4 +1,4 @@
-package no.nav.dagpenger.mellom.barken.og.veden.jobber
+package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber
 
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging

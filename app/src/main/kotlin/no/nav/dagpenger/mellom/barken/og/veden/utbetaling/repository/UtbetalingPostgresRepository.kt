@@ -1,13 +1,13 @@
-package no.nav.dagpenger.mellom.barken.og.veden.repository
+package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository
 
 import kotliquery.Row
 import kotliquery.TransactionalSession
 import kotliquery.queryOf
 import kotliquery.sessionOf
-import no.nav.dagpenger.mellom.barken.og.veden.domene.Person
-import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
-import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
-import no.nav.dagpenger.mellom.barken.og.veden.domene.Utbetalingsdag
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Person
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingStatus
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
 import java.util.UUID
 import javax.sql.DataSource
 

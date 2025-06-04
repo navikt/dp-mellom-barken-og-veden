@@ -1,10 +1,10 @@
 package no.nav.dagpenger.mellom.barken.og.veden.helved
 
 import io.kotest.assertions.json.shouldEqualJson
-import no.nav.dagpenger.mellom.barken.og.veden.domene.Person
-import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
-import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
-import no.nav.dagpenger.mellom.barken.og.veden.domene.Utbetalingsdag
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Person
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingStatus
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID

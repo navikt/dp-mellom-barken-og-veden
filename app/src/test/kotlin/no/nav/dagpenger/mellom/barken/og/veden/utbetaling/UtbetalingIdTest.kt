@@ -1,4 +1,4 @@
-package no.nav.dagpenger.mellom.barken.og.veden.domene
+package no.nav.dagpenger.mellom.barken.og.veden.utbetaling
 
 import no.nav.dagpenger.mellom.barken.og.veden.helved.UtbetalingId
 import org.junit.jupiter.api.Assertions.assertEquals

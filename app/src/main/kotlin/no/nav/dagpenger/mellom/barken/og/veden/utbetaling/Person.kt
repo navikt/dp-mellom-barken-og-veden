@@ -1,4 +1,4 @@
-package no.nav.dagpenger.mellom.barken.og.veden.domene
+package no.nav.dagpenger.mellom.barken.og.veden.utbetaling
 
 @JvmInline
 value class Person(

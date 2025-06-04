@@ -1,4 +1,4 @@
-package no.nav.dagpenger.mellom.barken.og.veden.domene
+package no.nav.dagpenger.mellom.barken.og.veden.utbetaling
 
 import java.time.LocalDate
 import java.time.LocalDateTime

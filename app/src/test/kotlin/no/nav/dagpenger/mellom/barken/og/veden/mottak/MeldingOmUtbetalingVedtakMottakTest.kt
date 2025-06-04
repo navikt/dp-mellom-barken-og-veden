@@ -5,10 +5,11 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
-import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
-import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
-import no.nav.dagpenger.mellom.barken.og.veden.domene.Utbetalingsdag
-import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingRepo
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.MeldingOmUtbetalingVedtakMottak
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingStatus
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.LocalDateTime

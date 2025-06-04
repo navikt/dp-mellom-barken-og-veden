@@ -1,4 +1,4 @@
-package no.nav.dagpenger.mellom.barken.og.veden.mottak
+package no.nav.dagpenger.mellom.barken.og.veden.utbetaling
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
@@ -7,17 +7,13 @@ import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.micrometer.core.instrument.MeterRegistry
-import mu.KotlinLogging.logger
+import mu.KotlinLogging
 import mu.withLoggingContext
 import no.nav.dagpenger.behandling.api.models.BehandletAvDTORolleDTO
 import no.nav.dagpenger.behandling.api.models.VedtakDTO
 import no.nav.dagpenger.mellom.barken.og.veden.asUUID
-import no.nav.dagpenger.mellom.barken.og.veden.domene.Person
-import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
-import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
-import no.nav.dagpenger.mellom.barken.og.veden.domene.Utbetalingsdag
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
-import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingRepo
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
 
 internal class MeldingOmUtbetalingVedtakMottak(
     rapidsConnection: RapidsConnection,
@@ -107,7 +103,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
     }
 
     private companion object {
-        private val logger = logger { }
-        private val sikkerlogg = logger("tjenestekall.MeldingOmUtbetalingVedtakMottak")
+        private val logger = KotlinLogging.logger { }
+        private val sikkerlogg = KotlinLogging.logger("tjenestekall.MeldingOmUtbetalingVedtakMottak")
     }
 }

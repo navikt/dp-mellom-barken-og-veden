@@ -14,11 +14,12 @@ import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
 import no.nav.dagpenger.mellom.barken.og.veden.api.authenticationConfig
 import no.nav.dagpenger.mellom.barken.og.veden.api.utbetalingApi
 import no.nav.dagpenger.mellom.barken.og.veden.helved.HelvedUtsender
-import no.nav.dagpenger.mellom.barken.og.veden.jobber.BehandleMottatteUtbetalinger
-import no.nav.dagpenger.mellom.barken.og.veden.jobber.UtsendingsHjelper
+import no.nav.dagpenger.mellom.barken.og.veden.helved.StatusMottak
 import no.nav.dagpenger.mellom.barken.og.veden.leaderelection.LeaderElectionClient
-import no.nav.dagpenger.mellom.barken.og.veden.mottak.MeldingOmUtbetalingVedtakMottak
-import no.nav.dagpenger.mellom.barken.og.veden.repository.UtbetalingPostgresRepository
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.MeldingOmUtbetalingVedtakMottak
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber.BehandleMottatteUtbetalinger
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber.UtsendingsHjelper
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingPostgresRepository
 import no.nav.helse.rapids_rivers.RapidApplication
 
 internal class ApplicationBuilder(
@@ -68,6 +69,7 @@ internal class ApplicationBuilder(
                     rapidsConnection = this,
                     repo = repo,
                 )
+                StatusMottak(this)
             }
 
     init {

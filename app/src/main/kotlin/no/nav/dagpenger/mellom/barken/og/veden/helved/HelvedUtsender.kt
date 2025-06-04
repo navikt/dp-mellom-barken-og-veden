@@ -1,6 +1,6 @@
 package no.nav.dagpenger.mellom.barken.og.veden.helved
 
-import no.nav.dagpenger.mellom.barken.og.veden.domene.Person
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Person
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 

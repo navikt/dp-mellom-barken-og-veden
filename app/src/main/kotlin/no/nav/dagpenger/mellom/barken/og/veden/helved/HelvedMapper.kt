@@ -1,7 +1,7 @@
 package no.nav.dagpenger.mellom.barken.og.veden.helved
 
-import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.helved.kontrakt.api.models.UtbetalingDTO
 import no.nav.helved.kontrakt.api.models.UtbetalingsdagDTO
 import no.nav.helved.kontrakt.api.models.UtbetalingsdagDTORettighetstypeDTO.ORDINÆR

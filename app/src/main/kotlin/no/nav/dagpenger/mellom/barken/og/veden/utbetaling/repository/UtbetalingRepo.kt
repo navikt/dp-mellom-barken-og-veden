@@ -1,7 +1,7 @@
-package no.nav.dagpenger.mellom.barken.og.veden.repository
+package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository
 
-import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingStatus
-import no.nav.dagpenger.mellom.barken.og.veden.domene.UtbetalingVedtak
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingStatus
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import java.util.UUID
 
 interface UtbetalingRepo {
