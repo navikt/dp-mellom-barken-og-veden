@@ -14,16 +14,17 @@ fun UtbetalingVedtak.mapToVedtakDTO(): UtbetalingDTO =
         sakId = sakId,
         ident = ident.ident,
         utbetalinger =
-            utbetalinger.map { dag ->
-                UtbetalingsdagDTO(
-                    meldeperiode = dag.meldeperiode,
-                    dato = dag.dato,
-                    sats = dag.sats,
-                    utbetaltBeløp = dag.utbetaltBeløp,
-                    rettighetstype = ORDINÆR,
-                    utbetalingstype = DAGPENGER,
-                )
-            },
+            utbetalinger
+                .map { dag ->
+                    UtbetalingsdagDTO(
+                        meldeperiode = dag.meldeperiode,
+                        dato = dag.dato,
+                        sats = dag.sats,
+                        utbetaltBeløp = dag.utbetaltBeløp,
+                        rettighetstype = ORDINÆR,
+                        utbetalingstype = DAGPENGER,
+                    )
+                }.filterNot { it.utbetaltBeløp == 0 },
     )
 
 fun UtbetalingDTO.toJson(): String = objectMapper.writeValueAsString(this)

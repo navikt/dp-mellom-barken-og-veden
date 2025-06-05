@@ -9,10 +9,10 @@ data class StatusReply(
 )
 
 enum class Status {
-    OK,
-    FEILET,
-    MOTTATT,
-    HOS_OPPDRAG,
+    OK, // er utbetalt
+    FEILET, // noe gikk galt, se error
+    MOTTATT, // er mottatt helved men ikke sendt til oppdrag enda
+    HOS_OPPDRAG, // er sendt til oppdrag men ikke utbetalt enda
 }
 
 data class Detaljer(
@@ -20,6 +20,7 @@ data class Detaljer(
 )
 
 data class DetaljerLinje(
+    val behandlingId: String,
     val fom: LocalDate,
     val tom: LocalDate,
     val beløp: UInt,
