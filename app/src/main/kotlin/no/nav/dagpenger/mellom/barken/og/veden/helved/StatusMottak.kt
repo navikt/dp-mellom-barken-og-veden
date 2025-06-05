@@ -15,7 +15,7 @@ internal class StatusMottak(
     init {
         River(rapidsConnection)
             .apply {
-                validate { it.requireKey("status") }
+                precondition { message -> message.requireAllOrAny("status", Status.entries.map { it.name }) }
             }.register(this)
     }
 

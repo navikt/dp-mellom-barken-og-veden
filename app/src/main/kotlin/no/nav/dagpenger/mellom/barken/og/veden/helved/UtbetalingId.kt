@@ -30,3 +30,9 @@ data class UtbetalingId(
         }
     }
 }
+
+fun main() {
+    val id = "AZc6n9kKcpelfhC8Vt/i0Q=="
+    val utbetalingId = UtbetalingId.fromString(id)
+    print(utbetalingId.uuid)
+}
