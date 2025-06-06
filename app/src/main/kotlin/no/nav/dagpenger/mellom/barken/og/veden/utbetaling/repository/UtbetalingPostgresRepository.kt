@@ -59,23 +59,6 @@ internal class UtbetalingPostgresRepository(
         }
     }
 
-    private fun Row.toUtbetalingVedtak(tx: TransactionalSession): UtbetalingVedtak {
-        val behandlingId = UUID.fromString(string("behandling_id"))
-        return UtbetalingVedtak(
-            behandlingId = behandlingId,
-            basertPåBehandlingId = uuidOrNull("basert_paa_id"),
-            vedtakstidspunkt = localDateTime("vedtakstidspunkt"),
-            meldekortId = string("meldekort_id"),
-            sakId = string("sak_id"),
-            ident = Person(string("ident")),
-            besluttetAv = string("besluttet_av"),
-            saksbehandletAv = string("saksbehandlet_av"),
-            utbetalinger = hentDager(behandlingId, tx),
-            status = UtbetalingStatus.valueOf(string("status")),
-            opprettet = localDateTime("opprettet"),
-        )
-    }
-
     private fun hentDager(
         behandlingId: UUID,
         tx: TransactionalSession,
@@ -94,39 +77,43 @@ internal class UtbetalingPostgresRepository(
             }.asList,
         )
 
-    private fun Row.toUtbetalingsdag(): Utbetalingsdag =
-        Utbetalingsdag(
-            meldeperiode = string("meldeperiode"),
-            dato = localDate("dato"),
-            sats = int("sats"),
-            utbetaltBeløp = int("utbetalt_beløp"),
-        )
-
     override fun oppdaterStatus(
         behandlingId: UUID,
         status: UtbetalingStatus,
     ) {
         sessionOf(dataSource).use { session ->
             session.transaction { tx ->
-                tx
-                    .run(
-                        queryOf(
-                            // language=PostgreSQL
-                            """
-                            update utbetaling
-                            set status = :status
-                            where behandling_id = :behandlingId
-                            """.trimIndent(),
-                            mapOf(
-                                "behandlingId" to behandlingId,
-                                "status" to status.name,
-                            ),
-                        ).asUpdate,
-                    ).also {
-                        lagreStatus(behandlingId, status, tx)
-                    }
+                oppdaterStatus(
+                    behandlingId = behandlingId,
+                    status = status,
+                    tx = tx,
+                )
             }
         }
+    }
+
+    override fun oppdaterStatus(
+        behandlingId: UUID,
+        status: UtbetalingStatus,
+        tx: TransactionalSession,
+    ) {
+        tx
+            .run(
+                queryOf(
+                    // language=PostgreSQL
+                    """
+                    update utbetaling
+                    set status = :status
+                    where behandling_id = :behandlingId
+                    """.trimIndent(),
+                    mapOf(
+                        "behandlingId" to behandlingId,
+                        "status" to status.name,
+                    ),
+                ).asUpdate,
+            ).also {
+                lagreStatus(behandlingId, status, tx)
+            }
     }
 
     override fun lagreVedtak(vedtak: UtbetalingVedtak) {
@@ -242,4 +229,29 @@ internal class UtbetalingPostgresRepository(
             ).asUpdate,
         )
     }
+
+    private fun Row.toUtbetalingVedtak(tx: TransactionalSession): UtbetalingVedtak {
+        val behandlingId = UUID.fromString(string("behandling_id"))
+        return UtbetalingVedtak(
+            behandlingId = behandlingId,
+            basertPåBehandlingId = uuidOrNull("basert_paa_id"),
+            vedtakstidspunkt = localDateTime("vedtakstidspunkt"),
+            meldekortId = string("meldekort_id"),
+            sakId = string("sak_id"),
+            ident = Person(string("ident")),
+            besluttetAv = string("besluttet_av"),
+            saksbehandletAv = string("saksbehandlet_av"),
+            utbetalinger = hentDager(behandlingId, tx),
+            status = UtbetalingStatus.valueOf(string("status")),
+            opprettet = localDateTime("opprettet"),
+        )
+    }
+
+    private fun Row.toUtbetalingsdag(): Utbetalingsdag =
+        Utbetalingsdag(
+            meldeperiode = string("meldeperiode"),
+            dato = localDate("dato"),
+            sats = int("sats"),
+            utbetaltBeløp = int("utbetalt_beløp"),
+        )
 }

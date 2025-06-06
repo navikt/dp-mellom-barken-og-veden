@@ -1,5 +1,6 @@
 package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository
 
+import kotliquery.TransactionalSession
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import java.util.UUID
@@ -14,5 +15,11 @@ interface UtbetalingRepo {
     fun oppdaterStatus(
         behandlingId: UUID,
         status: UtbetalingStatus,
+    )
+
+    fun oppdaterStatus(
+        behandlingId: UUID,
+        status: UtbetalingStatus,
+        tx: TransactionalSession,
     )
 }

@@ -15,7 +15,9 @@ import no.nav.dagpenger.mellom.barken.og.veden.api.authenticationConfig
 import no.nav.dagpenger.mellom.barken.og.veden.api.utbetalingApi
 import no.nav.dagpenger.mellom.barken.og.veden.helved.HelvedUtsender
 import no.nav.dagpenger.mellom.barken.og.veden.helved.StatusMottak
+import no.nav.dagpenger.mellom.barken.og.veden.helved.repository.HelvedPostgresRepository
 import no.nav.dagpenger.mellom.barken.og.veden.leaderelection.LeaderElectionClient
+import no.nav.dagpenger.mellom.barken.og.veden.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.MeldingOmUtbetalingVedtakMottak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber.BehandleMottatteUtbetalinger
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber.UtsendingsHjelper
@@ -25,11 +27,13 @@ import no.nav.helse.rapids_rivers.RapidApplication
 internal class ApplicationBuilder(
     config: Map<String, String>,
 ) : RapidsConnection.StatusListener {
-    private val repo = UtbetalingPostgresRepository(dataSource)
+    private val utbetalingRepo = UtbetalingPostgresRepository(dataSource)
+    private val helvedRepo = HelvedPostgresRepository()
+    private val repo = Repo(dataSource, utbetalingRepo, helvedRepo)
     private val consumerProducerFactory = ConsumerProducerFactory(AivenConfig.default)
     private val producer = consumerProducerFactory.createProducer()
     private val helvedUtsender = HelvedUtsender(Configuration.utbetalingTopic, producer)
-    private val utsendingsHjelper = UtsendingsHjelper(repo, helvedUtsender)
+    private val utsendingsHjelper = UtsendingsHjelper(utbetalingRepo, helvedUtsender)
 
     companion object {
         private val logger = KotlinLogging.logger { }
@@ -67,9 +71,13 @@ internal class ApplicationBuilder(
                 ).start()
                 MeldingOmUtbetalingVedtakMottak(
                     rapidsConnection = this,
+                    repo = utbetalingRepo,
+                )
+                StatusMottak(
+                    rapidsConnection = this,
+                    utbetalingRepo = utbetalingRepo,
                     repo = repo,
                 )
-                StatusMottak(this)
             }
 
     init {
