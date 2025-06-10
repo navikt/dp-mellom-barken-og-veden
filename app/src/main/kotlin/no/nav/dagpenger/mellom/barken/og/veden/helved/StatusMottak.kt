@@ -41,7 +41,12 @@ internal class StatusMottak(
                 ?.first()
                 ?.behandlingId
 
-        val behandlingId = UtbetalingId.fromString(kortBehandlingId!!).uuid
+        if (kortBehandlingId == null || kortBehandlingId.isBlank()) {
+            logger.warn { "Melding mangler behandlingId, ignorerer denne" }
+            return
+        }
+
+        val behandlingId = UtbetalingId.fromString(kortBehandlingId).uuid
 
         withLoggingContext(
             "behandlingId" to behandlingId.toString(),

@@ -20,7 +20,7 @@ data class Detaljer(
 )
 
 data class DetaljerLinje(
-    val behandlingId: String,
+    val behandlingId: String?,
     val fom: LocalDate,
     val tom: LocalDate,
     val beløp: UInt,
