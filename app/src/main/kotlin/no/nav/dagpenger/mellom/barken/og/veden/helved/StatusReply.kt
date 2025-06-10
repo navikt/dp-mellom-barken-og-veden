@@ -29,7 +29,7 @@ data class DetaljerLinje(
 )
 
 data class ApiError(
-    val behandlingId: String,
+    val behandlingId: String?,
     val statusCode: Int,
     val msg: String,
     val doc: String,
