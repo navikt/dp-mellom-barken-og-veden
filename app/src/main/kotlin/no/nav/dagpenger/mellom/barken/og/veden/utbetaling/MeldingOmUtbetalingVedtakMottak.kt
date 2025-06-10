@@ -59,6 +59,10 @@ internal class MeldingOmUtbetalingVedtakMottak(
             "behandlingId" to behandlingId.toString(),
             "meldekortId" to meldekortId.toString(),
         ) {
+            if (behandlingId.toString() == "019758e1-e2c6-78dd-a3a6-d5eb67c37cf8") {
+                logger.info { "Mottok utbetaling vedtak for testbehandling, ignorerer" }
+                return
+            }
             logger.info { "Mottok melding om utbetaling for meldekort" }
             logger.sikkerlogg().info { "Mottok utbetaling vedtak ${packet.toJson()} " }
             // her kan vi kalle dp-behandling for å hente utbetalinger
