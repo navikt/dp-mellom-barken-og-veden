@@ -59,16 +59,12 @@ internal class MeldingOmUtbetalingVedtakMottak(
             "behandlingId" to behandlingId.toString(),
             "meldekortId" to meldekortId.toString(),
         ) {
-            if (behandlingId.toString() == "019758e1-e2c6-78dd-a3a6-d5eb67c37cf8") {
-                logger.info { "Mottok utbetaling vedtak for testbehandling, ignorerer" }
-                return
-            }
             logger.info { "Mottok melding om utbetaling for meldekort" }
-            logger.sikkerlogg().info { "Mottok utbetaling vedtak ${packet.toJson()} " }
             // her kan vi kalle dp-behandling for å hente utbetalinger
             val vedtakDto: VedtakDTO =
                 objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), VedtakDTO::class.java)
 
+            logger.sikkerlogg().info { "Mottok utbetalinger ${vedtakDto.utbetalinger.joinToString { it.toString() }} " }
             val utbetalingVedtak =
                 UtbetalingVedtak(
                     behandlingId = behandlingId,
@@ -102,9 +98,8 @@ internal class MeldingOmUtbetalingVedtakMottak(
                     opprettet = packet["@opprettet"].asLocalDateTime(),
                 )
 
-            logger.sikkerlogg().info { "Lagrer utbetaling vedtak: $utbetalingVedtak" }
             repo.lagreVedtak(utbetalingVedtak)
-            logger.info { "Utbetaling vedtak lagret" }
+            logger.info { "Utbetalingsvedtak lagret" }
         }
     }
 

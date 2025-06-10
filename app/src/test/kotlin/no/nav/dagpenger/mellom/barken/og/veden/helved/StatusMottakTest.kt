@@ -62,21 +62,30 @@ class StatusMottakTest {
     //language=JSON
     private val statusMelding =
         """
-                   {
+               {
           "status": "OK",
           "detaljer": {
               "linjer": [
                 {
-                  "behandlingId": "AZdYx846fYCpOMhKasfQbg==",
+                  "behandlingId": "AZdZCcAJcESkSYskqsOKKw==",
+                  "fom": "2025-05-22",
+                  "tom": "2025-05-23",
+                  "vedtakssats": 467,
+                  "beløp": 469,
+                  "klassekode": "DPORAS"
+                },
+                {
+                  "behandlingId": "AZdZCcAJcESkSYskqsOKKw==",
                   "fom": "2025-05-26",
                   "tom": "2025-06-06",
                   "vedtakssats": 467,
-                  "beløp": 420,
+                  "beløp": 324,
                   "klassekode": "DPORAS"
                 }
               ]
             },
           "error": null
         }
+                }
         """.trimIndent()
 }
