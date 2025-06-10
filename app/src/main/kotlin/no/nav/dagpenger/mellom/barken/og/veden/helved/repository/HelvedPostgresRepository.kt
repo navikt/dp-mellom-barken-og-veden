@@ -73,7 +73,7 @@ internal class HelvedPostgresRepository : HelvedRepo {
                         :belop,
                         :sats,
                         :klassekode
-                    )
+                    ) on conflict (behandling_id, fom, tom) do nothing
                     """.trimIndent(),
                     mapOf(
                         "behandlingId" to behandlingId,
