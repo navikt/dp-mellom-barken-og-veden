@@ -7,6 +7,7 @@ import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.micrometer.core.instrument.MeterRegistry
+import mu.KLogger
 import mu.KotlinLogging
 import mu.withLoggingContext
 import no.nav.dagpenger.behandling.api.models.BehandletAvDTORolleDTO
@@ -59,7 +60,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
             "meldekortId" to meldekortId.toString(),
         ) {
             logger.info { "Mottok melding om utbetaling for meldekort" }
-            sikkerlogg.info { "Mottok utbetaling vedtak ${packet.toJson()} " }
+            logger.sikkerlogg().info { "Mottok utbetaling vedtak ${packet.toJson()} " }
             // her kan vi kalle dp-behandling for å hente utbetalinger
             val vedtakDto: VedtakDTO =
                 objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), VedtakDTO::class.java)
@@ -97,14 +98,15 @@ internal class MeldingOmUtbetalingVedtakMottak(
                     opprettet = packet["@opprettet"].asLocalDateTime(),
                 )
 
-            sikkerlogg.info { "Lagrer utbetaling vedtak: $utbetalingVedtak" }
+            logger.sikkerlogg().info { "Lagrer utbetaling vedtak: $utbetalingVedtak" }
             repo.lagreVedtak(utbetalingVedtak)
             logger.info { "Utbetaling vedtak lagret" }
         }
     }
 
+    private fun KLogger.sikkerlogg() = KotlinLogging.logger("tjenestekall.$name")
+
     private companion object {
         private val logger = KotlinLogging.logger { }
-        private val sikkerlogg = KotlinLogging.logger("tjenestekall.MeldingOmUtbetalingVedtakMottak")
     }
 }
