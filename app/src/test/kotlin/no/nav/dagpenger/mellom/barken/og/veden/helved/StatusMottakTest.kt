@@ -62,7 +62,7 @@ class StatusMottakTest {
     //language=JSON
     private val statusMelding =
         """
-               {
+        {
           "status": "OK",
           "detaljer": {
               "linjer": [
@@ -86,6 +86,5 @@ class StatusMottakTest {
             },
           "error": null
         }
-                }
         """.trimIndent()
 }
