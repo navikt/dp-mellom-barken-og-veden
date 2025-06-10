@@ -23,7 +23,7 @@ object Configuration {
             ),
         )
 
-    val properties =
+    internal val properties =
         ConfigurationProperties.systemProperties() overriding EnvironmentVariables() overriding defaultProperties
 
     val config: Map<String, String> =

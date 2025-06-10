@@ -31,12 +31,6 @@ spec:
   env:
     - name: JDK_JAVA_OPTIONS
       value: -XX:+UseParallelGC -XX:MaxRAMPercentage=25.0 -XX:ActiveProcessorCount=4
-    - name: KAFKA_CONSUMER_GROUP_ID
-      value: dp-mellom-barken-og-veden
-    - name: KAFKA_RAPID_TOPIC
-      value: teamdagpenger.rapid.v1
-    - name: KAFKA_RESET_POLICY
-      value: LATEST
     - name: flyway.cleanDisabled
       value: '{{flyway.cleanDisabled}}'
     - name: CLEAN_ON_STARTUP

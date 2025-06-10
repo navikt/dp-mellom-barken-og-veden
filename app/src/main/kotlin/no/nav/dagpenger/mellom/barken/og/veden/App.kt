@@ -1,5 +1,5 @@
 package no.nav.dagpenger.mellom.barken.og.veden
 
 fun main() {
-    ApplicationBuilder(System.getenv()).start()
+    ApplicationBuilder(Configuration.config).start()
 }
