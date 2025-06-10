@@ -97,6 +97,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                     opprettet = packet["@opprettet"].asLocalDateTime(),
                 )
 
+            sikkerlogg.info { "Lagrer utbetaling vedtak: $utbetalingVedtak" }
             repo.lagreVedtak(utbetalingVedtak)
             logger.info { "Utbetaling vedtak lagret" }
         }
