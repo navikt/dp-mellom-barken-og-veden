@@ -23,6 +23,15 @@ internal class StatusMottak(
         River(rapidsConnection)
             .apply {
                 precondition { message -> message.requireAny("status", StatusReply.Status.entries.map { it.name }) }
+                precondition { message ->
+                    message.requireArray("detaljer.linjer") {
+                        require("klassekode") {
+                            require(
+                                it.asText().startsWith("DP"),
+                            )
+                        }
+                    }
+                }
             }.register(this)
     }
 
