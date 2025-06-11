@@ -46,7 +46,13 @@ internal class StatusMottak(
             return
         }
 
-        val behandlingId = UtbetalingId.fromString(kortBehandlingId).uuid
+        val behandlingId =
+            runCatching {
+                UtbetalingId.fromString(kortBehandlingId).uuid
+            }.getOrElse { e ->
+                logger.sikkerlogg().error { "Ugyldig behandlingId: ${packet.toJson()}" }
+                throw e
+            }
 
         withLoggingContext(
             "behandlingId" to behandlingId.toString(),
