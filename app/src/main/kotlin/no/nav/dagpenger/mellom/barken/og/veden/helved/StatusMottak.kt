@@ -11,7 +11,7 @@ import mu.KotlinLogging
 import mu.withLoggingContext
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.dagpenger.mellom.barken.og.veden.repository.Repo
-import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingStatus
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
 
 internal class StatusMottak(
@@ -61,10 +61,10 @@ internal class StatusMottak(
 
             val status =
                 when (statusDto.status) {
-                    StatusReply.Status.OK -> UtbetalingStatus.UTBETALT
-                    StatusReply.Status.FEILET -> UtbetalingStatus.FEIL
-                    StatusReply.Status.HOS_OPPDRAG -> UtbetalingStatus.SENDT_TIL_OPPDRAG
-                    StatusReply.Status.MOTTATT -> UtbetalingStatus.MOTTATT_HELVED
+                    StatusReply.Status.OK -> Status.Ferdig
+                    StatusReply.Status.FEILET -> Status.TilUtbetaling(Status.UtbetalingStatus.FEILET)
+                    StatusReply.Status.HOS_OPPDRAG -> Status.TilUtbetaling(Status.UtbetalingStatus.HOS_OPPDRAG)
+                    StatusReply.Status.MOTTATT -> Status.TilUtbetaling(Status.UtbetalingStatus.MOTTATT)
                 }
 
             repo.lagreStatusFraHelved(

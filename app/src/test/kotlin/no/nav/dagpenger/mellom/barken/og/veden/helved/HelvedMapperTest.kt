@@ -2,7 +2,7 @@ package no.nav.dagpenger.mellom.barken.og.veden.helved
 
 import io.kotest.assertions.json.shouldEqualJson
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Person
-import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingStatus
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
 import java.time.LocalDate
@@ -35,7 +35,7 @@ class HelvedMapperTest {
                             utbetaltBeløp = 1000,
                         ),
                     ),
-                status = UtbetalingStatus.SENDT,
+                status = Status.Mottatt,
                 opprettet = LocalDateTime.now(),
             )
 

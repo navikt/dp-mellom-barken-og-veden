@@ -5,7 +5,11 @@ import kotliquery.TransactionalSession
 import kotliquery.queryOf
 import kotliquery.sessionOf
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Person
-import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingStatus
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status.Ferdig
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status.Mottatt
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status.TilUtbetaling
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
 import java.util.UUID
@@ -14,7 +18,7 @@ import javax.sql.DataSource
 internal class UtbetalingPostgresRepository(
     private val dataSource: DataSource,
 ) : UtbetalingRepo {
-    override fun hentAlleVedtakMedStatus(status: UtbetalingStatus): List<UtbetalingVedtak> {
+    override fun hentAlleVedtakMedStatus(status: Status): List<UtbetalingVedtak> {
         sessionOf(dataSource).use { session ->
             return session.transaction { tx ->
                 tx.run(
@@ -24,10 +28,65 @@ internal class UtbetalingPostgresRepository(
                         select *
                         from utbetaling
                         where status = :status
-                        order by opprettet asc
+                        order by opprettet
                         """.trimIndent(),
                         mapOf(
-                            "status" to status.name,
+                            "status" to
+                                when (status) {
+                                    is Mottatt -> "MOTTATT"
+                                    is TilUtbetaling -> "TIL_UTBETALING"
+                                    is Ferdig -> "FERDIG"
+                                },
+                        ),
+                    ).map { row ->
+                        row.toUtbetalingVedtak(tx)
+                    }.asList,
+                )
+            }
+        }
+    }
+
+    override fun hentAlleMottatte(): List<UtbetalingVedtak> = hentAlleVedtakMedStatus(Mottatt)
+
+    override fun harUtbetalingerSomVenterPåSvar(sakId: String): Boolean {
+        sessionOf(dataSource).use { session ->
+            return session
+                .transaction { tx ->
+                    tx.run(
+                        queryOf(
+                            // language=PostgreSQL
+                            """
+                            select *
+                            from utbetaling
+                            where status = :status
+                              and sak_id = :sakId
+                            order by opprettet asc
+                            """.trimIndent(),
+                            mapOf(
+                                "status" to "TIL_UTBETALING",
+                                "sakId" to sakId,
+                            ),
+                        ).map { row ->
+                            row.toUtbetalingVedtak(tx)
+                        }.asList,
+                    )
+                }.isNotEmpty()
+        }
+    }
+
+    override fun hentAlleUtbetalingerForSak(sakId: String): List<UtbetalingVedtak> {
+        sessionOf(dataSource).use { session ->
+            return session.transaction { tx ->
+                tx.run(
+                    queryOf(
+                        // language=PostgreSQL
+                        """
+                        select *
+                        from utbetaling
+                        where sak_id = :sakId
+                        """.trimIndent(),
+                        mapOf(
+                            "sakId" to sakId,
                         ),
                     ).map { row ->
                         row.toUtbetalingVedtak(tx)
@@ -79,7 +138,7 @@ internal class UtbetalingPostgresRepository(
 
     override fun oppdaterStatus(
         behandlingId: UUID,
-        status: UtbetalingStatus,
+        status: Status,
     ) {
         sessionOf(dataSource).use { session ->
             session.transaction { tx ->
@@ -94,7 +153,7 @@ internal class UtbetalingPostgresRepository(
 
     override fun oppdaterStatus(
         behandlingId: UUID,
-        status: UtbetalingStatus,
+        status: Status,
         tx: TransactionalSession,
     ) {
         tx
@@ -103,16 +162,31 @@ internal class UtbetalingPostgresRepository(
                     // language=PostgreSQL
                     """
                     update utbetaling
-                    set status = :status
+                    set status = :status,
+                        ekstern_status = :externStatus
                     where behandling_id = :behandlingId
                     """.trimIndent(),
                     mapOf(
                         "behandlingId" to behandlingId,
-                        "status" to status.name,
+                        "status" to
+                            when (status) {
+                                is Mottatt -> "MOTTATT"
+                                is TilUtbetaling -> "TIL_UTBETALING"
+                                is Ferdig -> "FERDIG"
+                            },
+                        "externStatus" to
+                            when (status) {
+                                is Mottatt -> null
+                                is TilUtbetaling -> status.eksternStatus.name
+                                is Ferdig -> null
+                            },
                     ),
                 ).asUpdate,
             ).also {
                 lagreStatus(behandlingId, status, tx)
+                if (status is TilUtbetaling) {
+                    lagreEksternStatus(behandlingId, status.eksternStatus, tx)
+                }
             }
     }
 
@@ -155,7 +229,18 @@ internal class UtbetalingPostgresRepository(
                                 "meldekortId" to vedtak.meldekortId,
                                 "sakId" to vedtak.sakId,
                                 "ident" to vedtak.ident.ident,
-                                "status" to vedtak.status.name,
+                                "status" to
+                                    when (vedtak.status) {
+                                        is Mottatt -> "MOTTATT"
+                                        is TilUtbetaling -> "TIL_UTBETALING"
+                                        is Ferdig -> "FERDIG"
+                                    },
+                                "externStatus" to
+                                    when (vedtak.status) {
+                                        is Mottatt -> null
+                                        is TilUtbetaling -> (vedtak.status as TilUtbetaling).eksternStatus.name
+                                        is Ferdig -> null
+                                    },
                                 "saksbehandletAv" to vedtak.saksbehandletAv,
                                 "besluttetAv" to vedtak.besluttetAv,
                                 "opprettet" to vedtak.opprettet,
@@ -163,6 +248,13 @@ internal class UtbetalingPostgresRepository(
                         ).asUpdate,
                     ).also {
                         lagreStatus(vedtak.behandlingId, vedtak.status, tx)
+                        if (vedtak.status is TilUtbetaling) {
+                            lagreEksternStatus(
+                                behandlingId = vedtak.behandlingId,
+                                status = (vedtak.status as TilUtbetaling).eksternStatus,
+                                tx = tx,
+                            )
+                        }
                         vedtak.utbetalinger.forEach { dag ->
                             lagreDag(vedtak.behandlingId, dag, tx)
                         }
@@ -173,7 +265,7 @@ internal class UtbetalingPostgresRepository(
 
     private fun lagreStatus(
         behandlingId: UUID,
-        status: UtbetalingStatus,
+        status: Status,
         tx: TransactionalSession,
     ) {
         tx.run(
@@ -181,6 +273,36 @@ internal class UtbetalingPostgresRepository(
                 // language=PostgreSQL
                 """
                 insert into status (
+                    behandling_id,
+                    status
+                ) values (
+                    :behandlingId,
+                    :status
+                )
+                """.trimIndent(),
+                mapOf(
+                    "behandlingId" to behandlingId,
+                    "status" to
+                        when (status) {
+                            is Mottatt -> StatusDb.MOTTATT.name
+                            is TilUtbetaling -> StatusDb.TIL_UTBETALING.name
+                            is Ferdig -> StatusDb.FERDIG.name
+                        },
+                ),
+            ).asUpdate,
+        )
+    }
+
+    private fun lagreEksternStatus(
+        behandlingId: UUID,
+        status: UtbetalingStatus,
+        tx: TransactionalSession,
+    ) {
+        tx.run(
+            queryOf(
+                // language=PostgreSQL
+                """
+                insert into ekstern_status (
                     behandling_id,
                     status
                 ) values (
@@ -242,7 +364,12 @@ internal class UtbetalingPostgresRepository(
             besluttetAv = string("besluttet_av"),
             saksbehandletAv = string("saksbehandlet_av"),
             utbetalinger = hentDager(behandlingId, tx),
-            status = UtbetalingStatus.valueOf(string("status")),
+            status =
+                when (StatusDb.valueOf(string("status"))) {
+                    StatusDb.MOTTATT -> Mottatt
+                    StatusDb.TIL_UTBETALING -> TilUtbetaling(UtbetalingStatus.valueOf(string("ekstern_status")))
+                    StatusDb.FERDIG -> Ferdig
+                },
             opprettet = localDateTime("opprettet"),
         )
     }
@@ -254,4 +381,10 @@ internal class UtbetalingPostgresRepository(
             sats = int("sats"),
             utbetaltBeløp = int("utbetalt_beløp"),
         )
+
+    private enum class StatusDb {
+        MOTTATT,
+        TIL_UTBETALING,
+        FERDIG,
+    }
 }

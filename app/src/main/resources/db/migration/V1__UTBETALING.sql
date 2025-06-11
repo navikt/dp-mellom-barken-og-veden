@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS utbetaling
     sak_id           text                     NOT NULL,
     ident            TEXT                     NOT NULL,
     status           TEXT                     NOT NULL,
+    ekstern_status   TEXT                     NULL,
     saksbehandlet_av TEXT                     NULL,
     besluttet_av     TEXT                     NULL,
     opprettet        TIMESTAMP WITH TIME ZONE NOT NULL
@@ -32,5 +33,30 @@ CREATE TABLE status
     PRIMARY KEY (behandling_id, status, opprettet)
 );
 
--- tabell for kvitteringer
--- tabell for feil
+CREATE TABLE ekstern_status
+(
+    behandling_id uuid                     NOT NULL REFERENCES utbetaling (behandling_id),
+    status        TEXT                     NOT NULL,
+    opprettet     timestamp WITH TIME ZONE NOT NULL DEFAULT NOW(),
+
+    PRIMARY KEY (behandling_id, status, opprettet)
+);
+
+CREATE TABLE IF NOT EXISTS detaljer_svar
+(
+    behandling_id uuid NOT NULL REFERENCES utbetaling (behandling_id),
+    fom           DATE NOT NULL,
+    tom           DATE NOT NULL,
+    beløp         int  NOT NULL,
+    sats          int  NULL,
+    klassekode    text NOT NULL,
+
+    PRIMARY KEY (behandling_id, fom, tom)
+);
+
+CREATE TABLE feil
+(
+    behandling_id uuid NOT NULL REFERENCES utbetaling (behandling_id),
+    status        int  NOT NULL,
+    doc           text NOT NULL
+);

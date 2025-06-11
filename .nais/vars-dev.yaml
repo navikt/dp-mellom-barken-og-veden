@@ -15,4 +15,4 @@ wonderwalled: true
 
 
 flyway:
-  cleanDisabled: true
+  cleanDisabled: false

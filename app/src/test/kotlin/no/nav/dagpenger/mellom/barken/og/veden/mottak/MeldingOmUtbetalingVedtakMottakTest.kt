@@ -6,7 +6,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.MeldingOmUtbetalingVedtakMottak
-import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingStatus
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
@@ -58,7 +58,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
                     utbetaltBeløp = 0,
                 )
             utbetalinger.size shouldBe 56
-            status shouldBe UtbetalingStatus.MOTTATT
+            status shouldBe Status.Mottatt
             opprettet shouldBe LocalDateTime.parse("2025-05-16T09:37:17.338979")
         }
     }

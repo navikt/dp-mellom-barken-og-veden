@@ -34,7 +34,7 @@ spec:
     - name: flyway.cleanDisabled
       value: '{{flyway.cleanDisabled}}'
     - name: CLEAN_ON_STARTUP
-      value: "false"
+      value: "true"
   {{#if ingresses}}
   ingresses:
     {{#each ingresses as |url|}}

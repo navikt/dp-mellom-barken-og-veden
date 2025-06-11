@@ -5,14 +5,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import no.nav.dagpenger.mellom.barken.og.veden.repository.Repo
-import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Person
-import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingStatus
-import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
-import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
+import no.nav.dagpenger.mellom.barken.og.veden.repository.vedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.util.UUID
 import kotlin.test.Test
 
 class StatusMottakTest {
@@ -22,28 +16,7 @@ class StatusMottakTest {
     fun `lese status meldinger fra helved`() {
         val utbetalingRepo =
             mockk<UtbetalingRepo>().also {
-                every { it.hentVedtak(any()) } returns
-                    UtbetalingVedtak(
-                        behandlingId = UUID.randomUUID(),
-                        basertPåBehandlingId = UUID.randomUUID(),
-                        vedtakstidspunkt = LocalDateTime.now(),
-                        meldekortId = "meldekort1",
-                        sakId = "sakId",
-                        ident = Person("12345678901"),
-                        saksbehandletAv = "saksbehandler",
-                        besluttetAv = "beslutter",
-                        utbetalinger =
-                            listOf(
-                                Utbetalingsdag(
-                                    meldeperiode = "1234567",
-                                    dato = LocalDate.of(2025, 5, 23),
-                                    sats = 1000,
-                                    utbetaltBeløp = 1000,
-                                ),
-                            ),
-                        status = UtbetalingStatus.SENDT,
-                        opprettet = LocalDateTime.now(),
-                    )
+                every { it.hentVedtak(any()) } returns vedtak()
             }
         val repo =
             mockk<Repo>().also {

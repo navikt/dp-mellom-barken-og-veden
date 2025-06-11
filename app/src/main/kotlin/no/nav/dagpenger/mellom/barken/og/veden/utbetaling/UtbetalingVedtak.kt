@@ -14,7 +14,7 @@ data class UtbetalingVedtak(
     val saksbehandletAv: String,
     val besluttetAv: String,
     val utbetalinger: List<Utbetalingsdag>,
-    var status: UtbetalingStatus,
+    var status: Status,
     val opprettet: LocalDateTime,
 )
 
@@ -25,11 +25,20 @@ data class Utbetalingsdag(
     val utbetaltBeløp: Int,
 )
 
-enum class UtbetalingStatus {
-    MOTTATT,
-    SENDT,
-    MOTTATT_HELVED,
-    SENDT_TIL_OPPDRAG,
-    UTBETALT,
-    FEIL,
+sealed class Status {
+    object Mottatt : Status()
+
+    data class TilUtbetaling(
+        // skal vi bare ta med staus her eller hele statusReply?
+        val eksternStatus: UtbetalingStatus,
+    ) : Status()
+
+    object Ferdig : Status()
+
+    enum class UtbetalingStatus {
+        SENDT,
+        FEILET,
+        MOTTATT,
+        HOS_OPPDRAG,
+    }
 }

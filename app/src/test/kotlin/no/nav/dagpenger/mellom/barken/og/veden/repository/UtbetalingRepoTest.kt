@@ -5,7 +5,7 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
 import no.nav.dagpenger.mellom.barken.og.veden.repository.Postgres.withMigratedDb
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Person
-import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingStatus
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingPostgresRepository
@@ -31,25 +31,36 @@ class UtbetalingRepoTest {
     }
 }
 
-fun vedtak() =
-    UtbetalingVedtak(
-        behandlingId = UUID.randomUUID(),
-        basertPåBehandlingId = null,
-        vedtakstidspunkt = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS),
-        meldekortId = "m1",
-        sakId = "s1",
-        ident = Person("12345678910"),
-        saksbehandletAv = "saksbehandler",
-        besluttetAv = "beslutter",
-        utbetalinger =
-            listOf(
-                Utbetalingsdag(
-                    meldeperiode = "m1",
-                    dato = LocalDate.now(),
-                    sats = 1000,
-                    utbetaltBeløp = 1000,
-                ),
+fun vedtak(
+    behandlingId: UUID = UUID.randomUUID(),
+    basertPåBehandlingId: UUID? = null,
+    vedtakstidspunkt: LocalDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS),
+    meldekortId: String = "m1",
+    sakId: String = "s1",
+    ident: Person = Person("12345678910"),
+    saksbehandletAv: String = "saksbehandler",
+    besluttetAv: String = "beslutter",
+    utbetalinger: List<Utbetalingsdag> =
+        listOf(
+            Utbetalingsdag(
+                meldeperiode = "m1",
+                dato = LocalDate.now(),
+                sats = 1000,
+                utbetaltBeløp = 1000,
             ),
-        status = UtbetalingStatus.MOTTATT,
-        opprettet = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS),
-    )
+        ),
+    status: Status = Status.Mottatt,
+    opprettet: LocalDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS),
+) = UtbetalingVedtak(
+    behandlingId = behandlingId,
+    basertPåBehandlingId = basertPåBehandlingId,
+    vedtakstidspunkt = vedtakstidspunkt,
+    meldekortId = meldekortId,
+    sakId = sakId,
+    ident = ident,
+    saksbehandletAv = saksbehandletAv,
+    besluttetAv = besluttetAv,
+    utbetalinger = utbetalinger,
+    status = status,
+    opprettet = opprettet,
+)

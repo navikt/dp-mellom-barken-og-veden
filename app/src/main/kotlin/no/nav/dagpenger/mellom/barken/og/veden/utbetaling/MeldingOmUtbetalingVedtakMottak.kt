@@ -94,7 +94,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                                 utbetaltBeløp = utbetaling.utbetaling,
                             )
                         },
-                    status = UtbetalingStatus.MOTTATT,
+                    status = Status.Mottatt,
                     opprettet = packet["@opprettet"].asLocalDateTime(),
                 )
 
