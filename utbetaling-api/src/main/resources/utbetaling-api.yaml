@@ -14,7 +14,6 @@ paths:
   /utbetaling/{behandlingId}:
     get:
       summary: Hent utbetaling for behandling
-      description: Henter alle utbetalinger for en behandling
       operationId: hentUtbetaling
       parameters:
         - name: behandlingId
@@ -29,7 +28,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Synkronisering'
+                $ref: '#/components/schemas/Utbetaling'
         404:
           description: behandling ikke funnet
           content:
@@ -46,7 +45,7 @@ paths:
 
 components:
   schemas:
-    Synkronisering:
+    Utbetaling:
       type: object
       required:
         - behandlingId
@@ -59,28 +58,35 @@ components:
           description: Behandlingens id
         tilstand:
           type: string
-          description: Tilstand på synkroniseringen
+          description: Tilstand på utbetalingen
         opprettet:
           type: string
           format: date-time
-          description: Dato og tidspunkt for opprettelse av synkroniseringen
-        feilmelding:
+          description: Dato og tidspunkt for opprettelse av utbetalingen
+        utbetalingsdager:
           type: array
           items:
-            $ref: '#/components/schemas/Feilmelding'
+            $ref: '#/components/schemas/Utbetalingsdag'
 
-    Feilmelding:
+    Utbetalingsdag:
       type: object
       required:
-        - feiltype
-        - feilmelding
+        - dato
+        - sats
+        - utbetaltBeløp
       properties:
-        feiltype:
+        dato:
           type: string
-          description: Type feil
-        feilmelding:
-          type: string
-          description: Feilmelding
+          format: date
+          description: Dato for utbetalingen
+        sats:
+          type: number
+          format: double
+          description: Vedtaksatsen for utbetalingen
+        utbetaltBeløp:
+          type: number
+          format: double
+          description: Totalt beløp som er utbetalt for denne dagen
 
     HttpProblem:
       type: object
