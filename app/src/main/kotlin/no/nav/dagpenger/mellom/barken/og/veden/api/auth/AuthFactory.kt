@@ -14,7 +14,6 @@ import io.ktor.serialization.jackson.jackson
 import io.ktor.server.auth.jwt.JWTAuthenticationProvider
 import kotlinx.coroutines.runBlocking
 import no.nav.dagpenger.mellom.barken.og.veden.Configuration
-import no.nav.dagpenger.mellom.barken.og.veden.api.auth.validering.autoriserADGrupper
 import java.net.URI
 import java.net.URL
 import java.util.concurrent.TimeUnit
@@ -47,7 +46,6 @@ object AuthFactory {
     fun JWTAuthenticationProvider.Config.azureAd() {
         realm = Configuration.APP_NAME
         verifiserTokenFormatOgSignatur()
-        autoriserADGrupper()
     }
 
     private fun JWTAuthenticationProvider.Config.verifiserTokenFormatOgSignatur() {

@@ -4,6 +4,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.auth.authenticate
 import io.ktor.server.plugins.BadRequestException
+import io.ktor.server.plugins.swagger.swaggerUI
 import io.ktor.server.response.respond
 import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
@@ -13,7 +14,7 @@ import java.util.UUID
 
 internal fun Application.utbetalingApi() {
     routing {
-        // swaggerUI(path = "openapi", swaggerFile = "utbetaling-api.yaml")
+        swaggerUI(path = "openapi", swaggerFile = "utbetaling-api.yaml")
 
         get("/") { call.respond(HttpStatusCode.OK) }
 
@@ -21,7 +22,7 @@ internal fun Application.utbetalingApi() {
             route("utbetaling/{behandlingId}") {
                 get {
                     val behandlingId = behandlingId()
-                    println(behandlingId)
+
                     call.respond(HttpStatusCode.OK)
                 }
             }
