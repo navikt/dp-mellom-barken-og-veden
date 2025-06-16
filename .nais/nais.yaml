@@ -78,9 +78,9 @@ spec:
         - application: dp-utbetaling
         {{#if wonderwalled}}
         - application: wonderwalled-idporten
-          namespace: aura
+          namespace: nais
         - application: wonderwalled-azure
-          namespace: aura
+          namespace: nais
         - application: azure-token-generator
-          namespace: aura
+          namespace: nais
         {{/if}}
