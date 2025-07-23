@@ -7,6 +7,8 @@ import io.mockk.verify
 import no.nav.dagpenger.mellom.barken.og.veden.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.repository.vedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
+import org.junit.jupiter.api.Disabled
+import java.util.UUID
 import kotlin.test.Test
 
 class StatusMottakTest {
@@ -26,6 +28,7 @@ class StatusMottakTest {
 
         rapid.sendTestMessage(
             statusMelding,
+            UUID.randomUUID().toString(),
         )
 
         verify(exactly = 1) { utbetalingRepo.hentVedtak(any()) }
@@ -33,6 +36,7 @@ class StatusMottakTest {
     }
 
     @Test
+    @Disabled("Vi har ikke noe annet enn nøkkel vi kan bruke for å identifisere meldingene")
     fun `hopper over statusmeldinger som ikke har klassekode som starter med DP`() {
         val utbetalingRepo =
             mockk<UtbetalingRepo>().also {
@@ -46,6 +50,7 @@ class StatusMottakTest {
 
         rapid.sendTestMessage(
             meldingViIgnorer,
+            UUID.randomUUID().toString(),
         )
 
         verify(exactly = 0) { utbetalingRepo.hentVedtak(any()) }

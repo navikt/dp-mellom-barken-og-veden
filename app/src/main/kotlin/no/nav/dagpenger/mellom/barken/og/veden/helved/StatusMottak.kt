@@ -13,6 +13,7 @@ import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.dagpenger.mellom.barken.og.veden.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
+import java.util.UUID
 
 internal class StatusMottak(
     rapidsConnection: RapidsConnection,
@@ -23,15 +24,6 @@ internal class StatusMottak(
         River(rapidsConnection)
             .apply {
                 precondition { message -> message.requireAny("status", StatusReply.Status.entries.map { it.name }) }
-                precondition { message ->
-                    message.requireArray("detaljer.linjer") {
-                        require("klassekode") {
-                            require(
-                                it.asText().startsWith("DP"),
-                            )
-                        }
-                    }
-                }
             }.register(this)
     }
 
@@ -43,25 +35,9 @@ internal class StatusMottak(
     ) {
         val statusDto: StatusReply =
             objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), StatusReply::class.java)
-
-        val kortBehandlingId =
-            statusDto.detaljer
-                ?.linjer
-                ?.first()
-                ?.behandlingId
-
-        if (kortBehandlingId == null || kortBehandlingId.isBlank()) {
-            logger.warn { "Melding mangler behandlingId, ignorerer denne" }
-            return
-        }
-
         val behandlingId =
-            runCatching {
-                UtbetalingId.fromString(kortBehandlingId).uuid
-            }.getOrElse { e ->
-                logger.sikkerlogg().error { "Ugyldig behandlingId: ${packet.toJson()}" }
-                throw e
-            }
+            metadata.key?.let { UUID.fromString(it) }
+                ?: throw IllegalStateException("Mangler nøkkel i metadata, kan ikke prosessere melding uten behandlingId")
 
         withLoggingContext(
             "behandlingId" to behandlingId.toString(),
