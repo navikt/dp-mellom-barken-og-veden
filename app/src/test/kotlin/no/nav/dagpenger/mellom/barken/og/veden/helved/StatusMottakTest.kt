@@ -7,7 +7,6 @@ import io.mockk.verify
 import no.nav.dagpenger.mellom.barken.og.veden.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.repository.vedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
-import org.junit.jupiter.api.Disabled
 import java.util.UUID
 import kotlin.test.Test
 
@@ -16,9 +15,10 @@ class StatusMottakTest {
 
     @Test
     fun `lese status meldinger fra helved`() {
+        val behandlingId = UUID.randomUUID()
         val utbetalingRepo =
             mockk<UtbetalingRepo>().also {
-                every { it.hentVedtak(any()) } returns vedtak()
+                every { it.hentVedtak(behandlingId) } returns vedtak()
             }
         val repo =
             mockk<Repo>().also {
@@ -28,32 +28,32 @@ class StatusMottakTest {
 
         rapid.sendTestMessage(
             statusMelding,
-            UUID.randomUUID().toString(),
+            behandlingId.toString(),
         )
 
-        verify(exactly = 1) { utbetalingRepo.hentVedtak(any()) }
+        verify(exactly = 1) { utbetalingRepo.hentVedtak(behandlingId) }
         verify(exactly = 1) { repo.lagreStatusFraHelved(any(), any(), any()) }
     }
 
     @Test
-    @Disabled("Vi har ikke noe annet enn nøkkel vi kan bruke for å identifisere meldingene")
     fun `hopper over statusmeldinger som ikke har klassekode som starter med DP`() {
+        val behandlingId = UUID.randomUUID()
         val utbetalingRepo =
             mockk<UtbetalingRepo>().also {
-                every { it.hentVedtak(any()) } returns vedtak()
+                every { it.hentVedtak(any()) } returns null
             }
         val repo =
             mockk<Repo>().also {
                 every { it.lagreStatusFraHelved(any(), any(), any()) } returns Unit
             }
-        val statusMottak = StatusMottak(rapid, utbetalingRepo, repo)
+        val statusMottak = StatusMottak(rapid, utbetalingRepo, mockk())
 
         rapid.sendTestMessage(
             meldingViIgnorer,
-            UUID.randomUUID().toString(),
+            behandlingId.toString(),
         )
 
-        verify(exactly = 0) { utbetalingRepo.hentVedtak(any()) }
+        verify(exactly = 1) { utbetalingRepo.hentVedtak(behandlingId) }
         verify(exactly = 0) { repo.lagreStatusFraHelved(any(), any(), any()) }
     }
 
