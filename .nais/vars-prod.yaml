@@ -12,4 +12,4 @@ azure:
   tenant: nav.no
 
 flyway:
-  cleanDisabled: false
+  cleanDisabled: true
