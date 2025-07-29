@@ -3,6 +3,7 @@ package no.nav.dagpenger.mellom.barken.og.veden.repository
 import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.nulls.shouldNotBeNull
 import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
+import no.nav.dagpenger.mellom.barken.og.veden.helved.BehandlingId
 import no.nav.dagpenger.mellom.barken.og.veden.repository.Postgres.withMigratedDb
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Person
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
@@ -52,8 +53,8 @@ fun vedtak(
     status: Status = Status.Mottatt,
     opprettet: LocalDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS),
 ) = UtbetalingVedtak(
-    behandlingId = behandlingId,
-    basertPåBehandlingId = basertPåBehandlingId,
+    behandlingId = BehandlingId(behandlingId),
+    basertPåBehandlingId = basertPåBehandlingId?.let { BehandlingId(it) },
     vedtakstidspunkt = vedtakstidspunkt,
     meldekortId = meldekortId,
     sakId = sakId,

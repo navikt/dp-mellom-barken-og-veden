@@ -13,13 +13,13 @@ import kotlin.test.Test
 class HelvedMapperTest {
     @Test
     fun `vi kan mappe utbetaling til json`() {
-        val behandlingId = UUID.randomUUID()
-        val utbetalingId = UtbetalingId(behandlingId).toString()
+        val behandlingId = BehandlingId(UUID.randomUUID())
+        val utbetalingId = behandlingId.tilBase64()
         val vedtakstidspunkt = LocalDateTime.now()
         val utbetaling =
             UtbetalingVedtak(
                 behandlingId = behandlingId,
-                basertPåBehandlingId = UUID.randomUUID(),
+                basertPåBehandlingId = BehandlingId(UUID.randomUUID()),
                 vedtakstidspunkt = vedtakstidspunkt,
                 meldekortId = "meldekort1",
                 sakId = "sakId",

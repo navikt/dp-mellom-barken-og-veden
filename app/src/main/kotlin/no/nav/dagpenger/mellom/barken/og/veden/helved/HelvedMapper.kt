@@ -9,7 +9,7 @@ import no.nav.helved.kontrakt.api.models.UtbetalingsdagDTOUtbetalingstypeDTO.DAG
 
 fun UtbetalingVedtak.mapToVedtakDTO(): UtbetalingDTO =
     UtbetalingDTO(
-        behandlingId = UtbetalingId(behandlingId).toString(),
+        behandlingId = behandlingId.tilBase64(),
         vedtakstidspunktet = vedtakstidspunkt,
         sakId = sakId,
         ident = ident.ident,

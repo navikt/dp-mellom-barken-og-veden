@@ -5,34 +5,37 @@ import java.nio.ByteBuffer
 import java.util.Base64
 import java.util.UUID
 
-data class UtbetalingId(
+@JvmInline
+value class BehandlingId(
     val uuid: UUID,
 ) {
-    private val byteBuffer =
+    private val byteBuffer get() =
         ByteBuffer.allocate(Long.BYTES * 2).apply {
             // 128 bits
             putLong(uuid.mostSignificantBits) // første 64 bits
             putLong(uuid.leastSignificantBits) // siste 64 bits
         }
 
-    override fun toString(): String =
+    fun tilBase64(): String =
         Base64.getEncoder().encodeToString(byteBuffer.array()).also {
             require(it.length <= 30) { "base64 encoding av UUID ble over 30 tegn." }
         }
 
+    override fun toString(): String = """BehandlingId: $uuid - Base64 versjon: ${tilBase64()}"""
+
     companion object {
-        fun fromString(base64: String): UtbetalingId {
+        fun fromString(base64: String): BehandlingId {
             val decoded = Base64.getDecoder().decode(base64)
             val byteBuffer = ByteBuffer.wrap(decoded)
             val mostSignificantBits = byteBuffer.long
             val leastSignificantBits = byteBuffer.long
-            return UtbetalingId(UUID(mostSignificantBits, leastSignificantBits))
+            return BehandlingId(UUID(mostSignificantBits, leastSignificantBits))
         }
     }
 }
 
 fun main() {
     val id = "AZc6n9kKcpelfhC8Vt/i0Q=="
-    val utbetalingId = UtbetalingId.fromString(id)
-    print(utbetalingId.uuid)
+    val behandlingId = BehandlingId.fromString(id)
+    print(behandlingId.uuid)
 }

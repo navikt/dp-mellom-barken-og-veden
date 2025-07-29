@@ -15,7 +15,7 @@ class StatusMottakTest {
 
     @Test
     fun `lese status meldinger fra helved`() {
-        val behandlingId = UUID.randomUUID()
+        val behandlingId = BehandlingId(UUID.randomUUID())
         val utbetalingRepo =
             mockk<UtbetalingRepo>().also {
                 every { it.hentVedtak(behandlingId) } returns vedtak()
@@ -28,7 +28,7 @@ class StatusMottakTest {
 
         rapid.sendTestMessage(
             statusMelding,
-            behandlingId.toString(),
+            behandlingId.uuid.toString(),
         )
 
         verify(exactly = 1) { utbetalingRepo.hentVedtak(behandlingId) }
@@ -37,7 +37,7 @@ class StatusMottakTest {
 
     @Test
     fun `hopper over statusmeldinger som ikke har klassekode som starter med DP`() {
-        val behandlingId = UUID.randomUUID()
+        val behandlingId = BehandlingId(UUID.randomUUID())
         val utbetalingRepo =
             mockk<UtbetalingRepo>().also {
                 every { it.hentVedtak(any()) } returns null
@@ -50,7 +50,7 @@ class StatusMottakTest {
 
         rapid.sendTestMessage(
             meldingViIgnorer,
-            behandlingId.toString(),
+            behandlingId.uuid.toString(),
         )
 
         verify(exactly = 1) { utbetalingRepo.hentVedtak(behandlingId) }

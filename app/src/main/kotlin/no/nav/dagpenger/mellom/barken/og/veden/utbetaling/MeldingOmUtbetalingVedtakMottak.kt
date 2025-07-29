@@ -13,6 +13,7 @@ import mu.withLoggingContext
 import no.nav.dagpenger.behandling.api.models.BehandletAvDTORolleDTO
 import no.nav.dagpenger.behandling.api.models.VedtakDTO
 import no.nav.dagpenger.mellom.barken.og.veden.asUUID
+import no.nav.dagpenger.mellom.barken.og.veden.helved.BehandlingId
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
 
@@ -52,11 +53,11 @@ internal class MeldingOmUtbetalingVedtakMottak(
         metadata: MessageMetadata,
         meterRegistry: MeterRegistry,
     ) {
-        val behandlingId = packet["behandlingId"].asUUID()
+        val behandlingId = packet["behandlingId"].asUUID().let { BehandlingId(it) }
         val meldekortId = packet["behandletHendelse"]["id"].asLong()
 
         withLoggingContext(
-            "behandlingId" to behandlingId.toString(),
+            "behandlingId" to behandlingId.uuid.toString(),
             "meldekortId" to meldekortId.toString(),
         ) {
             logger.info { "Mottok melding om utbetaling for meldekort" }
@@ -68,7 +69,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
             val utbetalingVedtak =
                 UtbetalingVedtak(
                     behandlingId = behandlingId,
-                    basertPåBehandlingId = vedtakDto.basertPåBehandlinger?.lastOrNull(),
+                    basertPåBehandlingId = vedtakDto.basertPåBehandlinger?.lastOrNull()?.let { BehandlingId(it) },
                     meldekortId = vedtakDto.behandletHendelse.id,
                     vedtakstidspunkt = vedtakDto.vedtakstidspunkt,
                     sakId = vedtakDto.fagsakId,

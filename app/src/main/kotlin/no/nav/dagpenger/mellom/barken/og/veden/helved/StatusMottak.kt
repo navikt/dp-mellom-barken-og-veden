@@ -36,13 +36,13 @@ internal class StatusMottak(
         val statusDto: StatusReply =
             objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), StatusReply::class.java)
         val behandlingId =
-            metadata.key?.let { UUID.fromString(it) }
+            metadata.key?.let { BehandlingId(UUID.fromString(it)) }
                 ?: throw IllegalStateException("Mangler nøkkel i metadata, kan ikke prosessere melding uten behandlingId")
 
         withLoggingContext(
-            "behandlingId" to behandlingId.toString(),
+            "behandlingId" to behandlingId.uuid.toString(),
         ) {
-            logger.info("Fått statusmelding: ${packet["status"].asText()}")
+            logger.info("Fått statusmelding: ${packet["status"].asText()} for behandlingId: $behandlingId")
             logger.sikkerlogg().info("Fått statusmelding: ${packet.toJson()}, nøkkel: ${metadata.key}")
 
             utbetalingRepo.hentVedtak(behandlingId) ?: run {

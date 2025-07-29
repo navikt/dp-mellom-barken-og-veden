@@ -4,6 +4,7 @@ import kotliquery.Row
 import kotliquery.TransactionalSession
 import kotliquery.queryOf
 import kotliquery.sessionOf
+import no.nav.dagpenger.mellom.barken.og.veden.helved.BehandlingId
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Person
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status.Ferdig
@@ -12,7 +13,6 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status.TilUtbetaling
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
-import java.util.UUID
 import javax.sql.DataSource
 
 internal class UtbetalingPostgresRepository(
@@ -96,7 +96,7 @@ internal class UtbetalingPostgresRepository(
         }
     }
 
-    override fun hentVedtak(behandlingId: UUID): UtbetalingVedtak? {
+    override fun hentVedtak(behandlingId: BehandlingId): UtbetalingVedtak? {
         sessionOf(dataSource).use { session ->
             return session.transaction { tx ->
                 tx.run(
@@ -108,7 +108,7 @@ internal class UtbetalingPostgresRepository(
                         where behandling_id = :behandlingId
                         """.trimIndent(),
                         mapOf(
-                            "behandlingId" to behandlingId,
+                            "behandlingId" to behandlingId.uuid,
                         ),
                     ).map { row ->
                         row.toUtbetalingVedtak(tx)
@@ -119,7 +119,7 @@ internal class UtbetalingPostgresRepository(
     }
 
     private fun hentDager(
-        behandlingId: UUID,
+        behandlingId: BehandlingId,
         tx: TransactionalSession,
     ): List<Utbetalingsdag> =
         tx.run(
@@ -130,14 +130,14 @@ internal class UtbetalingPostgresRepository(
                 from utbetalingsdag
                 where behandling_id = :behandlingId
                 """.trimIndent(),
-                mapOf("behandlingId" to behandlingId),
+                mapOf("behandlingId" to behandlingId.uuid),
             ).map { row ->
                 row.toUtbetalingsdag()
             }.asList,
         )
 
     override fun oppdaterStatus(
-        behandlingId: UUID,
+        behandlingId: BehandlingId,
         status: Status,
     ) {
         sessionOf(dataSource).use { session ->
@@ -152,7 +152,7 @@ internal class UtbetalingPostgresRepository(
     }
 
     override fun oppdaterStatus(
-        behandlingId: UUID,
+        behandlingId: BehandlingId,
         status: Status,
         tx: TransactionalSession,
     ) {
@@ -167,7 +167,7 @@ internal class UtbetalingPostgresRepository(
                     where behandling_id = :behandlingId
                     """.trimIndent(),
                     mapOf(
-                        "behandlingId" to behandlingId,
+                        "behandlingId" to behandlingId.uuid,
                         "status" to
                             when (status) {
                                 is Mottatt -> "MOTTATT"
@@ -223,8 +223,8 @@ internal class UtbetalingPostgresRepository(
                             )
                             """.trimIndent(),
                             mapOf(
-                                "behandlingId" to vedtak.behandlingId,
-                                "basertPaaId" to vedtak.basertPåBehandlingId,
+                                "behandlingId" to vedtak.behandlingId.uuid,
+                                "basertPaaId" to vedtak.basertPåBehandlingId?.uuid,
                                 "vedtakstidspunkt" to vedtak.vedtakstidspunkt,
                                 "meldekortId" to vedtak.meldekortId,
                                 "sakId" to vedtak.sakId,
@@ -264,7 +264,7 @@ internal class UtbetalingPostgresRepository(
     }
 
     private fun lagreStatus(
-        behandlingId: UUID,
+        behandlingId: BehandlingId,
         status: Status,
         tx: TransactionalSession,
     ) {
@@ -281,7 +281,7 @@ internal class UtbetalingPostgresRepository(
                 )
                 """.trimIndent(),
                 mapOf(
-                    "behandlingId" to behandlingId,
+                    "behandlingId" to behandlingId.uuid,
                     "status" to
                         when (status) {
                             is Mottatt -> StatusDb.MOTTATT.name
@@ -294,7 +294,7 @@ internal class UtbetalingPostgresRepository(
     }
 
     private fun lagreEksternStatus(
-        behandlingId: UUID,
+        behandlingId: BehandlingId,
         status: UtbetalingStatus,
         tx: TransactionalSession,
     ) {
@@ -311,7 +311,7 @@ internal class UtbetalingPostgresRepository(
                 )
                 """.trimIndent(),
                 mapOf(
-                    "behandlingId" to behandlingId,
+                    "behandlingId" to behandlingId.uuid,
                     "status" to status.name,
                 ),
             ).asUpdate,
@@ -319,7 +319,7 @@ internal class UtbetalingPostgresRepository(
     }
 
     private fun lagreDag(
-        behandlingId: UUID,
+        behandlingId: BehandlingId,
         dag: Utbetalingsdag,
         tx: TransactionalSession,
     ) {
@@ -342,7 +342,7 @@ internal class UtbetalingPostgresRepository(
                 )
                 """.trimIndent(),
                 mapOf(
-                    "behandlingId" to behandlingId,
+                    "behandlingId" to behandlingId.uuid,
                     "meldeperiode" to dag.meldeperiode,
                     "dato" to dag.dato,
                     "sats" to dag.sats,
@@ -353,10 +353,10 @@ internal class UtbetalingPostgresRepository(
     }
 
     private fun Row.toUtbetalingVedtak(tx: TransactionalSession): UtbetalingVedtak {
-        val behandlingId = UUID.fromString(string("behandling_id"))
+        val behandlingId = uuid("behandling_id").let { BehandlingId(it) }
         return UtbetalingVedtak(
             behandlingId = behandlingId,
-            basertPåBehandlingId = uuidOrNull("basert_paa_id"),
+            basertPåBehandlingId = uuidOrNull("basert_paa_id")?.let { BehandlingId(it) },
             vedtakstidspunkt = localDateTime("vedtakstidspunkt"),
             meldekortId = string("meldekort_id"),
             sakId = string("sak_id"),
