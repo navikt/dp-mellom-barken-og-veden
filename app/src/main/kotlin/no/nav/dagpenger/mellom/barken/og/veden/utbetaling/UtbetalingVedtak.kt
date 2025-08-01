@@ -10,7 +10,7 @@ data class UtbetalingVedtak(
     val vedtakstidspunkt: LocalDateTime,
     val meldekortId: String,
     val sakId: String,
-    val ident: Person,
+    val person: Person,
     val saksbehandletAv: String,
     val besluttetAv: String,
     val utbetalinger: List<Utbetalingsdag>,

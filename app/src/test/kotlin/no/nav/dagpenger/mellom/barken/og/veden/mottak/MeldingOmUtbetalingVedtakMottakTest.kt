@@ -41,7 +41,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
             basertPåBehandlingId?.uuid shouldBe UUID.fromString("A421B97A-EDC8-4DB7-BCC0-3F87B2DBDB1D")
             vedtakstidspunkt shouldBe LocalDateTime.parse("2025-05-16T09:37:17.336661")
             meldekortId shouldBe "5"
-            ident.ident shouldBe "11109233444"
+            person.ident shouldBe "11109233444"
             saksbehandletAv shouldBe "dp-behandling"
             utbetalinger.minBy { it.dato } shouldBe
                 Utbetalingsdag(

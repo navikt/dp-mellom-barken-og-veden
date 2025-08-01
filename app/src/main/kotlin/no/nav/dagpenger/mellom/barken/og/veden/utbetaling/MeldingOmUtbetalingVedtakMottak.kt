@@ -73,7 +73,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                     meldekortId = vedtakDto.behandletHendelse.id,
                     vedtakstidspunkt = vedtakDto.vedtakstidspunkt,
                     sakId = vedtakDto.fagsakId,
-                    ident = Person(vedtakDto.ident),
+                    person = Person(vedtakDto.ident),
                     saksbehandletAv =
                         vedtakDto.behandletAv
                             .singleOrNull { it.rolle == BehandletAvDTORolleDTO.SAKSBEHANDLER }

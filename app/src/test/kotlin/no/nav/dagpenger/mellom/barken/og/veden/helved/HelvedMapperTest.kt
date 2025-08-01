@@ -23,7 +23,7 @@ class HelvedMapperTest {
                 vedtakstidspunkt = vedtakstidspunkt,
                 meldekortId = "meldekort1",
                 sakId = "sakId",
-                ident = Person("12345678901"),
+                person = Person("12345678901"),
                 saksbehandletAv = "saksbehandler",
                 besluttetAv = "beslutter",
                 utbetalinger =

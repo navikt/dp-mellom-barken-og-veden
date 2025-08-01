@@ -228,7 +228,7 @@ internal class UtbetalingPostgresRepository(
                                 "vedtakstidspunkt" to vedtak.vedtakstidspunkt,
                                 "meldekortId" to vedtak.meldekortId,
                                 "sakId" to vedtak.sakId,
-                                "ident" to vedtak.ident.ident,
+                                "ident" to vedtak.person.ident,
                                 "status" to
                                     when (vedtak.status) {
                                         is Mottatt -> "MOTTATT"
@@ -360,7 +360,7 @@ internal class UtbetalingPostgresRepository(
             vedtakstidspunkt = localDateTime("vedtakstidspunkt"),
             meldekortId = string("meldekort_id"),
             sakId = string("sak_id"),
-            ident = Person(string("ident")),
+            person = Person(string("ident")),
             besluttetAv = string("besluttet_av"),
             saksbehandletAv = string("saksbehandlet_av"),
             utbetalinger = hentDager(behandlingId, tx),

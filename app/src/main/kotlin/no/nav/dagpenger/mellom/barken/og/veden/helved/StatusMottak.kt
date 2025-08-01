@@ -42,7 +42,7 @@ internal class StatusMottak(
         withLoggingContext(
             "behandlingId" to behandlingId.uuid.toString(),
         ) {
-            logger.info("Fått statusmelding: ${packet["status"].asText()} for behandlingId: $behandlingId")
+            logger.info("Fått statusmelding: ${packet["status"].asText()}")
             logger.sikkerlogg().info("Fått statusmelding: ${packet.toJson()}, nøkkel: ${metadata.key}")
 
             utbetalingRepo.hentVedtak(behandlingId) ?: run {

@@ -58,7 +58,7 @@ fun vedtak(
     vedtakstidspunkt = vedtakstidspunkt,
     meldekortId = meldekortId,
     sakId = sakId,
-    ident = ident,
+    person = ident,
     saksbehandletAv = saksbehandletAv,
     besluttetAv = besluttetAv,
     utbetalinger = utbetalinger,
