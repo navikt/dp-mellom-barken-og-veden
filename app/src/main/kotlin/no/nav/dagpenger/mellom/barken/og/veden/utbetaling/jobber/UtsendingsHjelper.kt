@@ -27,7 +27,7 @@ class UtsendingsHjelper(
             .forEach { vedtak ->
                 withLoggingContext(
                     mapOf(
-                        "behandlingId" to vedtak.behandlingId.toString(),
+                        "behandlingId" to vedtak.behandlingId.uuid.toString(),
                         "sakId" to vedtak.sakId,
                     ),
                 ) {
