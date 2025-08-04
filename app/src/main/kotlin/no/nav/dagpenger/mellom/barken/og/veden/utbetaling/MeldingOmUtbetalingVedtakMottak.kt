@@ -64,8 +64,6 @@ internal class MeldingOmUtbetalingVedtakMottak(
             // her kan vi kalle dp-behandling for å hente utbetalinger
             val vedtakDto: VedtakDTO =
                 objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), VedtakDTO::class.java)
-
-            logger.sikkerlogg().info { "Mottok utbetalinger ${vedtakDto.utbetalinger.joinToString { it.toString() }} " }
             val utbetalingVedtak =
                 UtbetalingVedtak(
                     behandlingId = behandlingId,
@@ -103,8 +101,6 @@ internal class MeldingOmUtbetalingVedtakMottak(
             logger.info { "Utbetalingsvedtak lagret" }
         }
     }
-
-    private fun KLogger.sikkerlogg() = KotlinLogging.logger("tjenestekall.$name")
 
     private companion object {
         private val logger = KotlinLogging.logger { }

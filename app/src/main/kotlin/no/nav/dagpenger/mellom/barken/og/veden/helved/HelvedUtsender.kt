@@ -1,7 +1,10 @@
 package no.nav.dagpenger.mellom.barken.og.veden.helved
 
+import mu.KLogger
+import mu.KotlinLogging
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
+import kotlin.math.log
 
 class HelvedUtsender(
     private val topic: String,
@@ -23,9 +26,14 @@ class HelvedUtsender(
                     utbetaling,
                 )
             val metadata = producer.send(record).get()
-            logger.info("Utbetaling sendt til helved: ${metadata.topic()} med offset ${metadata.offset()} for behandlingId $behandlingId")
+            logger.info(
+                "Utbetaling sendt til helved: ${metadata.topic()} med offset ${metadata.offset()}",
+            )
+            logger.sikkerlogg().info("Utbetaling sendt til helved: $utbetaling")
         } catch (e: Exception) {
             logger.error("Feil ved sending av utbetaling", e)
         }
     }
+
+    private fun KLogger.sikkerlogg() = KotlinLogging.logger("tjenestekall.$name")
 }
