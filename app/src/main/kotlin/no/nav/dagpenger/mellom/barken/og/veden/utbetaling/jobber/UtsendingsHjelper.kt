@@ -1,6 +1,5 @@
 package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber
 
-import mu.KLogger
 import mu.KotlinLogging
 import mu.withLoggingContext
 import no.nav.dagpenger.mellom.barken.og.veden.helved.HelvedUtsender
@@ -10,14 +9,12 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
 
 class UtsendingsHjelper(
-    val repo: UtbetalingRepo,
-    val producer: HelvedUtsender,
+    private val repo: UtbetalingRepo,
+    private val utsender: HelvedUtsender,
 ) {
     companion object {
         private val logger = KotlinLogging.logger { }
     }
-
-    private fun KLogger.sikkerlogg() = KotlinLogging.logger("tjenestekall.$name")
 
     fun behandleUtbetalingVedtak() {
         repo
@@ -38,9 +35,8 @@ class UtsendingsHjelper(
 
                     val json = vedtak.mapToVedtakDTO().toJson()
                     logger.info { "Sender utbetaling til helved" }
-                    producer.send(vedtak.behandlingId, json)
+                    utsender.send(vedtak.behandlingId, json)
                     logger.info { "Har sendt utbetaling til helved" }
-                    logger.sikkerlogg().info { "Utbetaling som er sendt til helved: $json" }
 
                     repo.oppdaterStatus(vedtak.behandlingId, Status.TilUtbetaling(Status.UtbetalingStatus.SENDT))
                 }
