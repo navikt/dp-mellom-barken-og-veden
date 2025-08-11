@@ -33,9 +33,3 @@ value class BehandlingId(
         }
     }
 }
-
-fun main() {
-    val id = "AZc6n9kKcpelfhC8Vt/i0Q=="
-    val behandlingId = BehandlingId.fromString(id)
-    print(behandlingId.uuid)
-}

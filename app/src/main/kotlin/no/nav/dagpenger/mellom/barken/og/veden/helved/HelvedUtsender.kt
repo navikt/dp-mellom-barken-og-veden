@@ -4,14 +4,13 @@ import mu.KLogger
 import mu.KotlinLogging
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
-import kotlin.math.log
 
 class HelvedUtsender(
     private val topic: String,
     private val producer: Producer<String, String>,
 ) {
     companion object {
-        private val logger = mu.KotlinLogging.logger { }
+        private val logger = KotlinLogging.logger { }
     }
 
     fun send(
@@ -32,6 +31,7 @@ class HelvedUtsender(
             logger.sikkerlogg().info("Utbetaling sendt til helved: $utbetaling")
         } catch (e: Exception) {
             logger.error("Feil ved sending av utbetaling", e)
+            throw e
         }
     }
 
