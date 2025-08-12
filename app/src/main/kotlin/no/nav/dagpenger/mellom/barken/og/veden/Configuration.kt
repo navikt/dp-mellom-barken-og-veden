@@ -18,7 +18,7 @@ object Configuration {
                 "KAFKA_CONSUMER_GROUP_ID" to "dp-mellom-barken-og-veden-v1",
                 "KAFKA_RAPID_TOPIC" to "teamdagpenger.rapid.v1",
                 "KAFKA_EXTRA_TOPIC" to "helved.status.v1",
-                "KAFKA_RESET_POLICY" to "LATEST",
+                "KAFKA_RESET_POLICY" to "EARLIEST",
                 "UTBETALING_TOPIC" to "teamdagpenger.utbetaling.v1",
             ),
         )

@@ -14,6 +14,7 @@ import io.ktor.serialization.jackson.jackson
 import io.ktor.server.auth.jwt.JWTAuthenticationProvider
 import kotlinx.coroutines.runBlocking
 import no.nav.dagpenger.mellom.barken.og.veden.Configuration
+import no.nav.dagpenger.mellom.barken.og.veden.api.auth.validering.autoriserADGrupper
 import java.net.URI
 import java.net.URL
 import java.util.concurrent.TimeUnit
@@ -46,6 +47,7 @@ object AuthFactory {
     fun JWTAuthenticationProvider.Config.azureAd() {
         realm = Configuration.APP_NAME
         verifiserTokenFormatOgSignatur()
+        autoriserADGrupper()
     }
 
     private fun JWTAuthenticationProvider.Config.verifiserTokenFormatOgSignatur() {
@@ -70,10 +72,10 @@ object AuthFactory {
 }
 
 private data class OpenIdConfiguration(
-    @JsonProperty("jwks_uri") val jwksUri: String,
-    @JsonProperty("issuer") val issuer: String,
-    @JsonProperty("token_endpoint") val tokenEndpoint: String,
-    @JsonProperty("authorization_endpoint") val authorizationEndpoint: String,
+    @param:JsonProperty("jwks_uri") val jwksUri: String,
+    @param:JsonProperty("issuer") val issuer: String,
+    @param:JsonProperty("token_endpoint") val tokenEndpoint: String,
+    @param:JsonProperty("authorization_endpoint") val authorizationEndpoint: String,
 )
 
 private val httpClient =
