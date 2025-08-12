@@ -41,6 +41,14 @@ openApiGenerate {
     outputDir.set("${layout.buildDirectory.get()}/generated/")
     packageName.set("no.nav.dagpenger.utbetaling.api")
     globalProperties.set(mapOf("models" to ""))
+    typeMappings =
+        mapOf(
+            "DateTime" to "LocalDateTime",
+        )
+    importMappings =
+        mapOf(
+            "LocalDateTime" to "java.time.LocalDateTime",
+        )
     modelNameSuffix.set("DTO")
     configOptions.set(
         mapOf("serializationLibrary" to "jackson"),

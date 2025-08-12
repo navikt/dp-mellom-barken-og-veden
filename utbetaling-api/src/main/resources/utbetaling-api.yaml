@@ -11,6 +11,39 @@ servers:
   - url: https://dp-mellom-barken-og-veden.intern.nav.no
     description: prod
 paths:
+  /utbetaling:
+    get:
+      summary: Hent utbetalinger for sak
+      operationId: hentUtbetalingerForSak
+      parameters:
+        - name: sakId
+          in: query
+          required: false
+          description: Sakens id
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UtbetalingStatus'
+        404:
+          description: sak ikke funnet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpProblem'
+
+        500:
+          description: Noe gikk galt
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpProblem'
   /utbetaling/{behandlingId}:
     get:
       summary: Hent utbetaling for behandling
@@ -45,6 +78,43 @@ paths:
 
 components:
   schemas:
+    UtbetalingStatus:
+      required:
+        - behandlingId
+        - status
+        - meldekortId
+        - sakId
+        - ident
+        - opprettet
+        - vedtakstidspunkt
+      properties:
+        behandlingId:
+          type: string
+          format: uuid
+          description: Behandlingens id
+        status:
+          type: string
+          description: Status på utbetalingen
+        eksternStatus:
+          type: string
+          description: Ekstern status på utbetalingen
+        meldekortId:
+          type: string
+          description: Meldekortets id, hvis det er knyttet til en utbetaling
+        sakId:
+          type: string
+          description: Sakens id som utbetalingen er knyttet til
+        ident:
+          type: string
+          description: NAV-identen til brukeren som utbetalingen gjelder for
+        opprettet:
+          type: string
+          format: date-time
+          description: Dato og tidspunkt for opprettelse av utbetalingen
+        vedtakstidspunkt:
+          type: string
+          format: date-time
+          description: Tidspunktet da vedtaket ble fattet
     Utbetaling:
       type: object
       required:

@@ -60,7 +60,7 @@ internal class ApplicationBuilder(
                             preStopHook = preStopHook::handlePreStopRequest,
                         ) {
                             authenticationConfig()
-                            utbetalingApi()
+                            utbetalingApi(utbetalingRepo)
                         }
                     }
                 },

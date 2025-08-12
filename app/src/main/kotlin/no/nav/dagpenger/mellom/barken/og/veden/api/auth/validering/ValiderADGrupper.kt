@@ -6,10 +6,10 @@ import io.ktor.server.auth.jwt.JWTPrincipal
 import no.nav.dagpenger.mellom.barken.og.veden.Configuration
 
 internal fun JWTAuthenticationProvider.Config.autoriserADGrupper() {
-    val saksbehandlerGruppe = Configuration.utvikler
+    val utviklerGruppe = Configuration.utvikler
 
     validate { jwtClaims ->
-        jwtClaims.måInneholde(adGruppe = saksbehandlerGruppe)
+        jwtClaims.måInneholde(adGruppe = utviklerGruppe)
         JWTPrincipal(jwtClaims.payload)
     }
 }
