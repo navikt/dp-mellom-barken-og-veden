@@ -35,8 +35,7 @@ internal fun Application.utbetalingApi(repo: UtbetalingRepo) {
 
                     val utbetalinger =
                         if (sakId == null) {
-                            // dette er ikke den riktige.... skal hente alle
-                            repo.hentAlleMottatte().toUtbetalingStatusDTO()
+                            repo.hentAlleIkkeFerdige().toUtbetalingStatusDTO()
                         } else {
                             repo.hentAlleUtbetalingerForSak(sakId).toUtbetalingStatusDTO()
                         }

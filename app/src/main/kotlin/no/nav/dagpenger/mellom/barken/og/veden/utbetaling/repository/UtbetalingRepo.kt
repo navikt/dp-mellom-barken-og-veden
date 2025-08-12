@@ -12,6 +12,8 @@ interface UtbetalingRepo {
 
     fun hentAlleMottatte(): List<UtbetalingVedtak>
 
+    fun hentAlleIkkeFerdige(): List<UtbetalingVedtak>
+
     fun hentVedtak(behandlingId: BehandlingId): UtbetalingVedtak?
 
     fun oppdaterStatus(

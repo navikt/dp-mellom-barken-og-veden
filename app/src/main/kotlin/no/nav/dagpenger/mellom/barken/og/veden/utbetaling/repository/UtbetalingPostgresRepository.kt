@@ -46,6 +46,29 @@ internal class UtbetalingPostgresRepository(
         }
     }
 
+    override fun hentAlleIkkeFerdige(): List<UtbetalingVedtak> {
+        sessionOf(dataSource).use { session ->
+            return session.transaction { tx ->
+                tx.run(
+                    queryOf(
+                        // language=PostgreSQL
+                        """
+                        select *
+                        from utbetaling
+                        where status != :status
+                        order by opprettet
+                        """.trimIndent(),
+                        mapOf(
+                            "status" to "FERDIG",
+                        ),
+                    ).map { row ->
+                        row.toUtbetalingVedtak(tx)
+                    }.asList,
+                )
+            }
+        }
+    }
+
     override fun hentAlleMottatte(): List<UtbetalingVedtak> = hentAlleVedtakMedStatus(Mottatt)
 
     override fun harUtbetalingerSomVenterPåSvar(sakId: String): Boolean {
