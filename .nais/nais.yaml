@@ -73,6 +73,9 @@ spec:
   kafka:
     pool: "{{ kafka.pool }}"
   accessPolicy:
+    outbound:
+      rules:
+        - application: dp-behandling-admin
     inbound:
       rules:
         - application: dp-utbetaling
