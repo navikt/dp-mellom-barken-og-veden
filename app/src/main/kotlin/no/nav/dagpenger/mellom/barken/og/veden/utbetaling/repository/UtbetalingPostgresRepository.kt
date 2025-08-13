@@ -56,7 +56,7 @@ internal class UtbetalingPostgresRepository(
                         select *
                         from utbetaling
                         where status != :status
-                        order by opprettet
+                        order by behandling_id
                         """.trimIndent(),
                         mapOf(
                             "status" to "FERDIG",
@@ -83,7 +83,7 @@ internal class UtbetalingPostgresRepository(
                             from utbetaling
                             where status = :status
                               and sak_id = :sakId
-                            order by opprettet asc
+                            order by behandling_id
                             """.trimIndent(),
                             mapOf(
                                 "status" to "TIL_UTBETALING",
