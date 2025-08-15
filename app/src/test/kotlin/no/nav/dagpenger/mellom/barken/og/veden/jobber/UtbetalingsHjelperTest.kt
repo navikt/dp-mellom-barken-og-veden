@@ -1,6 +1,7 @@
 package no.nav.dagpenger.mellom.barken.og.veden.jobber
 
 import io.kotest.matchers.collections.shouldNotBeEmpty
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
 import no.nav.dagpenger.mellom.barken.og.veden.helved.HelvedUtsender
@@ -33,10 +34,20 @@ class UtbetalingsHjelperTest {
             producer.history().shouldNotBeEmpty()
             producer.history().firstOrNull()?.topic() shouldBe topic
 
-            repo.hentAlleVedtakMedStatus(Status.Mottatt) shouldBe emptyList()
+            repo.hentAlleVedtakMedStatus(Status.Type.MOTTATT) shouldBe emptyList()
 
-            repo.hentVedtak(mottattVedtak1.behandlingId)?.status shouldBe Status.TilUtbetaling(Status.UtbetalingStatus.SENDT)
-            repo.hentVedtak(mottattVedtak2.behandlingId)?.status shouldBe Status.TilUtbetaling(Status.UtbetalingStatus.SENDT)
+            with(repo.hentVedtak(mottattVedtak1.behandlingId)?.status) {
+                this.shouldNotBeNull()
+                type shouldBe Status.Type.TIL_UTBETALING
+                this as Status.TilUtbetaling
+                eksternStatus shouldBe Status.UtbetalingStatus.SENDT
+            }
+            with(repo.hentVedtak(mottattVedtak2.behandlingId)?.status) {
+                this.shouldNotBeNull()
+                type shouldBe Status.Type.TIL_UTBETALING
+                this as Status.TilUtbetaling
+                eksternStatus shouldBe Status.UtbetalingStatus.SENDT
+            }
         }
     }
 
@@ -59,10 +70,10 @@ class UtbetalingsHjelperTest {
             producer.history().shouldNotBeEmpty()
             producer.history().firstOrNull()?.topic() shouldBe topic
 
-            repo.hentAlleVedtakMedStatus(Status.Mottatt).size shouldBe 1
+            repo.hentAlleVedtakMedStatus(Status.Type.MOTTATT).size shouldBe 1
 
-            repo.hentVedtak(mottattVedtak1.behandlingId)?.status shouldBe Status.TilUtbetaling(Status.UtbetalingStatus.SENDT)
-            repo.hentVedtak(mottattVedtak2.behandlingId)?.status shouldBe Status.Mottatt
+            repo.hentVedtak(mottattVedtak1.behandlingId)?.status?.type shouldBe Status.Type.TIL_UTBETALING
+            repo.hentVedtak(mottattVedtak2.behandlingId)?.status?.type shouldBe Status.Type.MOTTATT
         }
     }
 }

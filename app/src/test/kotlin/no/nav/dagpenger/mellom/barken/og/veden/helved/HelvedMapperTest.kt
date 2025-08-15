@@ -7,6 +7,7 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import java.util.UUID
 import kotlin.test.Test
 
@@ -15,7 +16,7 @@ class HelvedMapperTest {
     fun `vi kan mappe utbetaling til json`() {
         val behandlingId = BehandlingId(UUID.randomUUID())
         val utbetalingId = behandlingId.tilBase64()
-        val vedtakstidspunkt = LocalDateTime.now()
+        val vedtakstidspunkt = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS)
         val utbetaling =
             UtbetalingVedtak(
                 behandlingId = behandlingId,
@@ -35,7 +36,7 @@ class HelvedMapperTest {
                             utbetaltBeløp = 1000,
                         ),
                     ),
-                status = Status.Mottatt,
+                status = Status.Mottatt(),
                 opprettet = LocalDateTime.now(),
             )
 

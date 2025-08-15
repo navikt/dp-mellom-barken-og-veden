@@ -15,28 +15,23 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
 import javax.sql.DataSource
 
-internal class UtbetalingPostgresRepository(
+class UtbetalingPostgresRepository(
     private val dataSource: DataSource,
 ) : UtbetalingRepo {
-    override fun hentAlleVedtakMedStatus(status: Status): List<UtbetalingVedtak> {
+    override fun hentAlleVedtakMedStatus(status: Status.Type): List<UtbetalingVedtak> {
         sessionOf(dataSource).use { session ->
             return session.transaction { tx ->
                 tx.run(
                     queryOf(
                         // language=PostgreSQL
                         """
-                        select *
-                        from utbetaling
-                        where status = :status
-                        order by opprettet
+                        SELECT *
+                        FROM utbetaling
+                        WHERE status = :status
+                        ORDER BY opprettet
                         """.trimIndent(),
                         mapOf(
-                            "status" to
-                                when (status) {
-                                    is Mottatt -> "MOTTATT"
-                                    is TilUtbetaling -> "TIL_UTBETALING"
-                                    is Ferdig -> "FERDIG"
-                                },
+                            "status" to status.name,
                         ),
                     ).map { row ->
                         row.toUtbetalingVedtak(tx)
@@ -53,10 +48,10 @@ internal class UtbetalingPostgresRepository(
                     queryOf(
                         // language=PostgreSQL
                         """
-                        select *
-                        from utbetaling
-                        where status != :status
-                        order by behandling_id
+                        SELECT *
+                        FROM utbetaling
+                        WHERE status != :status
+                        ORDER BY behandling_id
                         """.trimIndent(),
                         mapOf(
                             "status" to "FERDIG",
@@ -69,7 +64,7 @@ internal class UtbetalingPostgresRepository(
         }
     }
 
-    override fun hentAlleMottatte(): List<UtbetalingVedtak> = hentAlleVedtakMedStatus(Mottatt)
+    override fun hentAlleMottatte(): List<UtbetalingVedtak> = hentAlleVedtakMedStatus(Status.Type.MOTTATT)
 
     override fun harUtbetalingerSomVenterPåSvar(sakId: String): Boolean {
         sessionOf(dataSource).use { session ->
@@ -79,14 +74,14 @@ internal class UtbetalingPostgresRepository(
                         queryOf(
                             // language=PostgreSQL
                             """
-                            select *
-                            from utbetaling
-                            where status = :status
-                              and sak_id = :sakId
-                            order by behandling_id
+                            SELECT *
+                            FROM utbetaling
+                            WHERE status = :status
+                              AND sak_id = :sakId
+                            ORDER BY behandling_id
                             """.trimIndent(),
                             mapOf(
-                                "status" to "TIL_UTBETALING",
+                                "status" to Status.Type.TIL_UTBETALING.name,
                                 "sakId" to sakId,
                             ),
                         ).map { row ->
@@ -104,9 +99,9 @@ internal class UtbetalingPostgresRepository(
                     queryOf(
                         // language=PostgreSQL
                         """
-                        select *
-                        from utbetaling
-                        where sak_id = :sakId
+                        SELECT *
+                        FROM utbetaling
+                        WHERE sak_id = :sakId
                         """.trimIndent(),
                         mapOf(
                             "sakId" to sakId,
@@ -126,9 +121,9 @@ internal class UtbetalingPostgresRepository(
                     queryOf(
                         // language=PostgreSQL
                         """
-                        select *
-                        from utbetaling
-                        where behandling_id = :behandlingId
+                        SELECT *
+                        FROM utbetaling
+                        WHERE behandling_id = :behandlingId
                         """.trimIndent(),
                         mapOf(
                             "behandlingId" to behandlingId.uuid,
@@ -149,9 +144,9 @@ internal class UtbetalingPostgresRepository(
             queryOf(
                 // language=PostgreSQL
                 """
-                select *
-                from utbetalingsdag
-                where behandling_id = :behandlingId
+                SELECT *
+                FROM utbetalingsdag
+                WHERE behandling_id = :behandlingId
                 """.trimIndent(),
                 mapOf("behandlingId" to behandlingId.uuid),
             ).map { row ->
@@ -184,10 +179,11 @@ internal class UtbetalingPostgresRepository(
                 queryOf(
                     // language=PostgreSQL
                     """
-                    update utbetaling
-                    set status = :status,
-                        ekstern_status = :externStatus
-                    where behandling_id = :behandlingId
+                    UPDATE utbetaling
+                    SET status = :status,
+                        ekstern_status = :externStatus,
+                        sist_endret_tilstand = NOW()
+                    WHERE behandling_id = :behandlingId
                     """.trimIndent(),
                     mapOf(
                         "behandlingId" to behandlingId.uuid,
@@ -221,7 +217,7 @@ internal class UtbetalingPostgresRepository(
                         queryOf(
                             // language=PostgreSQL
                             """
-                            insert into utbetaling (
+                            INSERT INTO utbetaling (
                                 behandling_id,
                                 basert_paa_id,
                                 vedtakstidspunkt,
@@ -232,7 +228,7 @@ internal class UtbetalingPostgresRepository(
                                 saksbehandlet_av,
                                 besluttet_av,
                                 opprettet
-                            ) values (
+                            ) VALUES (
                                 :behandlingId,
                                 :basertPaaId,
                                 :vedtakstidspunkt,
@@ -295,22 +291,25 @@ internal class UtbetalingPostgresRepository(
             queryOf(
                 // language=PostgreSQL
                 """
-                insert into status (
+                INSERT INTO status (
                     behandling_id,
-                    status
-                ) values (
+                    status,
+                    opprettet
+                ) VALUES (
                     :behandlingId,
-                    :status
+                    :status,
+                    :opprettet
                 )
                 """.trimIndent(),
                 mapOf(
                     "behandlingId" to behandlingId.uuid,
                     "status" to
                         when (status) {
-                            is Mottatt -> StatusDb.MOTTATT.name
-                            is TilUtbetaling -> StatusDb.TIL_UTBETALING.name
-                            is Ferdig -> StatusDb.FERDIG.name
+                            is Mottatt -> Status.Type.MOTTATT.name
+                            is TilUtbetaling -> Status.Type.TIL_UTBETALING.name
+                            is Ferdig -> Status.Type.FERDIG.name
                         },
+                    "opprettet" to status.opprettet,
                 ),
             ).asUpdate,
         )
@@ -325,10 +324,10 @@ internal class UtbetalingPostgresRepository(
             queryOf(
                 // language=PostgreSQL
                 """
-                insert into ekstern_status (
+                INSERT INTO ekstern_status (
                     behandling_id,
                     status
-                ) values (
+                ) VALUES (
                     :behandlingId,
                     :status
                 )
@@ -350,13 +349,13 @@ internal class UtbetalingPostgresRepository(
             queryOf(
                 // language=PostgreSQL
                 """
-                insert into utbetalingsdag (
+                INSERT INTO utbetalingsdag (
                     behandling_id,
                     meldeperiode,
                     dato,
                     sats,
                     utbetalt_beløp
-                ) values (
+                ) VALUES (
                     :behandlingId,
                     :meldeperiode,
                     :dato,
@@ -388,10 +387,25 @@ internal class UtbetalingPostgresRepository(
             saksbehandletAv = string("saksbehandlet_av"),
             utbetalinger = hentDager(behandlingId, tx),
             status =
-                when (StatusDb.valueOf(string("status"))) {
-                    StatusDb.MOTTATT -> Mottatt
-                    StatusDb.TIL_UTBETALING -> TilUtbetaling(UtbetalingStatus.valueOf(string("ekstern_status")))
-                    StatusDb.FERDIG -> Ferdig
+                when (Status.Type.valueOf(string("status"))) {
+                    Status.Type.MOTTATT ->
+                        Mottatt(
+                            opprettet = localDateTime("opprettet"),
+                        )
+
+                    Status.Type.TIL_UTBETALING ->
+                        TilUtbetaling(
+                            eksternStatus =
+                                UtbetalingStatus.valueOf(
+                                    string("ekstern_status"),
+                                ),
+                            opprettet = localDateTime("opprettet"),
+                        )
+
+                    Status.Type.FERDIG ->
+                        Ferdig(
+                            opprettet = localDateTime("opprettet"),
+                        )
                 },
             opprettet = localDateTime("opprettet"),
         )
@@ -404,10 +418,4 @@ internal class UtbetalingPostgresRepository(
             sats = int("sats"),
             utbetaltBeløp = int("utbetalt_beløp"),
         )
-
-    private enum class StatusDb {
-        MOTTATT,
-        TIL_UTBETALING,
-        FERDIG,
-    }
 }

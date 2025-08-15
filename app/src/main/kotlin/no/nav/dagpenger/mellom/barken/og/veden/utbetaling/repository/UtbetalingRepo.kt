@@ -8,7 +8,7 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 interface UtbetalingRepo {
     fun lagreVedtak(vedtak: UtbetalingVedtak)
 
-    fun hentAlleVedtakMedStatus(status: Status): List<UtbetalingVedtak>
+    fun hentAlleVedtakMedStatus(status: Status.Type): List<UtbetalingVedtak>
 
     fun hentAlleMottatte(): List<UtbetalingVedtak>
 

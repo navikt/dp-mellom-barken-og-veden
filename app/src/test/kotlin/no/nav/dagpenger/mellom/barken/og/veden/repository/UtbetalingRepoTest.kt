@@ -50,8 +50,8 @@ fun vedtak(
                 utbetaltBeløp = 1000,
             ),
         ),
-    status: Status = Status.Mottatt,
     opprettet: LocalDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS),
+    status: Status = Status.Mottatt(opprettet),
 ) = UtbetalingVedtak(
     behandlingId = BehandlingId(behandlingId),
     basertPåBehandlingId = basertPåBehandlingId?.let { BehandlingId(it) },

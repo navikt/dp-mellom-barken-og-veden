@@ -1,0 +1,2 @@
+ALTER TABLE utbetaling
+    ADD COLUMN sist_endret_tilstand TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW() NOT NULL;

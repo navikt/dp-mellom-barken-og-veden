@@ -26,14 +26,33 @@ data class Utbetalingsdag(
 )
 
 sealed class Status {
-    object Mottatt : Status()
+    abstract val opprettet: LocalDateTime
+    abstract val type: Type
+
+    enum class Type {
+        MOTTATT,
+        TIL_UTBETALING,
+        FERDIG,
+    }
+
+    data class Mottatt(
+        override val opprettet: LocalDateTime = LocalDateTime.now(),
+    ) : Status() {
+        override val type: Type = Type.MOTTATT
+    }
 
     data class TilUtbetaling(
-        // skal vi bare ta med staus her eller hele statusReply?
         val eksternStatus: UtbetalingStatus,
-    ) : Status()
+        override val opprettet: LocalDateTime = LocalDateTime.now(),
+    ) : Status() {
+        override val type: Type = Type.TIL_UTBETALING
+    }
 
-    object Ferdig : Status()
+    data class Ferdig(
+        override val opprettet: LocalDateTime = LocalDateTime.now(),
+    ) : Status() {
+        override val type: Type = Type.FERDIG
+    }
 
     enum class UtbetalingStatus {
         SENDT,

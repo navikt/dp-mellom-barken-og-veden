@@ -58,7 +58,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
                     utbetaltBeløp = 0,
                 )
             utbetalinger.size shouldBe 56
-            status shouldBe Status.Mottatt
+            status.type shouldBe Status.Type.MOTTATT
             opprettet shouldBe LocalDateTime.parse("2025-05-16T09:37:17.338979")
         }
     }

@@ -52,7 +52,7 @@ internal class StatusMottak(
 
             val status =
                 when (statusDto.status) {
-                    StatusReply.Status.OK -> Status.Ferdig
+                    StatusReply.Status.OK -> Status.Ferdig()
                     StatusReply.Status.FEILET -> Status.TilUtbetaling(Status.UtbetalingStatus.FEILET)
                     StatusReply.Status.HOS_OPPDRAG -> Status.TilUtbetaling(Status.UtbetalingStatus.HOS_OPPDRAG)
                     StatusReply.Status.MOTTATT -> Status.TilUtbetaling(Status.UtbetalingStatus.MOTTATT)
