@@ -5,10 +5,10 @@ import com.github.navikt.tbd_libs.rapids_and_rivers.River
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
+import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
-import mu.KLogger
-import mu.KotlinLogging
-import mu.withLoggingContext
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.dagpenger.mellom.barken.og.veden.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
@@ -42,8 +42,8 @@ internal class StatusMottak(
         withLoggingContext(
             "behandlingId" to behandlingId.uuid.toString(),
         ) {
-            logger.info("Fått statusmelding: ${packet["status"].asText()}")
-            logger.sikkerlogg().info("Fått statusmelding: ${packet.toJson()}, nøkkel: ${metadata.key}")
+            logger.info { "Fått statusmelding: ${packet["status"].asText()}" }
+            logger.sikkerlogg().info { "Fått statusmelding: ${packet.toJson()}, nøkkel: ${metadata.key}" }
 
             utbetalingRepo.hentVedtak(behandlingId) ?: run {
                 logger.warn { "Ukjent behandlingId: $behandlingId ignorerer denne" }

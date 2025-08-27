@@ -16,7 +16,7 @@ class HelvedMapperTest {
     fun `vi kan mappe utbetaling til json`() {
         val behandlingId = BehandlingId(UUID.randomUUID())
         val utbetalingId = behandlingId.tilBase64()
-        val vedtakstidspunkt = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS)
+        val vedtakstidspunkt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
         val utbetaling =
             UtbetalingVedtak(
                 behandlingId = behandlingId,
