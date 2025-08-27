@@ -1,7 +1,7 @@
 package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber
 
-import mu.KotlinLogging
-import mu.withLoggingContext
+import io.github.oshai.kotlinlogging.KotlinLogging
+import io.github.oshai.kotlinlogging.withLoggingContext
 import no.nav.dagpenger.mellom.barken.og.veden.helved.HelvedUtsender
 import no.nav.dagpenger.mellom.barken.og.veden.helved.mapToVedtakDTO
 import no.nav.dagpenger.mellom.barken.og.veden.helved.toJson

@@ -1,7 +1,7 @@
 package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.runBlocking
-import mu.KotlinLogging
 import no.nav.dagpenger.mellom.barken.og.veden.leaderelection.LeaderElectionClient
 import kotlin.concurrent.fixedRateTimer
 import kotlin.time.Duration.Companion.minutes

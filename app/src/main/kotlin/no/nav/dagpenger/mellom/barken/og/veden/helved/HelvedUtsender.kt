@@ -1,7 +1,7 @@
 package no.nav.dagpenger.mellom.barken.og.veden.helved
 
-import mu.KLogger
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 
@@ -25,12 +25,12 @@ class HelvedUtsender(
                     utbetaling,
                 )
             val metadata = producer.send(record).get()
-            logger.info(
-                "Utbetaling sendt til helved: ${metadata.topic()} med offset ${metadata.offset()}",
-            )
-            logger.sikkerlogg().info("Utbetaling sendt til helved: $utbetaling")
+            logger.info {
+                "Utbetaling sendt til helved: ${metadata.topic()} med offset ${metadata.offset()}"
+            }
+            logger.sikkerlogg().info { "Utbetaling sendt til helved: $utbetaling" }
         } catch (e: Exception) {
-            logger.error("Feil ved sending av utbetaling", e)
+            logger.error(e) { "Feil ved sending av utbetaling" }
             throw e
         }
     }
