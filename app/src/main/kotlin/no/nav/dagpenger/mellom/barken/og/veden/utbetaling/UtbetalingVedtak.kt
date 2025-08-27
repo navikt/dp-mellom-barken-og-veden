@@ -14,7 +14,7 @@ data class UtbetalingVedtak(
     val saksbehandletAv: String,
     val besluttetAv: String,
     val utbetalinger: List<Utbetalingsdag>,
-    var status: Status,
+    val status: Status,
     val opprettet: LocalDateTime,
 )
 
