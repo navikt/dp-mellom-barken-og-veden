@@ -2,7 +2,7 @@
 plugins {
     id("common")
     `java-library`
-    id("org.openapi.generator") version "7.14.0"
+    id("org.openapi.generator") version "7.15.0"
 }
 
 dependencies {
