@@ -3,13 +3,13 @@ package no.nav.dagpenger.mellom.barken.og.veden.helved.repository
 import kotliquery.TransactionalSession
 import kotliquery.queryOf
 import no.nav.dagpenger.mellom.barken.og.veden.helved.ApiError
-import no.nav.dagpenger.mellom.barken.og.veden.helved.BehandlingId
 import no.nav.dagpenger.mellom.barken.og.veden.helved.Detaljer
 import no.nav.dagpenger.mellom.barken.og.veden.helved.StatusReply
+import java.util.UUID
 
 internal class HelvedPostgresRepository : HelvedRepo {
     override fun lagreStatusSvar(
-        behandlingId: BehandlingId,
+        behandlingId: UUID,
         svar: StatusReply,
         tx: TransactionalSession,
     ) {
@@ -18,7 +18,7 @@ internal class HelvedPostgresRepository : HelvedRepo {
     }
 
     private fun lagreFeil(
-        behandlingId: BehandlingId,
+        behandlingId: UUID,
         feil: ApiError?,
         tx: TransactionalSession,
     ) {
@@ -39,7 +39,7 @@ internal class HelvedPostgresRepository : HelvedRepo {
                 )
                 """.trimIndent(),
                 mapOf(
-                    "behandlingId" to behandlingId.uuid,
+                    "behandlingId" to behandlingId,
                     "status" to feil.statusCode,
                     "doc" to feil.doc,
                 ),
@@ -48,7 +48,7 @@ internal class HelvedPostgresRepository : HelvedRepo {
     }
 
     private fun lagreDetaljer(
-        behandlingId: BehandlingId,
+        behandlingId: UUID,
         detaljer: Detaljer?,
         tx: TransactionalSession,
     ) {
@@ -76,7 +76,7 @@ internal class HelvedPostgresRepository : HelvedRepo {
                     ) on conflict (behandling_id, fom, tom) do nothing
                     """.trimIndent(),
                     mapOf(
-                        "behandlingId" to behandlingId.uuid,
+                        "behandlingId" to behandlingId,
                         "fom" to linje.fom,
                         "tom" to linje.tom,
                         "belop" to linje.beløp.toInt(),

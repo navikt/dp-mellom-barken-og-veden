@@ -1,15 +1,15 @@
 package no.nav.dagpenger.mellom.barken.og.veden.utbetaling
 
-import no.nav.dagpenger.mellom.barken.og.veden.helved.BehandlingId
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.util.UUID
 
 data class UtbetalingVedtak(
-    val behandlingId: BehandlingId,
-    val basertPåBehandlingId: BehandlingId?,
+    val behandlingId: UUID,
+    val basertPåBehandlingId: UUID?,
     val vedtakstidspunkt: LocalDateTime,
     val meldekortId: String,
-    val sakId: String,
+    val sakId: UUID,
     val person: Person,
     val saksbehandletAv: String,
     val besluttetAv: String,

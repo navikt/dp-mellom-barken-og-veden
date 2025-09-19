@@ -49,10 +49,10 @@ internal fun Application.utbetalingApi(repo: UtbetalingRepo) {
 private fun List<UtbetalingVedtak>.toUtbetalingStatusDTO(): List<UtbetalingStatusDTO> =
     this.map { utbetaling ->
         UtbetalingStatusDTO(
-            behandlingId = utbetaling.behandlingId.uuid,
+            behandlingId = utbetaling.behandlingId,
             status = utbetaling.status::class.simpleName ?: "Ukjent",
             meldekortId = utbetaling.meldekortId,
-            sakId = utbetaling.sakId,
+            sakId = utbetaling.sakId.toString(),
             ident = utbetaling.person.ident,
             opprettet = utbetaling.opprettet,
             vedtakstidspunkt = utbetaling.vedtakstidspunkt,

@@ -11,7 +11,7 @@ fun UtbetalingVedtak.mapToVedtakDTO(): UtbetalingDTO =
     UtbetalingDTO(
         behandlingId = behandlingId.tilBase64(),
         vedtakstidspunktet = vedtakstidspunkt,
-        sakId = sakId,
+        sakId = sakId.tilBase64(),
         ident = person.ident,
         utbetalinger =
             utbetalinger

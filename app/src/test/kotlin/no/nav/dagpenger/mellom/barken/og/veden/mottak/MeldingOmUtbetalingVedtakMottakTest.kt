@@ -42,12 +42,12 @@ class MeldingOmUtbetalingVedtakMottakTest {
 
         val vedtak = capturedVedtak.captured
         with(vedtak) {
-            behandlingId.uuid shouldBe UUID.fromString("76755FC9-592A-46A1-88C9-1B9AE622E5F2")
-            basertPåBehandlingId?.uuid shouldBe UUID.fromString("A421B97A-EDC8-4DB7-BCC0-3F87B2DBDB1D")
+            behandlingId shouldBe UUID.fromString("76755FC9-592A-46A1-88C9-1B9AE622E5F2")
+            basertPåBehandlingId shouldBe UUID.fromString("A421B97A-EDC8-4DB7-BCC0-3F87B2DBDB1D")
             vedtakstidspunkt shouldBe LocalDateTime.parse("2025-05-16T09:37:17.336661")
             meldekortId shouldBe "5"
             person.ident shouldBe "11109233444"
-            sakId shouldBe testSakId.toString()
+            sakId shouldBe testSakId
             saksbehandletAv shouldBe "dp-behandling"
             utbetalinger.minBy { it.dato } shouldBe
                 Utbetalingsdag(

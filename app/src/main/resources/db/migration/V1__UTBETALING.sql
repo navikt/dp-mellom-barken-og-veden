@@ -1,16 +1,17 @@
 CREATE TABLE IF NOT EXISTS utbetaling
 (
-    behandling_id    uuid PRIMARY KEY,
-    basert_paa_id    uuid                     NULL,
-    vedtakstidspunkt TIMESTAMP WITH TIME ZONE NOT NULL,
-    meldekort_id     text                     NOT NULL,
-    sak_id           text                     NOT NULL,
-    ident            TEXT                     NOT NULL,
-    status           TEXT                     NOT NULL,
-    ekstern_status   TEXT                     NULL,
-    saksbehandlet_av TEXT                     NULL,
-    besluttet_av     TEXT                     NULL,
-    opprettet        TIMESTAMP WITH TIME ZONE NOT NULL
+    behandling_id        uuid PRIMARY KEY,
+    basert_paa_id        uuid                                      NULL,
+    vedtakstidspunkt     TIMESTAMP WITH TIME ZONE                  NOT NULL,
+    meldekort_id         text                                      NOT NULL,
+    sak_id               uuid                                      NOT NULL,
+    ident                TEXT                                      NOT NULL,
+    status               TEXT                                      NOT NULL,
+    ekstern_status       TEXT                                      NULL,
+    saksbehandlet_av     TEXT                                      NULL,
+    besluttet_av         TEXT                                      NULL,
+    opprettet            TIMESTAMP WITH TIME ZONE                  NOT NULL,
+    sist_endret_tilstand TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW() NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS utbetalingsdag

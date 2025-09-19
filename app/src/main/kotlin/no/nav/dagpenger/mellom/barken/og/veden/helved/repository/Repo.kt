@@ -1,10 +1,10 @@
 package no.nav.dagpenger.mellom.barken.og.veden.helved.repository
 
 import kotliquery.sessionOf
-import no.nav.dagpenger.mellom.barken.og.veden.helved.BehandlingId
 import no.nav.dagpenger.mellom.barken.og.veden.helved.StatusReply
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
+import java.util.UUID
 import javax.sql.DataSource
 
 internal class Repo(
@@ -13,7 +13,7 @@ internal class Repo(
     private val helvedRepo: HelvedRepo,
 ) {
     fun lagreStatusFraHelved(
-        behandlingId: BehandlingId,
+        behandlingId: UUID,
         status: Status,
         svar: StatusReply,
     ) {

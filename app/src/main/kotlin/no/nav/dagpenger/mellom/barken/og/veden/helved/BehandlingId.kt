@@ -9,27 +9,23 @@ import java.util.UUID
 value class BehandlingId(
     val uuid: UUID,
 ) {
-    private val byteBuffer get() =
-        ByteBuffer.allocate(Long.BYTES * 2).apply {
-            // 128 bits
-            putLong(uuid.mostSignificantBits) // første 64 bits
-            putLong(uuid.leastSignificantBits) // siste 64 bits
-        }
+    override fun toString(): String = """BehandlingId: $uuid - Base64 versjon: ${uuid.tilBase64()}"""
+}
 
-    fun tilBase64(): String =
-        Base64.getEncoder().encodeToString(byteBuffer.array()).also {
-            require(it.length <= 30) { "base64 encoding av UUID ble over 30 tegn." }
-        }
+fun UUID.tilBase64(): String {
+    val byteBuffer = ByteBuffer.allocate(Long.BYTES * 2)
+    byteBuffer.putLong(this.mostSignificantBits)
+    byteBuffer.putLong(this.leastSignificantBits)
 
-    override fun toString(): String = """BehandlingId: $uuid - Base64 versjon: ${tilBase64()}"""
-
-    companion object {
-        fun fromString(base64: String): BehandlingId {
-            val decoded = Base64.getDecoder().decode(base64)
-            val byteBuffer = ByteBuffer.wrap(decoded)
-            val mostSignificantBits = byteBuffer.long
-            val leastSignificantBits = byteBuffer.long
-            return BehandlingId(UUID(mostSignificantBits, leastSignificantBits))
-        }
+    return Base64.getEncoder().encodeToString(byteBuffer.array()).also {
+        require(it.length <= 30) { "base64 encoding av UUID ble over 30 tegn." }
     }
+}
+
+fun String.fraBase64(): UUID {
+    val decoded = Base64.getDecoder().decode(this)
+    val byteBuffer = ByteBuffer.wrap(decoded)
+    val mostSignificantBits = byteBuffer.long
+    val leastSignificantBits = byteBuffer.long
+    return UUID(mostSignificantBits, leastSignificantBits)
 }

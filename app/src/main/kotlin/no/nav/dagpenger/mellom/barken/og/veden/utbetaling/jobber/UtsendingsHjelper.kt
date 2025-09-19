@@ -24,8 +24,8 @@ class UtsendingsHjelper(
             .forEach { vedtak ->
                 withLoggingContext(
                     mapOf(
-                        "behandlingId" to vedtak.behandlingId.uuid.toString(),
-                        "sakId" to vedtak.sakId,
+                        "behandlingId" to vedtak.behandlingId.toString(),
+                        "sakId" to vedtak.sakId.toString(),
                     ),
                 ) {
                     if (repo.harUtbetalingerSomVenterPåSvar(vedtak.sakId)) {

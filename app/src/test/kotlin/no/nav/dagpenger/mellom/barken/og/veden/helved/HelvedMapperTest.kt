@@ -14,16 +14,17 @@ import kotlin.test.Test
 class HelvedMapperTest {
     @Test
     fun `vi kan mappe utbetaling til json`() {
-        val behandlingId = BehandlingId(UUID.randomUUID())
+        val behandlingId = UUID.randomUUID()
+        val sakId = UUID.randomUUID()
         val utbetalingId = behandlingId.tilBase64()
         val vedtakstidspunkt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
         val utbetaling =
             UtbetalingVedtak(
                 behandlingId = behandlingId,
-                basertPåBehandlingId = BehandlingId(UUID.randomUUID()),
+                basertPåBehandlingId = UUID.randomUUID(),
                 vedtakstidspunkt = vedtakstidspunkt,
                 meldekortId = "meldekort1",
-                sakId = "sakId",
+                sakId = sakId,
                 person = Person("12345678901"),
                 saksbehandletAv = "saksbehandler",
                 besluttetAv = "beslutter",
@@ -43,7 +44,7 @@ class HelvedMapperTest {
         utbetaling.mapToVedtakDTO().toJson() shouldEqualJson
             """
             {
-              "sakId": "sakId",
+              "sakId": "${sakId.tilBase64()}",
               "behandlingId": "$utbetalingId",
               "vedtakstidspunktet": "$vedtakstidspunkt",
               "ident": "12345678901",

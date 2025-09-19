@@ -4,6 +4,7 @@ import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
+import java.util.UUID
 
 class HelvedUtsender(
     private val topic: String,
@@ -14,14 +15,14 @@ class HelvedUtsender(
     }
 
     fun send(
-        behandlingId: BehandlingId,
+        behandlingId: UUID,
         utbetaling: String,
     ) {
         try {
             val record =
                 ProducerRecord(
                     topic,
-                    behandlingId.uuid.toString(),
+                    behandlingId.toString(),
                     utbetaling,
                 )
             val metadata = producer.send(record).get()

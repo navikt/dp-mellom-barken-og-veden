@@ -18,4 +18,4 @@ dp-saksbehandling:
 
 
 flyway:
-  cleanDisabled: true
+  cleanDisabled: false
