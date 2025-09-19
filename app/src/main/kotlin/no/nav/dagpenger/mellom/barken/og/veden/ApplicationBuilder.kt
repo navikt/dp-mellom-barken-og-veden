@@ -16,8 +16,8 @@ import no.nav.dagpenger.mellom.barken.og.veden.api.utbetalingApi
 import no.nav.dagpenger.mellom.barken.og.veden.helved.HelvedUtsender
 import no.nav.dagpenger.mellom.barken.og.veden.helved.StatusMottak
 import no.nav.dagpenger.mellom.barken.og.veden.helved.repository.HelvedPostgresRepository
+import no.nav.dagpenger.mellom.barken.og.veden.helved.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.leaderelection.LeaderElectionClient
-import no.nav.dagpenger.mellom.barken.og.veden.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.MeldingOmUtbetalingVedtakMottak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber.BehandleMottatteUtbetalinger
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber.UtsendingsHjelper

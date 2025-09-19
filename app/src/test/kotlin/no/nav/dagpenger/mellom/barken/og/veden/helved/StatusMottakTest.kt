@@ -4,7 +4,7 @@ import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import no.nav.dagpenger.mellom.barken.og.veden.repository.Repo
+import no.nav.dagpenger.mellom.barken.og.veden.helved.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.repository.vedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
 import java.util.UUID
