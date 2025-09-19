@@ -28,10 +28,6 @@ spec:
   env:
     - name: JDK_JAVA_OPTIONS
       value: -XX:+UseParallelGC -XX:MaxRAMPercentage=25.0 -XX:ActiveProcessorCount=4
-    - name: flyway.cleanDisabled
-      value: '{{flyway.cleanDisabled}}'
-    - name: CLEAN_ON_STARTUP
-      value: "true"
     - name: DP_SAKSBEHANDLING_SCOPE
       value: "{{dp-saksbehandling.scope}}"
   {{#if ingresses}}

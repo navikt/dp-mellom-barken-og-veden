@@ -93,10 +93,6 @@ internal class ApplicationBuilder(
 
     override fun onStartup(rapidsConnection: RapidsConnection) {
         logger.info { "Starter opp dp-mellom-barken-og-veden" }
-        if (config["CLEAN_ON_STARTUP"] == "true") {
-            logger.info { "Starter med en tom database" }
-            PostgresConfiguration.clean()
-        }
         PostgresConfiguration.runMigration()
     }
 }

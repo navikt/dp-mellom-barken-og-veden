@@ -13,6 +13,3 @@ azure:
 
 dp-saksbehandling:
   scope: "api://prod-gcp.teamdagpenger.dp-saksbehandling/.default"
-
-flyway:
-  cleanDisabled: false
