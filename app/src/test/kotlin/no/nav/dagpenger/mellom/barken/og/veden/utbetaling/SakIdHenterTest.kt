@@ -7,10 +7,9 @@ import io.ktor.client.engine.mock.respond
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.headers
 import io.ktor.http.headersOf
 import kotlinx.coroutines.runBlocking
-import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
-import no.nav.dagpenger.saksbehandling.api.models.HttpProblemDTO
 import org.junit.jupiter.api.Test
 import java.util.UUID
 
@@ -42,15 +41,15 @@ class SakIdHenterTest {
                 MockEngine { _ ->
                     respond(
                         content =
-                            objectMapper.writeValueAsString(
-                                HttpProblemDTO(
-                                    type = "about:blank",
-                                    title = "Internal Server Error",
-                                    status = 500,
-                                    detail = "En uventet feil oppstod",
-                                    instance = "/behandling/${UUID.randomUUID()}/sakId",
-                                ),
-                            ),
+                            """
+                            {
+                                "type": "about:blank",
+                                "title": "Internal Server Error",
+                                "status": 500,
+                                "detail": "En uventet feil oppstod",
+                                "instance": "/behandling/${UUID.randomUUID()}/sakId"
+                            }
+                            """.trimIndent(),
                         status = HttpStatusCode.InternalServerError,
                         headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
                     )
