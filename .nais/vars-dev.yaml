@@ -9,7 +9,7 @@ gcp:
     tier: db-custom-1-3840
 
 azure:
-  tenant: nav.no
+  tenant: trygdeetaten.no
 
 wonderwalled: true
 
