@@ -12,7 +12,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpHeaders
 import io.ktor.http.URLBuilder
 import io.ktor.http.appendPathSegments
-import no.nav.dagpenger.saksbehandling.api.models.HttpProblemDTOExtra
+import no.nav.dagpenger.saksbehandling.api.models.HttpProblemDTO
 import java.util.UUID
 
 internal class SakIdHenter(
@@ -36,14 +36,17 @@ internal class SakIdHenter(
     suspend fun hentSakId(behandlingId: UUID): UUID {
         val url = URLBuilder(baseUrl).appendPathSegments("behandling", behandlingId.toString(), "sakId").build()
         try {
-            return client
-                .get(url)
-                .bodyAsText()
-                .let { body -> UUID.fromString(body) }
+            val sakId =
+                client
+                    .get(url)
+                    .bodyAsText()
+                    .let { body -> UUID.fromString(body) }
+            log.info { "Hentet sakId=$sakId for behandlingId=$behandlingId" }
+            return sakId
         } catch (error: Exception) {
             when (error) {
                 is io.ktor.client.plugins.ServerResponseException -> {
-                    val body = error.response.body<HttpProblemDTOExtra>()
+                    val body = error.response.body<HttpProblemDTO>()
                     log.error(error) { "Feil ved kall mot $url. Feilmelding: $body" }
                 }
 

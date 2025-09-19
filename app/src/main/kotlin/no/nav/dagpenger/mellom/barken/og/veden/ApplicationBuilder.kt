@@ -19,6 +19,7 @@ import no.nav.dagpenger.mellom.barken.og.veden.helved.repository.HelvedPostgresR
 import no.nav.dagpenger.mellom.barken.og.veden.helved.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.leaderelection.LeaderElectionClient
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.MeldingOmUtbetalingVedtakMottak
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.SakIdHenter
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber.BehandleMottatteUtbetalinger
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber.UtsendingsHjelper
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingPostgresRepository
@@ -73,6 +74,7 @@ internal class ApplicationBuilder(
                 MeldingOmUtbetalingVedtakMottak(
                     rapidsConnection = this,
                     repo = utbetalingRepo,
+                    sakIdHenter = SakIdHenter(Configuration.sakApiBaseUrl, Configuration.sakApiToken),
                 )
                 StatusMottak(
                     rapidsConnection = this,

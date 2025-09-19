@@ -2,6 +2,7 @@ package no.nav.dagpenger.mellom.barken.og.veden.mottak
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
 import io.kotest.matchers.shouldBe
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -17,12 +18,16 @@ import java.util.UUID
 
 class MeldingOmUtbetalingVedtakMottakTest {
     private val repo = mockk<UtbetalingRepo>(relaxed = true)
-
+    private val testSakId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000")
     private val rapid =
         TestRapid().apply {
             MeldingOmUtbetalingVedtakMottak(
                 rapidsConnection = this,
                 repo = repo,
+                sakIdHenter =
+                    mockk {
+                        coEvery { hentSakId(any()) } returns testSakId
+                    },
             )
         }
 
@@ -42,6 +47,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
             vedtakstidspunkt shouldBe LocalDateTime.parse("2025-05-16T09:37:17.336661")
             meldekortId shouldBe "5"
             person.ident shouldBe "11109233444"
+            sakId shouldBe testSakId.toString()
             saksbehandletAv shouldBe "dp-behandling"
             utbetalinger.minBy { it.dato } shouldBe
                 Utbetalingsdag(

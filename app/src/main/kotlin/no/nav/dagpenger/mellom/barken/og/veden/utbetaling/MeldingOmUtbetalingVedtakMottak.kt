@@ -9,6 +9,7 @@ import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
+import kotlinx.coroutines.runBlocking
 import no.nav.dagpenger.behandling.api.models.BehandletAvDTORolleDTO
 import no.nav.dagpenger.behandling.api.models.VedtakDTO
 import no.nav.dagpenger.mellom.barken.og.veden.asUUID
@@ -18,6 +19,7 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingR
 
 internal class MeldingOmUtbetalingVedtakMottak(
     rapidsConnection: RapidsConnection,
+    private val sakIdHenter: SakIdHenter,
     private val repo: UtbetalingRepo,
 ) : River.PacketListener {
     init {
@@ -63,13 +65,15 @@ internal class MeldingOmUtbetalingVedtakMottak(
             // her kan vi kalle dp-behandling for å hente utbetalinger
             val vedtakDto: VedtakDTO =
                 objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), VedtakDTO::class.java)
+
+            val sakId = runBlocking { sakIdHenter.hentSakId(behandlingId.uuid) }
             val utbetalingVedtak =
                 UtbetalingVedtak(
                     behandlingId = behandlingId,
                     basertPåBehandlingId = vedtakDto.basertPåBehandlinger?.lastOrNull()?.let { BehandlingId(it) },
                     meldekortId = vedtakDto.behandletHendelse.id,
                     vedtakstidspunkt = vedtakDto.vedtakstidspunkt,
-                    sakId = vedtakDto.fagsakId,
+                    sakId = sakId.toString(),
                     person = Person(vedtakDto.ident),
                     saksbehandletAv =
                         vedtakDto.behandletAv

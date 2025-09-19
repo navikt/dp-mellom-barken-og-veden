@@ -35,6 +35,8 @@ spec:
       value: '{{flyway.cleanDisabled}}'
     - name: CLEAN_ON_STARTUP
       value: "false"
+    - name: DP_SAKSBEHANDLING_SCOPE
+      value: "{{dp-saksbehandling.scope}}"
   {{#if ingresses}}
   ingresses:
     {{#each ingresses as |url|}}

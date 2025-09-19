@@ -7,11 +7,10 @@ import io.ktor.client.engine.mock.respond
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.headers
 import io.ktor.http.headersOf
 import kotlinx.coroutines.runBlocking
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
-import no.nav.dagpenger.saksbehandling.api.models.HttpProblemDTOExtra
+import no.nav.dagpenger.saksbehandling.api.models.HttpProblemDTO
 import org.junit.jupiter.api.Test
 import java.util.UUID
 
@@ -44,7 +43,7 @@ class SakIdHenterTest {
                     respond(
                         content =
                             objectMapper.writeValueAsString(
-                                HttpProblemDTOExtra(
+                                HttpProblemDTO(
                                     type = "about:blank",
                                     title = "Internal Server Error",
                                     status = 500,
