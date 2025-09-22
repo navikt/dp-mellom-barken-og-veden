@@ -31,17 +31,11 @@ class BehandleMottatteUtbetalinger(
             }
         if (amILeader) {
             try {
-                if (System.getenv("NAIS_CLUSTER_NAME") == "dev-gcp") {
-                    logger.info { "Behandle utbetalinger kjører i dev" }
-                    utsendingsHjelper.behandleUtbetalingVedtak()
-                } else {
-                    logger.info { "Behandle utbetalinger kjører ikke i prod" }
-                }
+                logger.info { "Skal behandle utbetalinger" }
+                utsendingsHjelper.behandleUtbetalingVedtak()
             } catch (e: Exception) {
                 logger.error(e) { "Behandle utbetaling feilet" }
             }
-        } else {
-            logger.info { "Behandle utbetalinger kjører ikke, fordi jeg ikke er leader" }
         }
     }
 }
