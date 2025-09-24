@@ -9,7 +9,6 @@ dependencies {
     implementation(project(":utbetaling-api"))
     implementation(project(":helved-kontrakter"))
     implementation(project(":dp-behandling-kontrakt"))
-    implementation(project(":dp-saksbehandling-kontrakt"))
 
     implementation(libs.rapids.and.rivers)
     implementation(libs.konfig)
