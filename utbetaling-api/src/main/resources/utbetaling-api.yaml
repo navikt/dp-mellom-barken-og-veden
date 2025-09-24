@@ -81,9 +81,11 @@ components:
     UtbetalingStatus:
       required:
         - behandlingId
+        - behandlingIdEkstern
         - status
         - meldekortId
         - sakId
+        - sakIdEkstern
         - ident
         - opprettet
         - vedtakstidspunkt
@@ -92,6 +94,9 @@ components:
           type: string
           format: uuid
           description: Behandlingens id
+        behandlingIdEkstern:
+          type: string
+          description: Behandlingens eksterne id (base64 versjon av behandlingId)
         status:
           type: string
           description: Status på utbetalingen
@@ -103,7 +108,11 @@ components:
           description: Meldekortets id, hvis det er knyttet til en utbetaling
         sakId:
           type: string
+          format: uuid
           description: Sakens id som utbetalingen er knyttet til
+        sakIdEkstern:
+          type: string
+          description: Sakens eksterne id (base64 versjon av sakId)
         ident:
           type: string
           description: NAV-identen til brukeren som utbetalingen gjelder for

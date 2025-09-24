@@ -10,6 +10,7 @@ import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
+import no.nav.dagpenger.mellom.barken.og.veden.helved.tilBase64
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
@@ -50,9 +51,11 @@ private fun List<UtbetalingVedtak>.toUtbetalingStatusDTO(): List<UtbetalingStatu
     this.map { utbetaling ->
         UtbetalingStatusDTO(
             behandlingId = utbetaling.behandlingId,
+            behandlingIdEkstern = utbetaling.behandlingId.tilBase64(),
             status = utbetaling.status::class.simpleName ?: "Ukjent",
             meldekortId = utbetaling.meldekortId,
-            sakId = utbetaling.sakId.toString(),
+            sakId = utbetaling.sakId,
+            sakIdEkstern = utbetaling.sakId.tilBase64(),
             ident = utbetaling.person.ident,
             opprettet = utbetaling.opprettet,
             vedtakstidspunkt = utbetaling.vedtakstidspunkt,

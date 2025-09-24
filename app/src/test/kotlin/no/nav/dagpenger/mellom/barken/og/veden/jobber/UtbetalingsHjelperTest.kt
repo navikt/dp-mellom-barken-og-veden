@@ -11,6 +11,7 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber.UtsendingsHjelper
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingPostgresRepository
 import org.apache.kafka.clients.producer.MockProducer
+import org.apache.kafka.clients.producer.RoundRobinPartitioner
 import org.apache.kafka.common.serialization.StringSerializer
 import org.junit.jupiter.api.Test
 import java.util.UUID
@@ -21,7 +22,7 @@ class UtbetalingsHjelperTest {
         withMigratedDb {
             val repo = UtbetalingPostgresRepository(dataSource)
             val topic = "utbetaling.topic"
-            val producer = MockProducer<String, String>(true, StringSerializer(), StringSerializer())
+            val producer = MockProducer(true, RoundRobinPartitioner(), StringSerializer(), StringSerializer())
             val helvedUtsender = HelvedUtsender(topic, producer)
             val hjelper = UtsendingsHjelper(repo, helvedUtsender)
             val sak1 = UUID.randomUUID()
@@ -60,7 +61,7 @@ class UtbetalingsHjelperTest {
         withMigratedDb {
             val repo = UtbetalingPostgresRepository(dataSource)
             val topic = "utbetaling.topic"
-            val producer = MockProducer(true, StringSerializer(), StringSerializer())
+            val producer = MockProducer(true, RoundRobinPartitioner(), StringSerializer(), StringSerializer())
             val helvedUtsender = HelvedUtsender(topic, producer)
             val hjelper = UtsendingsHjelper(repo, helvedUtsender)
             val sak1 = UUID.randomUUID()
