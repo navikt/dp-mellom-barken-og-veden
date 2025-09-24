@@ -1,4 +1,4 @@
-package no.nav.dagpenger.mellom.barken.og.veden.helved
+package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved
 
 import java.lang.Long
 import java.nio.ByteBuffer

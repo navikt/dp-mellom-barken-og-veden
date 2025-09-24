@@ -4,10 +4,10 @@ import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
-import no.nav.dagpenger.mellom.barken.og.veden.helved.HelvedUtsender
 import no.nav.dagpenger.mellom.barken.og.veden.repository.Postgres.withMigratedDb
 import no.nav.dagpenger.mellom.barken.og.veden.repository.vedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.HelvedUtsender
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber.UtsendingsHjelper
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingPostgresRepository
 import org.apache.kafka.clients.producer.MockProducer

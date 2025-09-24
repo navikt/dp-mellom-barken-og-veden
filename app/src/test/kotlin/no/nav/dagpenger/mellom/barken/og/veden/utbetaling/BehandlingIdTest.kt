@@ -1,7 +1,7 @@
 package no.nav.dagpenger.mellom.barken.og.veden.utbetaling
 
-import no.nav.dagpenger.mellom.barken.og.veden.helved.fraBase64
-import no.nav.dagpenger.mellom.barken.og.veden.helved.tilBase64
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.fraBase64
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.tilBase64
 import org.junit.jupiter.api.Assertions.assertEquals
 import java.util.UUID
 import kotlin.test.Test

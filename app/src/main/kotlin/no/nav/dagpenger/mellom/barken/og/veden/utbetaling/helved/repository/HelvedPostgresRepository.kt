@@ -1,10 +1,10 @@
-package no.nav.dagpenger.mellom.barken.og.veden.helved.repository
+package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.repository
 
 import kotliquery.TransactionalSession
 import kotliquery.queryOf
-import no.nav.dagpenger.mellom.barken.og.veden.helved.ApiError
-import no.nav.dagpenger.mellom.barken.og.veden.helved.Detaljer
-import no.nav.dagpenger.mellom.barken.og.veden.helved.StatusReply
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.ApiError
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.Detaljer
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.StatusReply
 import java.util.UUID
 
 internal class HelvedPostgresRepository : HelvedRepo {

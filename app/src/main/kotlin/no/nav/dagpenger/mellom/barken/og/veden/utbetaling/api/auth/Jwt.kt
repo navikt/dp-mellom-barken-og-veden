@@ -8,7 +8,7 @@ import io.ktor.server.auth.jwt.JWTPayloadHolder
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.parseAuthorizationHeader
 import io.ktor.server.request.ApplicationRequest
-import no.nav.dagpenger.mellom.barken.og.veden.api.auth.AuthFactory.issuerFromString
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.api.auth.AuthFactory.issuerFromString
 
 internal fun validator(jwtCredential: JWTCredential): JWTPayloadHolder {
     requirePid(jwtCredential)

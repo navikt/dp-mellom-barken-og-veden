@@ -1,4 +1,4 @@
-package no.nav.dagpenger.mellom.barken.og.veden.helved
+package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved
 
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging

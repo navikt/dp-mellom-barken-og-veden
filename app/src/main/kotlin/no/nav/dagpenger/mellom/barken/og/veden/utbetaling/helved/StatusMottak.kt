@@ -1,4 +1,4 @@
-package no.nav.dagpenger.mellom.barken.og.veden.helved
+package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
@@ -9,9 +9,9 @@ import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
-import no.nav.dagpenger.mellom.barken.og.veden.helved.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
 import java.util.UUID
 
