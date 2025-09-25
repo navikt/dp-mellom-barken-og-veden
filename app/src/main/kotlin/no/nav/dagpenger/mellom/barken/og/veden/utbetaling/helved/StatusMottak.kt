@@ -11,6 +11,7 @@ import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingStatusHendelse
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
 import java.util.UUID
@@ -44,24 +45,33 @@ internal class StatusMottak(
         ) {
             logger.info { "Fått statusmelding: ${packet["status"].asText()}" }
             logger.sikkerlogg().info { "Fått statusmelding: ${packet.toJson()}, nøkkel: ${metadata.key}" }
-
-            utbetalingRepo.hentVedtak(behandlingId) ?: run {
-                logger.warn { "Ukjent behandlingId: $behandlingId ignorerer denne" }
-                return@withLoggingContext
-            }
+            val utbetalingVedtak =
+                utbetalingRepo.hentVedtak(behandlingId) ?: run {
+                    logger.warn { "Ukjent behandlingId: $behandlingId ignorerer denne" }
+                    return@withLoggingContext
+                }
 
             val status =
                 when (statusDto.status) {
                     StatusReply.Status.OK -> Status.Ferdig()
-                    StatusReply.Status.FEILET -> Status.TilUtbetaling(Status.UtbetalingStatus.FEILET)
-                    StatusReply.Status.HOS_OPPDRAG -> Status.TilUtbetaling(Status.UtbetalingStatus.HOS_OPPDRAG)
                     StatusReply.Status.MOTTATT -> Status.TilUtbetaling(Status.UtbetalingStatus.MOTTATT)
+                    StatusReply.Status.HOS_OPPDRAG -> Status.TilUtbetaling(Status.UtbetalingStatus.HOS_OPPDRAG)
+                    StatusReply.Status.FEILET -> Status.TilUtbetaling(Status.UtbetalingStatus.FEILET)
                 }
 
             repo.lagreStatusFraHelved(
                 behandlingId = behandlingId,
                 status = status,
                 svar = statusDto,
+            )
+            context.publish(
+                utbetalingVedtak.person.ident,
+                UtbetalingStatusHendelse(
+                    behandlingId = behandlingId,
+                    sakId = utbetalingVedtak.sakId,
+                    meldekortId = utbetalingVedtak.meldekortId,
+                    status = status,
+                ).tilHendelse(),
             )
         }
     }

@@ -1,6 +1,7 @@
 package no.nav.dagpenger.mellom.barken.og.veden.helved
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -17,9 +18,10 @@ class StatusMottakTest {
     @Test
     fun `lese status meldinger fra helved`() {
         val behandlingId = UUID.randomUUID()
+        val sakId = UUID.randomUUID()
         val utbetalingRepo =
             mockk<UtbetalingRepo>().also {
-                every { it.hentVedtak(behandlingId) } returns vedtak()
+                every { it.hentVedtak(behandlingId) } returns vedtak(sakId = sakId, behandlingId = behandlingId)
             }
         val repo =
             mockk<Repo>().also {
@@ -34,6 +36,15 @@ class StatusMottakTest {
 
         verify(exactly = 1) { utbetalingRepo.hentVedtak(behandlingId) }
         verify(exactly = 1) { repo.lagreStatusFraHelved(any(), any(), any()) }
+
+        with(rapid.inspektør) {
+            size shouldBe 1
+            key(0) shouldBe "12345678910"
+            val hendelse = message(0)
+            hendelse["@event_name"].asText() shouldBe "utbetaling_utført"
+            hendelse["behandlingId"].asText() shouldBe behandlingId.toString()
+            hendelse["sakId"].asText() shouldBe sakId.toString()
+        }
     }
 
     @Test

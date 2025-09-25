@@ -67,5 +67,9 @@ class MeldingOmUtbetalingVedtakMottakTest {
             status.type shouldBe Status.Type.MOTTATT
             opprettet shouldBe LocalDateTime.parse("2025-05-16T09:37:17.338979")
         }
+        with(rapid.inspektør) {
+            size shouldBe 1
+            message(0)["@event_name"].asText() shouldBe "utbetaling_mottatt"
+        }
     }
 }

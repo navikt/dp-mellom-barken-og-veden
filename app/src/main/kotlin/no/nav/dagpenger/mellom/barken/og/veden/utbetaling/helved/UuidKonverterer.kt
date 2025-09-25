@@ -5,13 +5,6 @@ import java.nio.ByteBuffer
 import java.util.Base64
 import java.util.UUID
 
-@JvmInline
-value class BehandlingId(
-    val uuid: UUID,
-) {
-    override fun toString(): String = """BehandlingId: $uuid - Base64 versjon: ${uuid.tilBase64()}"""
-}
-
 fun UUID.tilBase64(): String {
     val byteBuffer = ByteBuffer.allocate(Long.BYTES * 2)
     byteBuffer.putLong(this.mostSignificantBits)
