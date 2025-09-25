@@ -1,4 +1,4 @@
-package no.nav.dagpenger.mellom.barken.og.veden.api
+package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.api
 
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
@@ -10,9 +10,9 @@ import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
-import no.nav.dagpenger.mellom.barken.og.veden.helved.tilBase64
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.tilBase64
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
 import no.nav.dagpenger.utbetaling.api.models.UtbetalingStatusDTO
 import java.util.UUID

@@ -5,6 +5,9 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Person
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.mapToVedtakDTO
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.tilBase64
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.toJson
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit

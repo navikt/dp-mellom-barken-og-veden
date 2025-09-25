@@ -1,4 +1,4 @@
-package no.nav.dagpenger.mellom.barken.og.veden.api.auth.validering
+package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.api.auth.validering
 
 import io.ktor.server.auth.jwt.JWTAuthenticationProvider
 import io.ktor.server.auth.jwt.JWTCredential

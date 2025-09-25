@@ -1,4 +1,4 @@
-package no.nav.dagpenger.mellom.barken.og.veden.api.auth
+package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.api.auth
 
 import com.auth0.jwk.JwkProviderBuilder
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -8,13 +8,14 @@ import com.natpryce.konfig.getValue
 import com.natpryce.konfig.stringType
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.serialization.jackson.jackson
 import io.ktor.server.auth.jwt.JWTAuthenticationProvider
 import kotlinx.coroutines.runBlocking
 import no.nav.dagpenger.mellom.barken.og.veden.Configuration
-import no.nav.dagpenger.mellom.barken.og.veden.api.auth.validering.autoriserADGrupper
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.api.auth.validering.autoriserADGrupper
 import java.net.URI
 import java.net.URL
 import java.util.concurrent.TimeUnit
@@ -79,7 +80,7 @@ private data class OpenIdConfiguration(
 )
 
 private val httpClient =
-    HttpClient(io.ktor.client.engine.cio.CIO) {
+    HttpClient(CIO) {
         install(ContentNegotiation) {
             jackson {
                 configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

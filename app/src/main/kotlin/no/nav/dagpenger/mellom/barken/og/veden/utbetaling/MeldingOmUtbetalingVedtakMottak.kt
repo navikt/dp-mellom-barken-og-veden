@@ -104,6 +104,15 @@ internal class MeldingOmUtbetalingVedtakMottak(
                 )
 
             repo.lagreVedtak(utbetalingVedtak)
+            context.publish(
+                utbetalingVedtak.person.ident,
+                UtbetalingStatusHendelse(
+                    behandlingId = behandlingId,
+                    sakId = utbetalingVedtak.sakId,
+                    meldekortId = utbetalingVedtak.meldekortId,
+                    status = utbetalingVedtak.status,
+                ).tilHendelse(),
+            )
             logger.info { "Utbetalingsvedtak lagret" }
         }
     }
