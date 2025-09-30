@@ -108,6 +108,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                 utbetalingVedtak.person.ident,
                 UtbetalingStatusHendelse(
                     behandlingId = behandlingId,
+                    ident = utbetalingVedtak.person.ident,
                     sakId = utbetalingVedtak.sakId,
                     meldekortId = utbetalingVedtak.meldekortId,
                     status = utbetalingVedtak.status,

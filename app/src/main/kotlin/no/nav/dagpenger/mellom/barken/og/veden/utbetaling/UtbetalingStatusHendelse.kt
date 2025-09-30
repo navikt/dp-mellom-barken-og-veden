@@ -5,6 +5,7 @@ import java.util.UUID
 
 data class UtbetalingStatusHendelse(
     val behandlingId: UUID,
+    val ident: String,
     val sakId: UUID,
     val meldekortId: String,
     val status: Status,
@@ -24,6 +25,7 @@ data class UtbetalingStatusHendelse(
                             }
                             Status.Type.FERDIG -> "utbetaling_utført"
                         },
+                    "ident" to ident,
                     "behandlingId" to behandlingId,
                     "sakId" to sakId,
                     "meldekortId" to meldekortId,
