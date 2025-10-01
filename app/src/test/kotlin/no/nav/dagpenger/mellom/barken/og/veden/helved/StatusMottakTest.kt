@@ -6,7 +6,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import no.nav.dagpenger.mellom.barken.og.veden.repository.vedtak
-import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.StatusMottak
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.HelvedStatusMottak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
 import java.util.UUID
@@ -27,7 +27,7 @@ class StatusMottakTest {
             mockk<Repo>().also {
                 every { it.lagreStatusFraHelved(any(), any(), any()) } returns Unit
             }
-        val statusMottak = StatusMottak(rapid, utbetalingRepo, repo)
+        val helvedStatusMottak = HelvedStatusMottak(rapid, utbetalingRepo, repo)
 
         rapid.sendTestMessage(
             statusMelding,
@@ -58,7 +58,7 @@ class StatusMottakTest {
             mockk<Repo>().also {
                 every { it.lagreStatusFraHelved(any(), any(), any()) } returns Unit
             }
-        val statusMottak = StatusMottak(rapid, utbetalingRepo, mockk())
+        val helvedStatusMottak = HelvedStatusMottak(rapid, utbetalingRepo, mockk())
 
         rapid.sendTestMessage(
             meldingViIgnorer,

@@ -16,7 +16,7 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
 import java.util.UUID
 
-internal class StatusMottak(
+internal class HelvedStatusMottak(
     rapidsConnection: RapidsConnection,
     private val utbetalingRepo: UtbetalingRepo,
     private val repo: Repo,
@@ -25,6 +25,8 @@ internal class StatusMottak(
         River(rapidsConnection)
             .apply {
                 precondition { message -> message.requireAny("status", StatusReply.Status.entries.map { it.name }) }
+                // unngå kollisjon med andre eventer sendt på rapiden med samme "status" felt
+                precondition { message -> message.forbid("@event_name") }
             }.register(this)
     }
 

@@ -34,8 +34,6 @@ class UtbetalingStatusHendelseTest {
         hendelse["sakId"].asText() shouldBeEqual "123e4567-e89b-12d3-a456-426614174001"
         hendelse["meldekortId"].asText() shouldBeEqual "m1"
         hendelse["status"].asText() shouldBeEqual forventetStatusTekst
-
-        println(hendelse["@event_name"].asText())
     }
 
     companion object {

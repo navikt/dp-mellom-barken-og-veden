@@ -15,8 +15,8 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.MeldingOmUtbetalingVed
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.SakIdHenter
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.api.authenticationConfig
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.api.utbetalingApi
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.HelvedStatusMottak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.HelvedUtsender
-import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.StatusMottak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.repository.HelvedPostgresRepository
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber.BehandleMottatteUtbetalinger
@@ -75,7 +75,7 @@ internal class ApplicationBuilder(
                     repo = utbetalingRepo,
                     sakIdHenter = SakIdHenter(Configuration.sakApiBaseUrl, Configuration.sakApiToken),
                 )
-                StatusMottak(
+                HelvedStatusMottak(
                     rapidsConnection = this,
                     utbetalingRepo = utbetalingRepo,
                     repo = repo,
