@@ -92,7 +92,7 @@ class UtbetalingPostgresRepository(
         }
     }
 
-    override fun hentAlleUtbetalingerForSak(sakId: String): List<UtbetalingVedtak> {
+    override fun hentAlleUtbetalingerForSak(sakId: UUID): List<UtbetalingVedtak> {
         sessionOf(dataSource).use { session ->
             return session.transaction { tx ->
                 tx.run(

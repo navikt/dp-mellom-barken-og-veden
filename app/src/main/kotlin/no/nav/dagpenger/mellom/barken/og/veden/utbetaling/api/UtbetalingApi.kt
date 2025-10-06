@@ -32,7 +32,7 @@ internal fun Application.utbetalingApi(repo: UtbetalingRepo) {
                 }
 
                 get {
-                    val sakId = call.queryParameters["sakId"]
+                    val sakId = call.queryParameters["sakId"].let { UUID.fromString(it) }
 
                     val utbetalinger =
                         if (sakId == null) {

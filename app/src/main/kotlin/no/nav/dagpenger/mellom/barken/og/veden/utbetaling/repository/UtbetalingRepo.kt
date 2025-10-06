@@ -29,5 +29,5 @@ interface UtbetalingRepo {
 
     fun harUtbetalingerSomVenterPåSvar(sakId: UUID): Boolean
 
-    fun hentAlleUtbetalingerForSak(sakId: String): List<UtbetalingVedtak>
+    fun hentAlleUtbetalingerForSak(sakId: UUID): List<UtbetalingVedtak>
 }
