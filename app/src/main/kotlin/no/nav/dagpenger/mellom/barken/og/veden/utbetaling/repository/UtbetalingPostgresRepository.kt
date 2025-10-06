@@ -405,6 +405,8 @@ class UtbetalingPostgresRepository(
                     Status.Type.FERDIG ->
                         Ferdig(
                             opprettet = localDateTime("opprettet"),
+                            // Hvis ekstern_status er null, sett til OK (for bakoverkompatibilitet)
+                            eksternStatus = stringOrNull("ekstern_status")?.let { UtbetalingStatus.valueOf(it) } ?: UtbetalingStatus.OK,
                         )
                 },
             opprettet = localDateTime("opprettet"),

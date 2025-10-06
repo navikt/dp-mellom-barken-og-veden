@@ -46,7 +46,7 @@ class UtbetalingStatusHendelseTest {
                 Arguments.of(Status.TilUtbetaling(UtbetalingStatus.SENDT), "TIL_UTBETALING", "utbetaling_sendt"),
                 Arguments.of(Status.TilUtbetaling(UtbetalingStatus.MOTTATT), "TIL_UTBETALING", "utbetaling_sendt"),
                 Arguments.of(Status.TilUtbetaling(UtbetalingStatus.FEILET), "TIL_UTBETALING", "utbetaling_feilet"),
-                Arguments.of(Status.Ferdig(), "FERDIG", "utbetaling_utført"),
+                Arguments.of(Status.Ferdig(UtbetalingStatus.OK), "FERDIG", "utbetaling_utført"),
             )
     }
 }

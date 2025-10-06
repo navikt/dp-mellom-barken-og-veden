@@ -41,16 +41,23 @@ sealed class Status {
         override val type: Type = Type.MOTTATT
     }
 
+    interface HarEksternStatus {
+        val eksternStatus: UtbetalingStatus
+    }
+
     data class TilUtbetaling(
-        val eksternStatus: UtbetalingStatus,
+        override val eksternStatus: UtbetalingStatus,
         override val opprettet: LocalDateTime = LocalDateTime.now(),
-    ) : Status() {
+    ) : Status(),
+        HarEksternStatus {
         override val type: Type = Type.TIL_UTBETALING
     }
 
     data class Ferdig(
+        override val eksternStatus: UtbetalingStatus,
         override val opprettet: LocalDateTime = LocalDateTime.now(),
-    ) : Status() {
+    ) : Status(),
+        HarEksternStatus {
         override val type: Type = Type.FERDIG
     }
 
@@ -59,5 +66,6 @@ sealed class Status {
         FEILET,
         MOTTATT,
         HOS_OPPDRAG,
+        OK,
     }
 }

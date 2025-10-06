@@ -55,7 +55,7 @@ internal class HelvedStatusMottak(
 
             val status =
                 when (statusDto.status) {
-                    StatusReply.Status.OK -> Status.Ferdig()
+                    StatusReply.Status.OK -> Status.Ferdig(Status.UtbetalingStatus.OK)
                     StatusReply.Status.MOTTATT -> Status.TilUtbetaling(Status.UtbetalingStatus.MOTTATT)
                     StatusReply.Status.HOS_OPPDRAG -> Status.TilUtbetaling(Status.UtbetalingStatus.HOS_OPPDRAG)
                     StatusReply.Status.FEILET -> Status.TilUtbetaling(Status.UtbetalingStatus.FEILET)
