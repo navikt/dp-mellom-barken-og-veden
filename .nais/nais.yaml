@@ -62,6 +62,13 @@ spec:
         diskAutoresize: true
         pointInTimeRecovery: true
         tier: {{gcp.sql.tier}}
+        flags:
+          - name: cloudsql.enable_pgaudit
+            value: "true"
+          - name: pgaudit.log
+            value: "write,ddl,role"
+          - name: pgaudit.log_parameter
+            value: "on"
         databases:
           - name: mellom-barken-og-veden
             envVarPrefix: DB
