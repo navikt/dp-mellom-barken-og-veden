@@ -78,6 +78,8 @@ spec:
     outbound:
       rules:
         - application: dp-saksbehandling
+        - application: logging
+          namespace: nais-system
     inbound:
       rules:
         - application: dp-behandling-admin
