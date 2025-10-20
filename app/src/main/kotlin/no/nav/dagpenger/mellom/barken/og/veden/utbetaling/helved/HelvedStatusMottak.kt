@@ -45,14 +45,13 @@ internal class HelvedStatusMottak(
         withLoggingContext(
             "behandlingId" to behandlingId.toString(),
         ) {
-            logger.info { "Fått statusmelding: ${packet["status"].asText()}" }
-            logger.sikkerlogg().info { "Fått statusmelding: ${packet.toJson()}, nøkkel: ${metadata.key}" }
             val utbetalingVedtak =
                 utbetalingRepo.hentVedtak(behandlingId) ?: run {
                     logger.warn { "Ukjent behandlingId: $behandlingId ignorerer denne" }
                     return@withLoggingContext
                 }
-
+            logger.info { "Fått statusmelding: ${packet["status"].asText()}" }
+            logger.sikkerlogg().info { "Fått statusmelding: ${packet.toJson()}, nøkkel: ${metadata.key}" }
             val status =
                 when (statusDto.status) {
                     StatusReply.Status.OK -> Status.Ferdig(Status.UtbetalingStatus.OK)
