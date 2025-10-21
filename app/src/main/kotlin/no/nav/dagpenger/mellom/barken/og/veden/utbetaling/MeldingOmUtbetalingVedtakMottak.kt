@@ -62,6 +62,10 @@ internal class MeldingOmUtbetalingVedtakMottak(
             "meldekortId" to meldekortId.toString(),
         ) {
             logger.info { "Mottok melding om utbetaling for meldekort" }
+            if (behandlingId == UUID.fromString("019a068e-3d80-77f0-9a46-44cf2ec881fe")) {
+                logger.info { "Ignorerer utbetaling" }
+                return
+            }
             // her kan vi kalle dp-behandling for å hente utbetalinger
             val vedtakDto: VedtakDTO =
                 objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), VedtakDTO::class.java)
