@@ -103,6 +103,9 @@ internal class MeldingOmUtbetalingVedtakMottak(
                     opprettet = packet["@opprettet"].asLocalDateTime(),
                 )
 
+            sikkerlogger.info {
+                "Skal lagre dager for utbetaling=${utbetalingVedtak.utbetalinger}"
+            }
             repo.lagreVedtak(utbetalingVedtak)
             context.publish(
                 utbetalingVedtak.person.ident,
@@ -120,5 +123,6 @@ internal class MeldingOmUtbetalingVedtakMottak(
 
     private companion object {
         private val logger = KotlinLogging.logger { }
+        private val sikkerlogger = KotlinLogging.logger("tjenestekall.MeldingOmUtbetalingVedtakMottak")
     }
 }
