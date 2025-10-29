@@ -19,15 +19,15 @@ dependencies {
     implementation(libs.bundles.postgres)
 
     implementation("io.ktor:ktor-server-sse:$ktorVersion")
-    implementation("com.github.navikt.tbd-libs:naisful-app:2025.09.19-13.31-61342e73")
-    implementation("com.github.navikt.tbd-libs:kafka:2025.09.19-13.31-61342e73")
+    implementation("com.github.navikt.tbd-libs:naisful-app:2025.10.24-07.54-f9fca521")
+    implementation("com.github.navikt.tbd-libs:kafka:2025.10.24-07.54-f9fca521")
     implementation("io.ktor:ktor-server-swagger:$ktorVersion")
 
     testImplementation("io.ktor:ktor-server-test-host-jvm:$ktorVersion")
     testImplementation(libs.mockk)
     testImplementation(libs.kotest.assertions.core)
     testImplementation(libs.kotest.assertions.json)
-    testImplementation("com.github.navikt.tbd-libs:naisful-test-app:2025.09.19-13.31-61342e73")
+    testImplementation("com.github.navikt.tbd-libs:naisful-test-app:2025.10.24-07.54-f9fca521")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation(libs.rapids.and.rivers.test)
     testImplementation(libs.bundles.postgres.test)
