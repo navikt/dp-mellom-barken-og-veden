@@ -62,7 +62,9 @@ internal class MeldingOmUtbetalingVedtakMottak(
             "meldekortId" to meldekortId.toString(),
         ) {
             logger.info { "Mottok melding om utbetaling for meldekort" }
-            if (behandlingId == UUID.fromString("019a068e-3d80-77f0-9a46-44cf2ec881fe")) {
+            if (behandlingId == UUID.fromString("019a49ee-aa30-7ef8-9baa-f674e0ea8a82") &&
+                System.getenv("NAIS_CLUSTER_NAME") == "dev-gcp"
+            ) {
                 logger.info { "Ignorerer utbetaling" }
                 return
             }
