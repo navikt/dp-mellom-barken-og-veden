@@ -1,6 +1,7 @@
 package no.nav.dagpenger.mellom.barken.og.veden.utbetaling
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.tilBase64
 import java.util.UUID
 
 data class UtbetalingStatusHendelse(
@@ -27,7 +28,9 @@ data class UtbetalingStatusHendelse(
                         },
                     "ident" to ident,
                     "behandlingId" to behandlingId,
+                    "eksternBehandlingId" to behandlingId.tilBase64(),
                     "sakId" to sakId,
+                    "eksternSakId" to sakId.tilBase64(),
                     "meldekortId" to meldekortId,
                     "status" to status.type.name,
                 ),
