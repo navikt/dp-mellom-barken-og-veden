@@ -62,17 +62,18 @@ internal class MeldingOmUtbetalingVedtakMottak(
             "meldekortId" to meldekortId.toString(),
         ) {
             logger.info { "Mottok melding om utbetaling for meldekort" }
-            if (behandlingId == UUID.fromString("019a49ee-aa30-7ef8-9baa-f674e0ea8a82") &&
-                System.getenv("NAIS_CLUSTER_NAME") == "dev-gcp"
-            ) {
-                logger.info { "Ignorerer utbetaling" }
-                return
-            }
             // her kan vi kalle dp-behandling for å hente utbetalinger
             val vedtakDto: VedtakDTO =
                 objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), VedtakDTO::class.java)
 
-            val sakId: UUID = runBlocking { sakIdHenter.hentSakId(behandlingId) }
+            val sakId: UUID =
+                try {
+                    runBlocking { sakIdHenter.hentSakId(behandlingId) }
+                } catch (e: Exception) {
+                    logger.error(e) { "Klarte ikke hente sakId for behandling=$behandlingId" }
+                    if (System.getenv("NAIS_CLUSTER_NAME") == "prod-gcp") throw e else return@withLoggingContext
+                }
+
             val utbetalingVedtak =
                 UtbetalingVedtak(
                     behandlingId = behandlingId,
