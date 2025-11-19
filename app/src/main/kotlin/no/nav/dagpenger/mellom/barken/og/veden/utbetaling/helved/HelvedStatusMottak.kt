@@ -71,7 +71,7 @@ internal class HelvedStatusMottak(
                     behandlingId = behandlingId,
                     ident = utbetalingVedtak.person.ident,
                     sakId = utbetalingVedtak.sakId,
-                    meldekortId = utbetalingVedtak.meldekortId,
+                    hendelseId = utbetalingVedtak.hendelseId,
                     status = status,
                 ).tilHendelse(),
             )

@@ -26,7 +26,7 @@ class HelvedMapperTest {
                 behandlingId = behandlingId,
                 basertPåBehandlingId = UUID.randomUUID(),
                 vedtakstidspunkt = vedtakstidspunkt,
-                meldekortId = "meldekort1",
+                hendelseId = "meldekort1",
                 sakId = sakId,
                 person = Person("12345678901"),
                 saksbehandletAv = "saksbehandler",
