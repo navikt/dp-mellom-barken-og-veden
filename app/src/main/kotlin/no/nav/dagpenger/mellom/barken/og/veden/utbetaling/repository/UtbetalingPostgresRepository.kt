@@ -102,6 +102,7 @@ class UtbetalingPostgresRepository(
                         SELECT *
                         FROM utbetaling
                         WHERE sak_id = :sakId
+                        ORDER BY behandling_id
                         """.trimIndent(),
                         mapOf(
                             "sakId" to sakId,
