@@ -26,7 +26,7 @@ class UtbetalingStatusHendelseTest {
                 ident = "12345678901",
                 behandlingId = behandlingId,
                 sakId = sakId,
-                hendelseId = "m1",
+                behandletHendelseId = "m1",
                 status = status,
             )
 

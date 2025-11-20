@@ -54,7 +54,7 @@ private fun List<UtbetalingVedtak>.toUtbetalingStatusDTO(): List<UtbetalingStatu
             behandlingIdEkstern = utbetaling.behandlingId.tilBase64(),
             status = utbetaling.status::class.simpleName ?: "Ukjent",
             // dette er jo ikke nødvendigvis meldekortId lengre, men hendelseId.... Rename?
-            meldekortId = utbetaling.hendelseId,
+            behandletHendelseId = utbetaling.behandletHendelseId,
             sakId = utbetaling.sakId,
             sakIdEkstern = utbetaling.sakId.tilBase64(),
             ident = utbetaling.person.ident,

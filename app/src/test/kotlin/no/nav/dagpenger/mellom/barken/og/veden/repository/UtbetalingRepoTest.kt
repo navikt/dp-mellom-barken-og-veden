@@ -55,7 +55,7 @@ fun vedtak(
     behandlingId = behandlingId,
     basertPåBehandlingId = basertPåBehandlingId,
     vedtakstidspunkt = vedtakstidspunkt,
-    hendelseId = hendelseId,
+    behandletHendelseId = hendelseId,
     sakId = sakId,
     person = ident,
     saksbehandletAv = saksbehandletAv,

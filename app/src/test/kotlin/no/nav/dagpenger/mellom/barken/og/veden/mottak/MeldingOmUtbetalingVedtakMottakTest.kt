@@ -47,7 +47,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
             behandlingId shouldBe UUID.fromString("019a9b85-c056-7252-ba57-bc318ff3bfd6")
             basertPåBehandlingId shouldBe UUID.fromString("019a9b85-bf25-72ee-8fd7-1d8f6ab74ce2")
             vedtakstidspunkt shouldBe LocalDateTime.parse("2025-11-19T10:50:25.403304")
-            hendelseId shouldBe "019a9b85-bee3-7b3e-a122-7433aa5542bd"
+            behandletHendelseId shouldBe "019a9b85-bee3-7b3e-a122-7433aa5542bd"
             person.ident shouldBe "13216349431"
             sakId shouldBe testSakId
             saksbehandletAv shouldBe "NAV123123"
@@ -106,7 +106,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
             behandlingId shouldBe UUID.fromString("019a9b85-c056-7252-ba57-bc318ff3bfd6")
             basertPåBehandlingId shouldBe UUID.fromString("019a9b85-bf25-72ee-8fd7-1d8f6ab74ce2")
             vedtakstidspunkt shouldBe LocalDateTime.parse("2025-11-19T10:50:25.403304")
-            hendelseId shouldBe "019a9c58-7390-703e-a7af-97ed475d9546"
+            behandletHendelseId shouldBe "019a9c58-7390-703e-a7af-97ed475d9546"
             person.ident shouldBe "13216349431"
             sakId shouldBe testSakId
             saksbehandletAv shouldBe "NAV123123"

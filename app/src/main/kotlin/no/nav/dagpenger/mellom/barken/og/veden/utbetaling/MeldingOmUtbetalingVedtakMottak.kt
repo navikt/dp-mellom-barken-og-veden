@@ -80,7 +80,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                     behandlingId = behandlingId,
                     basertPåBehandlingId = behandlingsresultatDTO.basertPå,
                     vedtakstidspunkt = packet["@opprettet"].asLocalDateTime(),
-                    hendelseId = behandlingsresultatDTO.behandletHendelse.id,
+                    behandletHendelseId = behandlingsresultatDTO.behandletHendelse.id,
                     sakId = sakId,
                     person = Person(behandlingsresultatDTO.ident),
                     saksbehandletAv =
@@ -121,7 +121,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                     behandlingId = behandlingId,
                     ident = utbetalingVedtak.person.ident,
                     sakId = utbetalingVedtak.sakId,
-                    hendelseId = utbetalingVedtak.hendelseId,
+                    behandletHendelseId = utbetalingVedtak.behandletHendelseId,
                     status = utbetalingVedtak.status,
                 ).tilHendelse(),
             )
