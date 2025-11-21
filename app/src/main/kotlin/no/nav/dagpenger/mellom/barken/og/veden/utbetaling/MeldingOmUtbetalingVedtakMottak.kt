@@ -11,10 +11,11 @@ import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
 import kotlinx.coroutines.runBlocking
 import no.nav.dagpenger.behandling.api.models.BehandletAvDTORolleDTO
-import no.nav.dagpenger.behandling.api.models.VedtakDTO
+import no.nav.dagpenger.behandling.api.models.BehandlingsresultatDTO
 import no.nav.dagpenger.mellom.barken.og.veden.asUUID
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
+import java.time.LocalDateTime
 import java.util.UUID
 
 internal class MeldingOmUtbetalingVedtakMottak(
@@ -26,25 +27,20 @@ internal class MeldingOmUtbetalingVedtakMottak(
         River(rapidsConnection)
             .apply {
                 precondition {
-                    it.requireValue("@event_name", "vedtak_fattet")
+                    it.requireValue("@event_name", "behandlingsresultat")
                     // kanskje vi også vil ta vare på "rammevedtaket"?
-                    it.requireValue("behandletHendelse.type", "Meldekort")
+//                    it.requireValue("behandletHendelse.type", "Meldekort")
                 }
                 validate {
                     it.requireKey(
                         "behandlingId",
-                        "basertPåBehandlinger",
-                        "vedtakstidspunkt",
-                        "virkningsdato",
-                        "fastsatt",
+                        "basertPå",
                         "ident",
-                        "vilkår",
-                        "utbetalinger",
                         "opplysninger",
                         "behandletHendelse",
                     )
                 }
-                validate { it.interestedIn("@id", "@opprettet", "behandletAv") }
+                validate { it.interestedIn("@id", "@opprettet", "behandletAv", "basertPå") }
             }.register(this)
     }
 
@@ -55,16 +51,21 @@ internal class MeldingOmUtbetalingVedtakMottak(
         meterRegistry: MeterRegistry,
     ) {
         val behandlingId = packet["behandlingId"].asUUID()
-        val meldekortId = packet["behandletHendelse"]["id"].asLong()
+        val hendelseId = packet["behandletHendelse"]["id"].asText()
 
         withLoggingContext(
             "behandlingId" to behandlingId.toString(),
-            "meldekortId" to meldekortId.toString(),
+            "hendelseId" to hendelseId.toString(),
         ) {
             logger.info { "Mottok melding om utbetaling for meldekort" }
             // her kan vi kalle dp-behandling for å hente utbetalinger
-            val vedtakDto: VedtakDTO =
-                objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), VedtakDTO::class.java)
+            val behandlingsresultatDTO: BehandlingsresultatDTO =
+                objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), BehandlingsresultatDTO::class.java)
+
+            if (behandlingsresultatDTO.utbetalinger.isEmpty()) {
+                logger.info { "Ingen utbetalinger å lagre for behandling=$behandlingId" }
+                return@withLoggingContext
+            }
 
             val sakId: UUID =
                 try {
@@ -77,25 +78,25 @@ internal class MeldingOmUtbetalingVedtakMottak(
             val utbetalingVedtak =
                 UtbetalingVedtak(
                     behandlingId = behandlingId,
-                    basertPåBehandlingId = vedtakDto.basertPåBehandlinger?.lastOrNull(),
-                    meldekortId = vedtakDto.behandletHendelse.id,
-                    vedtakstidspunkt = vedtakDto.vedtakstidspunkt,
+                    basertPåBehandlingId = behandlingsresultatDTO.basertPå,
+                    vedtakstidspunkt = packet["@opprettet"].asLocalDateTime(),
+                    behandletHendelseId = behandlingsresultatDTO.behandletHendelse.id,
                     sakId = sakId,
-                    person = Person(vedtakDto.ident),
+                    person = Person(behandlingsresultatDTO.ident),
                     saksbehandletAv =
-                        vedtakDto.behandletAv
+                        behandlingsresultatDTO.behandletAv
                             .singleOrNull { it.rolle == BehandletAvDTORolleDTO.SAKSBEHANDLER }
                             ?.behandler
                             ?.ident
                             ?: "dp-behandling",
                     besluttetAv =
-                        vedtakDto.behandletAv
+                        behandlingsresultatDTO.behandletAv
                             .singleOrNull { it.rolle == BehandletAvDTORolleDTO.BESLUTTER }
                             ?.behandler
                             ?.ident
                             ?: "dp-behandling",
                     utbetalinger =
-                        vedtakDto.utbetalinger.map { utbetaling ->
+                        behandlingsresultatDTO.utbetalinger.map { utbetaling ->
                             Utbetalingsdag(
                                 meldeperiode = utbetaling.meldeperiode,
                                 dato = utbetaling.dato,
@@ -105,7 +106,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                         },
                     status =
                         Status.Mottatt(
-                            opprettet = packet["@opprettet"].asLocalDateTime(),
+                            opprettet = LocalDateTime.now(),
                         ),
                     opprettet = packet["@opprettet"].asLocalDateTime(),
                 )
@@ -120,7 +121,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                     behandlingId = behandlingId,
                     ident = utbetalingVedtak.person.ident,
                     sakId = utbetalingVedtak.sakId,
-                    meldekortId = utbetalingVedtak.meldekortId,
+                    behandletHendelseId = utbetalingVedtak.behandletHendelseId,
                     status = utbetalingVedtak.status,
                 ).tilHendelse(),
             )

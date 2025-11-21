@@ -83,7 +83,7 @@ components:
         - behandlingId
         - behandlingIdEkstern
         - status
-        - meldekortId
+        - behandletHendelseId
         - sakId
         - sakIdEkstern
         - ident
@@ -103,9 +103,9 @@ components:
         eksternStatus:
           type: string
           description: Ekstern status på utbetalingen
-        meldekortId:
+        behandletHendelseId:
           type: string
-          description: Meldekortets id, hvis det er knyttet til en utbetaling
+          description: Hendelse id som er behandlet, hvis det er knyttet til en utbetaling
         sakId:
           type: string
           format: uuid

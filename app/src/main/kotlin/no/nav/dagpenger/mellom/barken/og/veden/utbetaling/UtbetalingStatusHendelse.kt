@@ -8,7 +8,7 @@ data class UtbetalingStatusHendelse(
     val behandlingId: UUID,
     val ident: String,
     val sakId: UUID,
-    val meldekortId: String,
+    val behandletHendelseId: String,
     val status: Status,
 ) {
     fun tilHendelse() =
@@ -31,7 +31,8 @@ data class UtbetalingStatusHendelse(
                     "eksternBehandlingId" to behandlingId.tilBase64(),
                     "sakId" to sakId,
                     "eksternSakId" to sakId.tilBase64(),
-                    "meldekortId" to meldekortId,
+                    "behandletHendelseId" to behandletHendelseId,
+                    "meldekortId" to behandletHendelseId,
                     "status" to status.type.name,
                 ),
             ).toJson()
