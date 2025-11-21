@@ -26,7 +26,7 @@ class UtbetalingStatusHendelseTest {
                 ident = "12345678901",
                 behandlingId = behandlingId,
                 sakId = sakId,
-                meldekortId = "m1",
+                behandletHendelseId = "m1",
                 status = status,
             )
 
@@ -38,6 +38,7 @@ class UtbetalingStatusHendelseTest {
         hendelse["sakId"].asText() shouldBeEqual sakId.toString()
         hendelse["eksternSakId"].asText() shouldBeEqual sakId.tilBase64()
         hendelse["meldekortId"].asText() shouldBeEqual "m1"
+        hendelse["behandletHendelseId"].asText() shouldBeEqual "m1"
         hendelse["status"].asText() shouldBeEqual forventetStatusTekst
     }
 

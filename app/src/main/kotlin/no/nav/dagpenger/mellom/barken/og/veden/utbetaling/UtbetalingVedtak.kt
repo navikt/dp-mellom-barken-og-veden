@@ -8,7 +8,7 @@ data class UtbetalingVedtak(
     val behandlingId: UUID,
     val basertPåBehandlingId: UUID?,
     val vedtakstidspunkt: LocalDateTime,
-    val meldekortId: String,
+    val behandletHendelseId: String,
     val sakId: UUID,
     val person: Person,
     val saksbehandletAv: String,
