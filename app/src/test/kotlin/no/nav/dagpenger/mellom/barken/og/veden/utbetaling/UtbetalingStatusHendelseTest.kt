@@ -38,6 +38,7 @@ class UtbetalingStatusHendelseTest {
         hendelse["sakId"].asText() shouldBeEqual sakId.toString()
         hendelse["eksternSakId"].asText() shouldBeEqual sakId.tilBase64()
         hendelse["meldekortId"].asText() shouldBeEqual "m1"
+        hendelse["behandletHendelseId"].asText() shouldBeEqual "m1"
         hendelse["status"].asText() shouldBeEqual forventetStatusTekst
     }
 
