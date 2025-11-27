@@ -27,7 +27,7 @@ class HelvedUtsender(
                 )
             val metadata = producer.send(record).get()
             logger.info {
-                "Utbetaling sendt til helved: ${metadata.topic()} med offset ${metadata.offset()}"
+                "Utbetaling sendt til helved: (${metadata.topic()} med offset ${metadata.offset()})"
             }
             logger.sikkerlogg().info { "Utbetaling sendt til helved: $utbetaling" }
         } catch (e: Exception) {

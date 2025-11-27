@@ -5,6 +5,7 @@ import io.github.oshai.kotlinlogging.withLoggingContext
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.HelvedUtsender
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.mapToVedtakDTO
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.tilBase64
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.toJson
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
 
@@ -25,7 +26,9 @@ class UtsendingsHjelper(
                 withLoggingContext(
                     mapOf(
                         "behandlingId" to vedtak.behandlingId.toString(),
+                        "helvedBehandlingId" to vedtak.behandlingId.tilBase64(),
                         "sakId" to vedtak.sakId.toString(),
+                        "helvedSakId" to vedtak.sakId.tilBase64(),
                     ),
                 ) {
                     if (repo.harUtbetalingerSomVenterPåSvar(vedtak.sakId)) {
