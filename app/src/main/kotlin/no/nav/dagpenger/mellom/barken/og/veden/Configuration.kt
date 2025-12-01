@@ -36,6 +36,8 @@ object Configuration {
             map + pair.second
         }
 
+    val localHostname = properties[Key("HOSTNAME", stringType)]
+
     val utbetalingTopic: String = properties[Key("UTBETALING_TOPIC", stringType)]
 
     val sakApiBaseUrl: String = properties[Key("DP_SAKSBEHANDLING_URL", stringType)]
