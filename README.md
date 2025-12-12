@@ -3,7 +3,7 @@
 
 ## Ansvarsområder
 
-- Reagere på behandlingsresultat hendelser med utbeatlinger fra [dp-behandling](https://github.com/navikt/dp-behandling) 
+- Reagere på behandlingsresultat hendelser med utbetalinger fra [dp-behandling](https://github.com/navikt/dp-behandling) 
 - Sørge for å effekturere utbetalinger til Hel-ved (https://helved-docs.ansatt.dev.nav.no) 
 - Lytter på status på utbetalinger og oppdaterer behandling med resultat
 
