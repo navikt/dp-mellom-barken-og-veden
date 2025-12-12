@@ -12,7 +12,7 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingR
 import java.util.UUID
 import kotlin.test.Test
 
-class StatusMottakTest {
+class HelvedStatusMottakTest {
     private val rapid = TestRapid()
 
     @Test
@@ -30,8 +30,8 @@ class StatusMottakTest {
         val helvedStatusMottak = HelvedStatusMottak(rapid, utbetalingRepo, repo)
 
         rapid.sendTestMessage(
-            statusMelding,
-            behandlingId.toString(),
+            message = statusMelding,
+            key = behandlingId.toString(),
         )
 
         verify(exactly = 1) { utbetalingRepo.hentVedtak(behandlingId) }

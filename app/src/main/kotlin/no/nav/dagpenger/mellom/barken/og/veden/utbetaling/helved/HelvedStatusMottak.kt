@@ -36,11 +36,16 @@ internal class HelvedStatusMottak(
         metadata: MessageMetadata,
         meterRegistry: MeterRegistry,
     ) {
-        val statusDto: StatusReply =
-            objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), StatusReply::class.java)
+        val fagsystem = metadata.headers["fagsystem"]?.let { String(it) }
+        if (fagsystem != "DAGPENGER") {
+            logger.info { "Mottok statusmelding for annet fagsystem ($fagsystem), skal ignorere denne" }
+        }
         val behandlingId =
             metadata.key?.let { UUID.fromString(it) }
                 ?: throw IllegalStateException("Mangler nøkkel i metadata, kan ikke prosessere melding uten behandlingId")
+
+        val statusDto: StatusReply =
+            objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), StatusReply::class.java)
 
         withLoggingContext(
             "behandlingId" to behandlingId.toString(),
