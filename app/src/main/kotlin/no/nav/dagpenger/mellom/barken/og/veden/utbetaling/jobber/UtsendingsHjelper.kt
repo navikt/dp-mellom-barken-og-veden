@@ -41,6 +41,12 @@ class UtsendingsHjelper(
                     utsender.send(vedtak.behandlingId, json)
                     logger.info { "Har sendt utbetaling til helved" }
 
+                    repo.lagreMelding(
+                        behandlingId = vedtak.behandlingId,
+                        json = json,
+                        type = "UTBETALING_SENDT_TIL_HELVED",
+                    )
+
                     repo.oppdaterStatus(vedtak.behandlingId, Status.TilUtbetaling(Status.UtbetalingStatus.SENDT))
                 }
             }

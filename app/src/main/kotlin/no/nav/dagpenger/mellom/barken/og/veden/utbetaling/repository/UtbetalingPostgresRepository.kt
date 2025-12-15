@@ -115,6 +115,55 @@ class UtbetalingPostgresRepository(
         }
     }
 
+    override fun lagreMelding(
+        behandlingId: UUID,
+        type: String,
+        json: String,
+    ) {
+        sessionOf(dataSource).use { session ->
+            session.transaction { tx ->
+                lagreMelding(
+                    behandlingId = behandlingId,
+                    type = type,
+                    json = json,
+                    tx = tx,
+                )
+            }
+        }
+    }
+
+    override fun lagreMelding(
+        behandlingId: UUID,
+        type: String,
+        json: String,
+        tx: TransactionalSession,
+    ) {
+        tx.run(
+            queryOf(
+                // language=PostgreSQL
+                """
+                INSERT INTO melding (
+                    id,
+                    behandling_id,
+                    type,
+                    json
+                ) VALUES (
+                    :id,
+                    :behandlingId,
+                    :type,
+                    :json::jsonb
+                )
+                """.trimIndent(),
+                mapOf(
+                    "id" to UUID.randomUUID(),
+                    "behandlingId" to behandlingId,
+                    "type" to type,
+                    "json" to json,
+                ),
+            ).asUpdate,
+        )
+    }
+
     override fun hentVedtak(behandlingId: UUID): UtbetalingVedtak? {
         sessionOf(dataSource).use { session ->
             return session.transaction { tx ->
@@ -389,12 +438,13 @@ class UtbetalingPostgresRepository(
             utbetalinger = hentDager(behandlingId, tx),
             status =
                 when (Status.Type.valueOf(string("status"))) {
-                    Status.Type.MOTTATT ->
+                    Status.Type.MOTTATT -> {
                         Mottatt(
                             opprettet = localDateTime("opprettet"),
                         )
+                    }
 
-                    Status.Type.TIL_UTBETALING ->
+                    Status.Type.TIL_UTBETALING -> {
                         TilUtbetaling(
                             eksternStatus =
                                 UtbetalingStatus.valueOf(
@@ -402,13 +452,15 @@ class UtbetalingPostgresRepository(
                                 ),
                             opprettet = localDateTime("opprettet"),
                         )
+                    }
 
-                    Status.Type.FERDIG ->
+                    Status.Type.FERDIG -> {
                         Ferdig(
                             opprettet = localDateTime("opprettet"),
                             // Hvis ekstern_status er null, sett til OK (for bakoverkompatibilitet)
                             eksternStatus = stringOrNull("ekstern_status")?.let { UtbetalingStatus.valueOf(it) } ?: UtbetalingStatus.OK,
                         )
+                    }
                 },
             opprettet = localDateTime("opprettet"),
         )

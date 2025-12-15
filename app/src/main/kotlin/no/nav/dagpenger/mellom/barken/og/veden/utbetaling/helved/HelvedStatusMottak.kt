@@ -56,7 +56,8 @@ internal class HelvedStatusMottak(
                     return@withLoggingContext
                 }
             logger.info { "Fått statusmelding: ${packet["status"].asText()}" }
-            logger.sikkerlogg().info { "Fått statusmelding: ${packet.toJson()}, nøkkel: ${metadata.key}" }
+            val json = packet.toJson()
+            logger.sikkerlogg().info { "Fått statusmelding: $json, nøkkel: ${metadata.key}" }
             val status =
                 when (statusDto.status) {
                     StatusReply.Status.OK -> Status.Ferdig(Status.UtbetalingStatus.OK)
@@ -69,6 +70,7 @@ internal class HelvedStatusMottak(
                 behandlingId = behandlingId,
                 status = status,
                 svar = statusDto,
+                json = json,
             )
             context.publish(
                 utbetalingVedtak.person.ident,

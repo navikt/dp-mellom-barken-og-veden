@@ -1,9 +1,11 @@
 package no.nav.dagpenger.mellom.barken.og.veden.helved
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
+import io.kotest.assertions.json.shouldEqualSpecifiedJson
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.verify
 import no.nav.dagpenger.mellom.barken.og.veden.repository.vedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.HelvedStatusMottak
@@ -25,7 +27,7 @@ class HelvedStatusMottakTest {
             }
         val repo =
             mockk<Repo>().also {
-                every { it.lagreStatusFraHelved(any(), any(), any()) } returns Unit
+                every { it.lagreStatusFraHelved(any(), any(), any(), any()) } returns Unit
             }
         val helvedStatusMottak = HelvedStatusMottak(rapid, utbetalingRepo, repo)
 
@@ -34,8 +36,11 @@ class HelvedStatusMottakTest {
             key = behandlingId.toString(),
         )
 
+        val jsonLagret = slot<String>()
         verify(exactly = 1) { utbetalingRepo.hentVedtak(behandlingId) }
-        verify(exactly = 1) { repo.lagreStatusFraHelved(any(), any(), any()) }
+        verify(exactly = 1) { repo.lagreStatusFraHelved(any(), any(), any(), capture(jsonLagret)) }
+
+        jsonLagret.captured shouldEqualSpecifiedJson statusMelding
 
         with(rapid.inspektør) {
             size shouldBe 1
@@ -56,7 +61,7 @@ class HelvedStatusMottakTest {
             }
         val repo =
             mockk<Repo>().also {
-                every { it.lagreStatusFraHelved(any(), any(), any()) } returns Unit
+                every { it.lagreStatusFraHelved(any(), any(), any(), any()) } returns Unit
             }
         val helvedStatusMottak = HelvedStatusMottak(rapid, utbetalingRepo, mockk())
 
@@ -66,7 +71,7 @@ class HelvedStatusMottakTest {
         )
 
         verify(exactly = 1) { utbetalingRepo.hentVedtak(behandlingId) }
-        verify(exactly = 0) { repo.lagreStatusFraHelved(any(), any(), any()) }
+        verify(exactly = 0) { repo.lagreStatusFraHelved(any(), any(), any(), any()) }
     }
 
     //language=JSON
