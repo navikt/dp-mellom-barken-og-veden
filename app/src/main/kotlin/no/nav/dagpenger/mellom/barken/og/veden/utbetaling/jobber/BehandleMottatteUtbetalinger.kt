@@ -31,8 +31,9 @@ class BehandleMottatteUtbetalinger(
             }
         if (amILeader) {
             try {
-                logger.info { "Skal behandle utbetalinger" }
-                utsendingsHjelper.behandleUtbetalingVedtak()
+                logger.info { "Stoppet å sende utbetalinger til helved." }
+                // logger.info { "Skal behandle utbetalinger" }
+                // utsendingsHjelper.behandleUtbetalingVedtak()
             } catch (e: Exception) {
                 logger.error(e) { "Behandle utbetaling feilet" }
             }
