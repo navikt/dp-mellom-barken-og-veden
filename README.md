@@ -11,7 +11,7 @@
 
 ```mermaid
 flowchart TD
-    A[dp-behandling] -->|@event_name: behandlingsresultat<br/>teamdagpenger.rapid.v1| B[MeldingOmUtbetalingVedtakMottak]
+    A[dp-behandling] -->|behandlingsresultat<br/>teamdagpenger.rapid.v1| B[MeldingOmUtbetalingVedtakMottak]
     B -->|Lagrer UtbetalingVedtak<br/>Status: Mottatt| DB[(Database)]
     B -->|Publiserer utbetaling_mottatt<br/>teamdagpenger.rapid.v1| RAPID[Rapids]
     
