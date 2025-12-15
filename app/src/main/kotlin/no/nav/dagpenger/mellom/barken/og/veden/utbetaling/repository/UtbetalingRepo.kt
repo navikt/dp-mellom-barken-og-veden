@@ -30,4 +30,17 @@ interface UtbetalingRepo {
     fun harUtbetalingerSomVenterPåSvar(sakId: UUID): Boolean
 
     fun hentAlleUtbetalingerForSak(sakId: UUID): List<UtbetalingVedtak>
+
+    fun lagreMelding(
+        behandlingId: UUID,
+        type: String,
+        json: String,
+    )
+
+    fun lagreMelding(
+        behandlingId: UUID,
+        type: String,
+        json: String,
+        tx: TransactionalSession,
+    )
 }

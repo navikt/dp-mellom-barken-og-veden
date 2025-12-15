@@ -16,11 +16,13 @@ internal class Repo(
         behandlingId: UUID,
         status: Status,
         svar: StatusReply,
+        json: String,
     ) {
         sessionOf(dataSource).use { session ->
             return session.transaction { tx ->
                 utbetalingRepo.oppdaterStatus(behandlingId, status, tx)
                 helvedRepo.lagreStatusSvar(behandlingId, svar, tx)
+                utbetalingRepo.lagreMelding(behandlingId, "HELVED_STATUS_SVAR", json, tx)
             }
         }
     }

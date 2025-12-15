@@ -31,17 +31,20 @@ internal class HelvedPostgresRepository : HelvedRepo {
                 insert into feil (
                     behandling_id,
                     status,
-                    doc
+                    doc,
+                    msg
                 ) values (
                     :behandlingId,
                     :status,
-                    :doc
+                    :doc,
+                    :msg
                 )
                 """.trimIndent(),
                 mapOf(
                     "behandlingId" to behandlingId,
                     "status" to feil.statusCode,
                     "doc" to feil.doc,
+                    "msg" to feil.msg,
                 ),
             ).asUpdate,
         )
