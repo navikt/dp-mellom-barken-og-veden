@@ -198,7 +198,7 @@ class UtbetalingPostgresRepository(
                             when (status) {
                                 is Mottatt -> null
                                 is TilUtbetaling -> status.eksternStatus.name
-                                is Ferdig -> null
+                                is Ferdig -> status.eksternStatus.name
                             },
                     ),
                 ).asUpdate,
@@ -389,12 +389,13 @@ class UtbetalingPostgresRepository(
             utbetalinger = hentDager(behandlingId, tx),
             status =
                 when (Status.Type.valueOf(string("status"))) {
-                    Status.Type.MOTTATT ->
+                    Status.Type.MOTTATT -> {
                         Mottatt(
                             opprettet = localDateTime("opprettet"),
                         )
+                    }
 
-                    Status.Type.TIL_UTBETALING ->
+                    Status.Type.TIL_UTBETALING -> {
                         TilUtbetaling(
                             eksternStatus =
                                 UtbetalingStatus.valueOf(
@@ -402,13 +403,15 @@ class UtbetalingPostgresRepository(
                                 ),
                             opprettet = localDateTime("opprettet"),
                         )
+                    }
 
-                    Status.Type.FERDIG ->
+                    Status.Type.FERDIG -> {
                         Ferdig(
                             opprettet = localDateTime("opprettet"),
                             // Hvis ekstern_status er null, sett til OK (for bakoverkompatibilitet)
                             eksternStatus = stringOrNull("ekstern_status")?.let { UtbetalingStatus.valueOf(it) } ?: UtbetalingStatus.OK,
                         )
+                    }
                 },
             opprettet = localDateTime("opprettet"),
         )
