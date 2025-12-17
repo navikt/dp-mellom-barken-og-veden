@@ -31,9 +31,13 @@ class BehandleMottatteUtbetalinger(
             }
         if (amILeader) {
             try {
-                logger.info { "Stoppet å sende utbetalinger til helved." }
-                // logger.info { "Skal behandle utbetalinger" }
-                // utsendingsHjelper.behandleUtbetalingVedtak()
+                val miljø = System.getenv("NAIS_CLUSTER_NAME")
+                if (miljø == "dev-gcp") {
+                    logger.info { "Skal behandle utbetalinger i $miljø" }
+                    utsendingsHjelper.behandleUtbetalingVedtak()
+                } else {
+                    logger.info { "Stoppet å sende utbetalinger til helved i $miljø." }
+                }
             } catch (e: Exception) {
                 logger.error(e) { "Behandle utbetaling feilet" }
             }
