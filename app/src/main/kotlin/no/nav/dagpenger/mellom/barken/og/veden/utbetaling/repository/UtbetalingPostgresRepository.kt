@@ -269,10 +269,12 @@ class UtbetalingPostgresRepository(
                             """
                             INSERT INTO utbetaling (
                                 behandling_id,
+                                behandling_id_base64,
                                 basert_paa_id,
                                 vedtakstidspunkt,
                                 behandlet_hendelse_id,
                                 sak_id,
+                                sak_id_base64,
                                 ident,
                                 status,
                                 saksbehandlet_av,
@@ -280,10 +282,12 @@ class UtbetalingPostgresRepository(
                                 opprettet
                             ) VALUES (
                                 :behandlingId,
+                                :behandlingIdBase64,
                                 :basertPaaId,
                                 :vedtakstidspunkt,
                                 :behandletHendelseId,
                                 :sakId,
+                                :sakIdBase64,
                                 :ident,
                                 :status,
                                 :saksbehandletAv,
@@ -293,10 +297,12 @@ class UtbetalingPostgresRepository(
                             """.trimIndent(),
                             mapOf(
                                 "behandlingId" to vedtak.behandlingId,
+                                "behandlingIdBase64" to vedtak.behandlingIdBase64,
                                 "basertPaaId" to vedtak.basertPåBehandlingId,
                                 "vedtakstidspunkt" to vedtak.vedtakstidspunkt,
                                 "behandletHendelseId" to vedtak.behandletHendelseId,
                                 "sakId" to vedtak.sakId,
+                                "sakIdBase64" to vedtak.sakIdBase64,
                                 "ident" to vedtak.person.ident,
                                 "status" to
                                     when (vedtak.status) {
@@ -428,10 +434,12 @@ class UtbetalingPostgresRepository(
         val behandlingId = uuid("behandling_id")
         return UtbetalingVedtak(
             behandlingId = behandlingId,
+            behandlingIdBase64 = string("behandling_id_base64"),
             basertPåBehandlingId = uuidOrNull("basert_paa_id"),
             vedtakstidspunkt = localDateTime("vedtakstidspunkt"),
             behandletHendelseId = string("behandlet_hendelse_id"),
             sakId = uuid("sak_id"),
+            sakIdBase64 = string("sak_id_base64"),
             person = Person(string("ident")),
             besluttetAv = string("besluttet_av"),
             saksbehandletAv = string("saksbehandlet_av"),

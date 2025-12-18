@@ -1,0 +1,3 @@
+ALTER TABLE utbetaling
+    ADD COLUMN IF NOT EXISTS behandling_id_base64 TEXT NULL,
+    ADD COLUMN IF NOT EXISTS sak_id_base64 TEXT NULL;
