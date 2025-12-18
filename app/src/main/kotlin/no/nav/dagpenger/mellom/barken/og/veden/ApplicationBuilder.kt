@@ -93,6 +93,9 @@ internal class ApplicationBuilder(
     override fun onStartup(rapidsConnection: RapidsConnection) {
         logger.info { "Starter opp dp-mellom-barken-og-veden" }
         PostgresConfiguration.runMigration()
+        logger.info { "Starter migrering av behandlingId og sakId til base64" }
+        utbetalingRepo.migrerBase64()
+        logger.info { "Migrering av behandlingId og sakId til base64 fullført" }
     }
 }
 

@@ -12,6 +12,7 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status.TilUtbetaling
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.tilBase64
 import java.util.UUID
 import javax.sql.DataSource
 
@@ -466,7 +467,9 @@ class UtbetalingPostgresRepository(
                         Ferdig(
                             opprettet = localDateTime("opprettet"),
                             // Hvis ekstern_status er null, sett til OK (for bakoverkompatibilitet)
-                            eksternStatus = stringOrNull("ekstern_status")?.let { UtbetalingStatus.valueOf(it) } ?: UtbetalingStatus.OK,
+                            eksternStatus =
+                                stringOrNull("ekstern_status")?.let { UtbetalingStatus.valueOf(it) }
+                                    ?: UtbetalingStatus.OK,
                         )
                     }
                 },
@@ -481,4 +484,41 @@ class UtbetalingPostgresRepository(
             sats = int("sats"),
             utbetaltBeløp = int("utbetalt_beløp"),
         )
+
+    fun migrerBase64() {
+        sessionOf(dataSource).use { session ->
+            session.transaction { tx ->
+                tx.forEach(
+                    queryOf(
+                        // language=PostgreSQL
+                        """
+                        select behandling_id, sak_id
+                        from utbetaling
+                        WHERE behandling_id_base64 IS NULL
+                           OR sak_id_base64 IS NULL
+                        """.trimIndent(),
+                    ),
+                ) { row ->
+                    val behandlingId = row.uuid("behandling_id")
+                    val sakId = row.uuid("sak_id")
+                    tx.run(
+                        queryOf(
+                            // language=PostgreSQL
+                            """
+                            UPDATE utbetaling
+                            SET behandling_id_base64 = :behandlingIdBase64,
+                                sak_id_base64 = :sakIdBase64
+                            WHERE behandling_id = :behandlingId
+                            """.trimIndent(),
+                            mapOf(
+                                "behandlingId" to behandlingId,
+                                "behandlingIdBase64" to behandlingId.tilBase64(),
+                                "sakIdBase64" to sakId.tilBase64(),
+                            ),
+                        ).asUpdate,
+                    )
+                }
+            }
+        }
+    }
 }
