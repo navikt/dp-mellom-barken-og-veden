@@ -9,9 +9,9 @@ import no.nav.helved.kontrakt.api.models.UtbetalingsdagDTOUtbetalingstypeDTO.DAG
 
 fun UtbetalingVedtak.mapToVedtakDTO(): UtbetalingDTO =
     UtbetalingDTO(
-        behandlingId = behandlingId.tilBase64(),
+        behandlingId = behandlingIdBase64,
         vedtakstidspunktet = vedtakstidspunkt,
-        sakId = sakId.tilBase64(),
+        sakId = sakIdBase64,
         ident = person.ident,
         utbetalinger =
             utbetalinger
