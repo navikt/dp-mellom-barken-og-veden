@@ -53,7 +53,12 @@ private fun List<UtbetalingVedtak>.toUtbetalingStatusDTO(): List<UtbetalingStatu
             ident = utbetaling.person.ident,
             opprettet = utbetaling.opprettet,
             vedtakstidspunkt = utbetaling.vedtakstidspunkt,
-            eksternStatus = (utbetaling.status as? Status.TilUtbetaling)?.eksternStatus?.name,
+            eksternStatus =
+                when (val status = utbetaling.status) {
+                    is Status.Mottatt -> null
+                    is Status.TilUtbetaling -> status.eksternStatus.name
+                    is Status.Ferdig -> status.eksternStatus.name
+                },
             utbetalingsdager =
                 utbetaling.utbetalinger.map {
                     UtbetalingsdagDTO(
