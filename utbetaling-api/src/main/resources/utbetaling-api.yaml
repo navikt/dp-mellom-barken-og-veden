@@ -44,37 +44,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HttpProblem'
-  /utbetaling/{behandlingId}:
-    get:
-      summary: Hent utbetaling for behandling
-      operationId: hentUtbetaling
-      parameters:
-        - name: behandlingId
-          in: path
-          required: true
-          description: Behandlingens id
-          schema:
-            type: string
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Utbetaling'
-        404:
-          description: behandling ikke funnet
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HttpProblem'
-
-        500:
-          description: Noe gikk galt
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HttpProblem'
 
 components:
   schemas:
@@ -89,6 +58,7 @@ components:
         - ident
         - opprettet
         - vedtakstidspunkt
+        - utbetalingsdager
       properties:
         behandlingId:
           type: string
@@ -124,24 +94,6 @@ components:
           type: string
           format: date-time
           description: Tidspunktet da vedtaket ble fattet
-    Utbetaling:
-      type: object
-      required:
-        - behandlingId
-        - status
-        - opprettet
-      properties:
-        behandlingId:
-          type: string
-          format: uuid
-          description: Behandlingens id
-        tilstand:
-          type: string
-          description: Tilstand på utbetalingen
-        opprettet:
-          type: string
-          format: date-time
-          description: Dato og tidspunkt for opprettelse av utbetalingen
         utbetalingsdager:
           type: array
           items:
@@ -150,21 +102,25 @@ components:
     Utbetalingsdag:
       type: object
       required:
+        - meldeperiodeId
         - dato
         - sats
         - utbetaltBeløp
       properties:
+        meldeperiodeId:
+          type: string
+          description: Meldeperiode id som utbetalingsdagen er knyttet til
         dato:
           type: string
           format: date
           description: Dato for utbetalingen
         sats:
-          type: number
-          format: double
+          type: integer
+          format: int32
           description: Vedtaksatsen for utbetalingen
         utbetaltBeløp:
-          type: number
-          format: double
+          type: integer
+          format: int32
           description: Totalt beløp som er utbetalt for denne dagen
 
     HttpProblem:

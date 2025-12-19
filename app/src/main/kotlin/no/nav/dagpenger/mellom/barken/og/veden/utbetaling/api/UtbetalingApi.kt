@@ -12,9 +12,9 @@ import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
-import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.tilBase64
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
 import no.nav.dagpenger.utbetaling.api.models.UtbetalingStatusDTO
+import no.nav.dagpenger.utbetaling.api.models.UtbetalingsdagDTO
 import java.util.UUID
 
 internal fun Application.utbetalingApi(repo: UtbetalingRepo) {
@@ -51,16 +51,24 @@ private fun List<UtbetalingVedtak>.toUtbetalingStatusDTO(): List<UtbetalingStatu
     this.map { utbetaling ->
         UtbetalingStatusDTO(
             behandlingId = utbetaling.behandlingId,
-            behandlingIdEkstern = utbetaling.behandlingId.tilBase64(),
+            behandlingIdEkstern = utbetaling.behandlingIdBase64,
             status = utbetaling.status::class.simpleName ?: "Ukjent",
-            // dette er jo ikke nødvendigvis meldekortId lengre, men hendelseId.... Rename?
             behandletHendelseId = utbetaling.behandletHendelseId,
             sakId = utbetaling.sakId,
-            sakIdEkstern = utbetaling.sakId.tilBase64(),
+            sakIdEkstern = utbetaling.sakIdBase64,
             ident = utbetaling.person.ident,
             opprettet = utbetaling.opprettet,
             vedtakstidspunkt = utbetaling.vedtakstidspunkt,
             eksternStatus = (utbetaling.status as? Status.TilUtbetaling)?.eksternStatus?.name,
+            utbetalingsdager =
+                utbetaling.utbetalinger.map {
+                    UtbetalingsdagDTO(
+                        meldeperiodeId = it.meldeperiode,
+                        dato = it.dato,
+                        sats = it.sats,
+                        utbetaltBeløp = it.utbetaltBeløp,
+                    )
+                },
         )
     }
 
