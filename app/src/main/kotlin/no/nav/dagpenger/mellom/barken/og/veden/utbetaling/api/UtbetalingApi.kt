@@ -25,12 +25,6 @@ internal fun Application.utbetalingApi(repo: UtbetalingRepo) {
 
         authenticate("azureAd") {
             route("utbetaling") {
-                get("{behandlingId}") {
-                    val behandlingId = behandlingId()
-
-                    call.respond(HttpStatusCode.OK)
-                }
-
                 get {
                     val sakId = call.queryParameters["sakId"]?.let { UUID.fromString(it) }
 
