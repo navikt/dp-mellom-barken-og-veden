@@ -3,6 +3,7 @@ package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
 import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDate
+import com.github.navikt.tbd_libs.rapids_and_rivers.isMissingOrNull
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
@@ -100,6 +101,8 @@ internal class HelvedStatusMottak(
         utbetalingVedtak: UtbetalingVedtak,
         behandlingId: UUID,
     ) {
+        if (packet["detaljer"].isMissingOrNull()) return
+        if (packet["detaljer"]["linjer"].isEmpty) return
         val førsteDagFraHelVed = packet["detaljer"]["linjer"].minOf { it["fom"].asLocalDate() }
         // Default for eksisterende behandlinger er LocalDate.MIN, hopp over de
         if (utbetalingVedtak.førsteUtbetalingsdag.isEqual(LocalDate.MIN)) return
