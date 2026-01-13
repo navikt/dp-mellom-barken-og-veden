@@ -118,6 +118,8 @@ internal class HelvedStatusMottak(
                 mapOf(
                     "behandlingId" to behandlingId,
                     "sakId" to utbetalingVedtak.sakId,
+                    "eksternBehandlingId" to behandlingId.tilBase64(),
+                    "eksternSakId" to utbetalingVedtak.sakId.tilBase64(),
                     "førsteUtbetalingsdag" to utbetalingVedtak.førsteUtbetalingsdag,
                     "førsteDagFraHelVed" to førsteDagFraHelVed,
                 ),
