@@ -114,7 +114,7 @@ internal class HelvedStatusMottak(
         context.publish(
             utbetalingVedtak.person.ident,
             JsonMessage.newMessage(
-                "feil_utbetaling_grensedato",
+                "utbetaling_feil_grensedato",
                 mapOf(
                     "behandlingId" to behandlingId,
                     "sakId" to utbetalingVedtak.sakId,

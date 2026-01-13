@@ -79,7 +79,7 @@ class HelvedStatusMottakTest {
             size shouldBe 2
             key(0) shouldBe "12345678910"
             val hendelse = message(0)
-            hendelse["@event_name"].asText() shouldBe "feil_utbetaling_grensedato"
+            hendelse["@event_name"].asText() shouldBe "utbetaling_feil_grensedato"
             hendelse["behandlingId"].asText() shouldBe behandlingId.toString()
             hendelse["sakId"].asText() shouldBe sakId.toString()
         }
