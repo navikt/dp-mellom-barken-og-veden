@@ -8,6 +8,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.MeldingOmUtbetalingVedtakMottak
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Opprinnelse
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
@@ -57,6 +58,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
                     dato = LocalDate.of(2018, 6, 21),
                     sats = 1259,
                     utbetaltBeløp = 719,
+                    opprinnelse = Opprinnelse.Ukjent,
                 )
             utbetalinger.maxBy { it.dato } shouldBe
                 Utbetalingsdag(
@@ -64,6 +66,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
                     dato = LocalDate.of(2018, 7, 15),
                     sats = 1259,
                     utbetaltBeløp = 0,
+                    opprinnelse = Opprinnelse.Ukjent,
                 )
             utbetalinger.size shouldBe 25
             status.type shouldBe Status.Type.MOTTATT
@@ -116,6 +119,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
                     dato = LocalDate.of(2018, 6, 21),
                     sats = 1259,
                     utbetaltBeløp = 719,
+                    opprinnelse = Opprinnelse.Ukjent,
                 )
             utbetalinger.maxBy { it.dato } shouldBe
                 Utbetalingsdag(
@@ -123,6 +127,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
                     dato = LocalDate.of(2018, 7, 15),
                     sats = 1259,
                     utbetaltBeløp = 0,
+                    opprinnelse = Opprinnelse.Ukjent,
                 )
             utbetalinger.size shouldBe 25
             status.type shouldBe Status.Type.MOTTATT

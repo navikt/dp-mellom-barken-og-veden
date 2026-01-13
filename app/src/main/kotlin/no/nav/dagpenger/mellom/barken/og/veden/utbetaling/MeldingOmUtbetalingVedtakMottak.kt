@@ -102,6 +102,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                                 dato = utbetaling.dato,
                                 sats = utbetaling.sats,
                                 utbetaltBeløp = utbetaling.utbetaling,
+                                opprinnelse = utbetaling.opprinnelse?.let { Opprinnelse.valueOf(it.value) } ?: Opprinnelse.Ukjent,
                             )
                         },
                     status =

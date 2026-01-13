@@ -4,6 +4,7 @@ import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.nulls.shouldNotBeNull
 import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
 import no.nav.dagpenger.mellom.barken.og.veden.repository.Postgres.withMigratedDb
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Opprinnelse
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Person
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
@@ -44,9 +45,10 @@ fun vedtak(
         listOf(
             Utbetalingsdag(
                 meldeperiode = "m1",
-                dato = LocalDate.now(),
+                dato = LocalDate.of(2025, 5, 22),
                 sats = 1000,
                 utbetaltBeløp = 1000,
+                opprinnelse = Opprinnelse.Ny,
             ),
         ),
     opprettet: LocalDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS),

@@ -11,6 +11,7 @@ import no.nav.dagpenger.mellom.barken.og.veden.repository.vedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.HelvedStatusMottak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
+import java.time.LocalDate
 import java.util.UUID
 import kotlin.test.Test
 
@@ -32,7 +33,7 @@ class HelvedStatusMottakTest {
         val helvedStatusMottak = HelvedStatusMottak(rapid, utbetalingRepo, repo)
 
         rapid.sendTestMessage(
-            message = statusMelding,
+            message = statusMelding(),
             key = behandlingId.toString(),
         )
 
@@ -40,13 +41,45 @@ class HelvedStatusMottakTest {
         verify(exactly = 1) { utbetalingRepo.hentVedtak(behandlingId) }
         verify(exactly = 1) { repo.lagreStatusFraHelved(any(), any(), any(), capture(jsonLagret)) }
 
-        jsonLagret.captured shouldEqualSpecifiedJson statusMelding
+        jsonLagret.captured shouldEqualSpecifiedJson statusMelding()
 
         with(rapid.inspektør) {
             size shouldBe 1
             key(0) shouldBe "12345678910"
             val hendelse = message(0)
             hendelse["@event_name"].asText() shouldBe "utbetaling_utført"
+            hendelse["behandlingId"].asText() shouldBe behandlingId.toString()
+            hendelse["sakId"].asText() shouldBe sakId.toString()
+        }
+    }
+
+    @Test
+    fun `sender ut melding om feil grensedato i status fra helved`() {
+        val behandlingId = UUID.randomUUID()
+        val sakId = UUID.randomUUID()
+        val utbetalingRepo =
+            mockk<UtbetalingRepo>().also {
+                every { it.hentVedtak(behandlingId) } returns vedtak(sakId = sakId, behandlingId = behandlingId)
+            }
+        val repo =
+            mockk<Repo>().also {
+                every { it.lagreStatusFraHelved(any(), any(), any(), any()) } returns Unit
+            }
+        val helvedStatusMottak = HelvedStatusMottak(rapid, utbetalingRepo, repo)
+
+        rapid.sendTestMessage(
+            message = statusMelding(LocalDate.of(2021, 4, 24)),
+            key = behandlingId.toString(),
+        )
+
+        verify(exactly = 1) { utbetalingRepo.hentVedtak(behandlingId) }
+        verify(exactly = 1) { repo.lagreStatusFraHelved(any(), any(), any(), any()) }
+
+        with(rapid.inspektør) {
+            size shouldBe 2
+            key(0) shouldBe "12345678910"
+            val hendelse = message(0)
+            hendelse["@event_name"].asText() shouldBe "feil_utbetaling_grensedato"
             hendelse["behandlingId"].asText() shouldBe behandlingId.toString()
             hendelse["sakId"].asText() shouldBe sakId.toString()
         }
@@ -75,7 +108,7 @@ class HelvedStatusMottakTest {
     }
 
     //language=JSON
-    private val statusMelding =
+    private fun statusMelding(førsteFraOgMed: LocalDate = LocalDate.of(2025, 5, 22)) =
         """
         {
           "status": "OK",
@@ -83,7 +116,7 @@ class HelvedStatusMottakTest {
               "linjer": [
                 {
                   "behandlingId": "AZdZCcAJcESkSYskqsOKKw==",
-                  "fom": "2025-05-22",
+                  "fom": "$førsteFraOgMed",
                   "tom": "2025-05-23",
                   "vedtakssats": 467,
                   "beløp": 469,

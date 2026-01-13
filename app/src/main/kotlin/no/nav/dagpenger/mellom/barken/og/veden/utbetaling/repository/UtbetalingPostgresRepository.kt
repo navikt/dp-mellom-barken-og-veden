@@ -4,6 +4,7 @@ import kotliquery.Row
 import kotliquery.TransactionalSession
 import kotliquery.queryOf
 import kotliquery.sessionOf
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Opprinnelse
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Person
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status.Ferdig
@@ -410,13 +411,15 @@ class UtbetalingPostgresRepository(
                     meldeperiode,
                     dato,
                     sats,
-                    utbetalt_beløp
+                    utbetalt_beløp,
+                    opprinnelse
                 ) VALUES (
                     :behandlingId,
                     :meldeperiode,
                     :dato,
                     :sats,
-                    :utbetaltBelop
+                    :utbetaltBelop,
+                    :opprinnelse
                 )
                 """.trimIndent(),
                 mapOf(
@@ -425,6 +428,7 @@ class UtbetalingPostgresRepository(
                     "dato" to dag.dato,
                     "sats" to dag.sats,
                     "utbetaltBelop" to dag.utbetaltBeløp,
+                    "opprinnelse" to dag.opprinnelse.name,
                 ),
             ).asUpdate,
         )
@@ -482,5 +486,6 @@ class UtbetalingPostgresRepository(
             dato = localDate("dato"),
             sats = int("sats"),
             utbetaltBeløp = int("utbetalt_beløp"),
+            opprinnelse = stringOrNull("opprinnelse")?.let { Opprinnelse.valueOf(it) } ?: Opprinnelse.Ukjent,
         )
 }

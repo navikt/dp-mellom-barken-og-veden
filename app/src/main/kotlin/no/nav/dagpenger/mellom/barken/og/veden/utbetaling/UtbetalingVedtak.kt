@@ -1,5 +1,6 @@
 package no.nav.dagpenger.mellom.barken.og.veden.utbetaling
 
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Opprinnelse.Ny
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.tilBase64
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -19,14 +20,24 @@ data class UtbetalingVedtak(
     val utbetalinger: List<Utbetalingsdag>,
     val status: Status,
     val opprettet: LocalDateTime,
-)
+) {
+    val førsteUtbetalingsdag: LocalDate = utbetalinger.firstOrNull { it.opprinnelse == Ny }?.dato ?: LocalDate.MIN
+    val sisteUtbetalingsdag: LocalDate = utbetalinger.lastOrNull { it.opprinnelse == Ny }?.dato ?: LocalDate.MAX
+}
 
 data class Utbetalingsdag(
     val meldeperiode: String,
     val dato: LocalDate,
     val sats: Int,
     val utbetaltBeløp: Int,
+    val opprinnelse: Opprinnelse,
 )
+
+enum class Opprinnelse {
+    Ny,
+    Arvet,
+    Ukjent,
+}
 
 sealed class Status {
     abstract val opprettet: LocalDateTime

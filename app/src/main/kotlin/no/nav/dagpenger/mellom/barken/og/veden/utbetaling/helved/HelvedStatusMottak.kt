@@ -2,6 +2,7 @@ package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
+import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDate
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
@@ -12,8 +13,10 @@ import io.micrometer.core.instrument.MeterRegistry
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingStatusHendelse
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
+import java.time.LocalDate
 import java.util.UUID
 
 internal class HelvedStatusMottak(
@@ -27,6 +30,7 @@ internal class HelvedStatusMottak(
                 precondition { message -> message.requireAny("status", StatusReply.Status.entries.map { it.name }) }
                 // unngå kollisjon med andre eventer sendt på rapiden med samme "status" felt
                 precondition { message -> message.forbid("@event_name") }
+                validate { it.interestedIn("detaljer") }
             }.register(this)
     }
 
@@ -55,9 +59,14 @@ internal class HelvedStatusMottak(
                     logger.warn { "Ukjent behandlingId: $behandlingId ignorerer denne" }
                     return@withLoggingContext
                 }
-            logger.info { "Fått statusmelding: ${packet["status"].asText()}" }
+
             val json = packet.toJson()
+            logger.info { "Fått statusmelding: ${packet["status"].asText()}" }
             logger.sikkerlogg().info { "Fått statusmelding: $json, nøkkel: ${metadata.key}" }
+
+            // Verifiser at grensedatoene for utbetalingen til Helved stemmer med behandlingen
+            validerGrensedatoer(context, packet, utbetalingVedtak, behandlingId)
+
             val status =
                 when (statusDto.status) {
                     StatusReply.Status.OK -> Status.Ferdig(Status.UtbetalingStatus.OK)
@@ -83,6 +92,37 @@ internal class HelvedStatusMottak(
                 ).tilHendelse(),
             )
         }
+    }
+
+    private fun validerGrensedatoer(
+        context: MessageContext,
+        packet: JsonMessage,
+        utbetalingVedtak: UtbetalingVedtak,
+        behandlingId: UUID,
+    ) {
+        val førsteDagFraHelVed = packet["detaljer"]["linjer"].minOf { it["fom"].asLocalDate() }
+        // Default for eksisterende behandlinger er LocalDate.MIN, hopp over de
+        if (utbetalingVedtak.førsteUtbetalingsdag.isEqual(LocalDate.MIN)) return
+        if (førsteDagFraHelVed.isEqual(utbetalingVedtak.førsteUtbetalingsdag)) return
+
+        logger.error {
+            """Første utbetalingsdag ($førsteDagFraHelVed) fra Hel Ved er ikke lik første 
+            |utbetalingsdag (${utbetalingVedtak.førsteUtbetalingsdag}) for behandling $behandlingId
+            """.trimMargin()
+        }
+
+        context.publish(
+            utbetalingVedtak.person.ident,
+            JsonMessage.newMessage(
+                "feil_utbetaling_grensedato",
+                mapOf(
+                    "behandlingId" to behandlingId,
+                    "sakId" to utbetalingVedtak.sakId,
+                    "førsteUtbetalingsdag" to utbetalingVedtak.førsteUtbetalingsdag,
+                    "førsteDagFraHelVed" to førsteDagFraHelVed,
+                ),
+            ).toJson(),
+        )
     }
 
     private companion object {
