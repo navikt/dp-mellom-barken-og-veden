@@ -53,6 +53,12 @@ internal class MeldingOmUtbetalingVedtakMottak(
         val behandlingId = packet["behandlingId"].asUUID()
         val hendelseId = packet["behandletHendelse"]["id"].asText()
 
+        if (behandlingId.toString() == "019bf98f-a7ea-7464-b00b-f55895d75c8b") {
+            // Midlertidig filter for å unngå støy fra en spesifikk behandling som ikke er laget fra dp-behandling i dev?
+            logger.info { "Ignorerer behandling med ID $behandlingId" }
+            return
+        }
+
         withLoggingContext(
             "behandlingId" to behandlingId.toString(),
             "hendelseId" to hendelseId.toString(),
