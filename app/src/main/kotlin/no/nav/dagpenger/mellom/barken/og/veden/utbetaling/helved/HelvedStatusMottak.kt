@@ -43,7 +43,8 @@ internal class HelvedStatusMottak(
     ) {
         val fagsystem = metadata.headers["fagsystem"]?.let { String(it) }
         if (fagsystem != "DAGPENGER") {
-            logger.info { "Mottok statusmelding for annet fagsystem ($fagsystem), skal ignorere denne" }
+            logger.info { "Mottok statusmelding for annet fagsystem ($fagsystem) ignorere denne, nøkkel ${metadata.key}" }
+            return
         }
         val behandlingId =
             metadata.key?.let { UUID.fromString(it) }
@@ -116,17 +117,18 @@ internal class HelvedStatusMottak(
 
         context.publish(
             utbetalingVedtak.person.ident,
-            JsonMessage.newMessage(
-                "utbetaling_feil_grensedato",
-                mapOf(
-                    "behandlingId" to behandlingId,
-                    "sakId" to utbetalingVedtak.sakId,
-                    "eksternBehandlingId" to behandlingId.tilBase64(),
-                    "eksternSakId" to utbetalingVedtak.sakId.tilBase64(),
-                    "førsteUtbetalingsdag" to utbetalingVedtak.førsteUtbetalingsdag,
-                    "førsteDagFraHelVed" to førsteDagFraHelVed,
-                ),
-            ).toJson(),
+            JsonMessage
+                .newMessage(
+                    "utbetaling_feil_grensedato",
+                    mapOf(
+                        "behandlingId" to behandlingId,
+                        "sakId" to utbetalingVedtak.sakId,
+                        "eksternBehandlingId" to behandlingId.tilBase64(),
+                        "eksternSakId" to utbetalingVedtak.sakId.tilBase64(),
+                        "førsteUtbetalingsdag" to utbetalingVedtak.førsteUtbetalingsdag,
+                        "førsteDagFraHelVed" to førsteDagFraHelVed,
+                    ),
+                ).toJson(),
         )
     }
 

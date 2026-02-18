@@ -1,12 +1,12 @@
 package no.nav.dagpenger.mellom.barken.og.veden.helved
 
-import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
 import io.kotest.assertions.json.shouldEqualSpecifiedJson
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
+import no.nav.dagpenger.mellom.barken.og.veden.TestRapid
 import no.nav.dagpenger.mellom.barken.og.veden.repository.vedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.HelvedStatusMottak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.repository.Repo
@@ -17,6 +17,11 @@ import kotlin.test.Test
 
 class HelvedStatusMottakTest {
     private val rapid = TestRapid()
+
+    private val dagpengerHeader =
+        mapOf(
+            "fagsystem" to "DAGPENGER".toByteArray(),
+        )
 
     @Test
     fun `lese status meldinger fra helved`() {
@@ -35,6 +40,7 @@ class HelvedStatusMottakTest {
         rapid.sendTestMessage(
             message = statusMelding(),
             key = behandlingId.toString(),
+            headers = dagpengerHeader,
         )
 
         val jsonLagret = slot<String>()
@@ -70,6 +76,7 @@ class HelvedStatusMottakTest {
         rapid.sendTestMessage(
             message = statusMelding(LocalDate.of(2021, 4, 24)),
             key = behandlingId.toString(),
+            headers = dagpengerHeader,
         )
 
         verify(exactly = 1) { utbetalingRepo.hentVedtak(behandlingId) }
@@ -101,9 +108,33 @@ class HelvedStatusMottakTest {
         rapid.sendTestMessage(
             meldingViIgnorer,
             behandlingId.toString(),
+            headers = dagpengerHeader,
         )
 
         verify(exactly = 1) { utbetalingRepo.hentVedtak(behandlingId) }
+        verify(exactly = 0) { repo.lagreStatusFraHelved(any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `Ignorerer andre fagsystemer enn DAGPENGER`() {
+        val behandlingId = UUID.randomUUID()
+        val utbetalingRepo =
+            mockk<UtbetalingRepo>().also {
+                every { it.hentVedtak(any()) } returns null
+            }
+        val repo =
+            mockk<Repo>().also {
+                every { it.lagreStatusFraHelved(any(), any(), any(), any()) } returns Unit
+            }
+        val helvedStatusMottak = HelvedStatusMottak(rapid, utbetalingRepo, mockk())
+
+        rapid.sendTestMessage(
+            meldingViIgnorer,
+            behandlingId.toString(),
+            headers = mapOf("fagsystem" to "TILTAKSPENGER".toByteArray()),
+        )
+
+        verify(exactly = 0) { utbetalingRepo.hentVedtak(behandlingId) }
         verify(exactly = 0) { repo.lagreStatusFraHelved(any(), any(), any(), any()) }
     }
 
