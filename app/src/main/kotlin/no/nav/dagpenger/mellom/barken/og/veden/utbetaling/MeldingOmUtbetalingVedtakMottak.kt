@@ -58,6 +58,11 @@ internal class MeldingOmUtbetalingVedtakMottak(
             "hendelseId" to hendelseId.toString(),
         ) {
             logger.info { "Mottok melding om utbetaling for meldekort" }
+
+            if (behandlingId.toString() == "019a0694-650f-7075-be14-1e76a3fe8437" && System.getenv()["NAIS_CLUSTER_NAME"] == "dev-gcp") {
+                logger.info { "Hopper over behandling med ID $behandlingId" }
+                return@withLoggingContext
+            }
             // her kan vi kalle dp-behandling for å hente utbetalinger
             val behandlingsresultatDTO: BehandlingsresultatDTO =
                 objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), BehandlingsresultatDTO::class.java)
