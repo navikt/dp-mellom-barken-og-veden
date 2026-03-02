@@ -36,8 +36,6 @@ spec:
      - {{url}}
     {{/each}}
   {{/if}}
-  secureLogs:
-    enabled: true
   azure:
     application:
       enabled: true
