@@ -1,5 +1,6 @@
 package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotliquery.Row
 import kotliquery.TransactionalSession
 import kotliquery.queryOf
@@ -19,6 +20,8 @@ import javax.sql.DataSource
 class UtbetalingPostgresRepository(
     private val dataSource: DataSource,
 ) : UtbetalingRepo {
+    private val logger = KotlinLogging.logger { }
+
     override fun hentAlleVedtakMedStatus(status: Status.Type): List<UtbetalingVedtak> {
         sessionOf(dataSource).use { session ->
             return session.transaction { tx ->
@@ -235,6 +238,9 @@ class UtbetalingPostgresRepository(
                         ekstern_status = :externStatus,
                         sist_endret_tilstand = NOW()
                     WHERE behandling_id = :behandlingId
+                      AND (
+                        status != 'FERDIG'
+                      )
                     """.trimIndent(),
                     mapOf(
                         "behandlingId" to behandlingId,
@@ -252,7 +258,10 @@ class UtbetalingPostgresRepository(
                             },
                     ),
                 ).asUpdate,
-            ).also {
+            ).also { updatedRows ->
+                if (updatedRows == 0) {
+                    logger.warn { "Ignorerer status ${status.type.name} for en utbetaling som allerede er ferdig" }
+                }
                 lagreStatus(behandlingId, status, tx)
                 if (status is TilUtbetaling) {
                     lagreEksternStatus(behandlingId, status.eksternStatus, tx)
