@@ -35,12 +35,6 @@ jobs:
           cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
       - run: ./gradlew --configuration-cache installDist
 
-      #      - name: Publish results (unit test)
-      #        uses: EnricoMi/publish-unit-test-result-action@v2
-      #        if: success() || failure()
-      #        with:
-      #          junit_files: "**/build/test-results/test/TEST-*.xml"
-      #
       - name: docker-build-push
         uses: nais/docker-build-push@v0
         id: docker-build-push
@@ -64,8 +58,7 @@ jobs:
       - uses: navikt/dagpenger/actions/attest-sign@master
         with:
           digest: ${{ needs.build.outputs.digest }}
-          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
-          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          image: ${{ needs.build.outputs.image }}
           team: teamdagpenger
 
   deploy-dev:
