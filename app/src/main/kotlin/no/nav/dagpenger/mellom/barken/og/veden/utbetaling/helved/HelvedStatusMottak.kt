@@ -77,6 +77,12 @@ internal class HelvedStatusMottak(
                     StatusReply.Status.FEILET -> Status.TilUtbetaling(Status.UtbetalingStatus.FEILET)
                 }
 
+            meterRegistry.counter(
+                "dp_utbetaling_helved_status",
+                "status",
+                statusDto.status.name,
+            ).increment()
+
             repo.lagreStatusFraHelved(
                 behandlingId = behandlingId,
                 status = status,

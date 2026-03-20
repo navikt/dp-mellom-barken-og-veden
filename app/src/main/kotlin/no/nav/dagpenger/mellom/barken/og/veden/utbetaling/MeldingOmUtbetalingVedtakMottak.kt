@@ -121,6 +121,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                 "Skal lagre dager for utbetaling=${utbetalingVedtak.utbetalinger}"
             }
             repo.lagreVedtak(utbetalingVedtak)
+            meterRegistry.counter("dp_utbetaling_vedtak_mottatt").increment()
             context.publish(
                 utbetalingVedtak.person.ident,
                 UtbetalingStatusHendelse(
