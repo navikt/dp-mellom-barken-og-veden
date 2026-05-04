@@ -3,6 +3,7 @@ package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository
 import kotliquery.TransactionalSession
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
+import java.time.Year
 import java.util.UUID
 
 interface UtbetalingRepo {
@@ -30,6 +31,11 @@ interface UtbetalingRepo {
     fun harUtbetalingerSomVenterPåSvar(sakId: UUID): Boolean
 
     fun hentAlleUtbetalingerForSak(sakId: UUID): List<UtbetalingVedtak>
+
+    fun hentAlleFerdigeUtenFerietilleggForIdent(
+        ident: String,
+        opptjeningsår: Year,
+    ): List<UtbetalingVedtak>
 
     fun lagreMelding(
         behandlingId: UUID,

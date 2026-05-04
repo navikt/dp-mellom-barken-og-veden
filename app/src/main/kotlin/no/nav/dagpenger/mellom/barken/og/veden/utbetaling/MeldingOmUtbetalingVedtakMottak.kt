@@ -1,5 +1,6 @@
 package no.nav.dagpenger.mellom.barken.og.veden.utbetaling
 
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
 import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDateTime
@@ -65,7 +66,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
             }
             // her kan vi kalle dp-behandling for å hente utbetalinger
             val behandlingsresultatDTO: BehandlingsresultatDTO =
-                objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), BehandlingsresultatDTO::class.java)
+                objectMapper.readValue<BehandlingsresultatDTO>(packet.toJson())
 
             if (behandlingsresultatDTO.utbetalinger.isEmpty()) {
                 logger.info { "Ingen utbetalinger å lagre for behandling=$behandlingId" }

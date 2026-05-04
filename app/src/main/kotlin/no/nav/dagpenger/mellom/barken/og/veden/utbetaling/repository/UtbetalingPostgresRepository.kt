@@ -14,6 +14,7 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status.TilUtbetaling
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
+import java.time.Year
 import java.util.UUID
 import javax.sql.DataSource
 
@@ -36,6 +37,39 @@ class UtbetalingPostgresRepository(
                         """.trimIndent(),
                         mapOf(
                             "status" to status.name,
+                        ),
+                    ).map { row ->
+                        row.toUtbetalingVedtak(tx)
+                    }.asList,
+                )
+            }
+        }
+    }
+
+    override fun hentAlleFerdigeUtenFerietilleggForIdent(
+        ident: String,
+        opptjeningsår: Year,
+    ): List<UtbetalingVedtak> {
+        sessionOf(dataSource).use { session ->
+            val fom = opptjeningsår.atDay(1)
+            val tom = opptjeningsår.plusYears(1).atDay(1).minusDays(1)
+            return session.transaction { tx ->
+                tx.run(
+                    queryOf(
+                        // language=PostgreSQL
+                        """
+                        SELECT distinct ON (sak_id) *
+                        FROM utbetaling
+                        WHERE ident = :ident
+                          AND status = 'FERDIG'
+                          AND behandlet_hendelse_type != 'FERIETILLEGG'
+                          AND sist_endret_tilstand BETWEEN :fom AND :tom
+                        ORDER BY utbetaling.sak_id, sist_endret_tilstand desc 
+                        """.trimIndent(),
+                        mapOf(
+                            "ident" to ident,
+                            "fom" to fom,
+                            "tom" to tom,
                         ),
                     ).map { row ->
                         row.toUtbetalingVedtak(tx)

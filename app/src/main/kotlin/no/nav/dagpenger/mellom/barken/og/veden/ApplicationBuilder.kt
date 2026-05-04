@@ -11,6 +11,7 @@ import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
 import io.prometheus.metrics.model.registry.PrometheusRegistry
 import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
 import no.nav.dagpenger.mellom.barken.og.veden.leaderelection.LeaderElectionClient
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.BehovsløserFerietilleggBeløpMottak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.MeldingOmUtbetalingVedtakMottak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.SakIdHenter
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.api.authenticationConfig
@@ -74,6 +75,10 @@ internal class ApplicationBuilder(
                     rapidsConnection = this,
                     repo = utbetalingRepo,
                     sakIdHenter = SakIdHenter(Configuration.sakApiBaseUrl, Configuration.sakApiToken),
+                )
+                BehovsløserFerietilleggBeløpMottak(
+                    rapidsConnection = this,
+                    repo = utbetalingRepo,
                 )
                 HelvedStatusMottak(
                     rapidsConnection = this,
