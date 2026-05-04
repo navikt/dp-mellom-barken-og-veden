@@ -283,6 +283,7 @@ class UtbetalingPostgresRepository(
                                 basert_paa_id,
                                 vedtakstidspunkt,
                                 behandlet_hendelse_id,
+                                behandlet_hendelse_type,
                                 sak_id,
                                 sak_id_base64,
                                 ident,
@@ -296,6 +297,7 @@ class UtbetalingPostgresRepository(
                                 :basertPaaId,
                                 :vedtakstidspunkt,
                                 :behandletHendelseId,
+                                :behandletHendelseType,
                                 :sakId,
                                 :sakIdBase64,
                                 :ident,
@@ -311,6 +313,7 @@ class UtbetalingPostgresRepository(
                                 "basertPaaId" to vedtak.basertPåBehandlingId,
                                 "vedtakstidspunkt" to vedtak.vedtakstidspunkt,
                                 "behandletHendelseId" to vedtak.behandletHendelseId,
+                                "behandletHendelseType" to vedtak.behandletHendelseType,
                                 "sakId" to vedtak.sakId,
                                 "sakIdBase64" to vedtak.sakIdBase64,
                                 "ident" to vedtak.person.ident,
@@ -323,7 +326,7 @@ class UtbetalingPostgresRepository(
                                 "externStatus" to
                                     when (vedtak.status) {
                                         is Mottatt -> null
-                                        is TilUtbetaling -> (vedtak.status as TilUtbetaling).eksternStatus.name
+                                        is TilUtbetaling -> vedtak.status.eksternStatus.name
                                         is Ferdig -> null
                                     },
                                 "saksbehandletAv" to vedtak.saksbehandletAv,
@@ -336,7 +339,7 @@ class UtbetalingPostgresRepository(
                         if (vedtak.status is TilUtbetaling) {
                             lagreEksternStatus(
                                 behandlingId = vedtak.behandlingId,
-                                status = (vedtak.status as TilUtbetaling).eksternStatus,
+                                status = vedtak.status.eksternStatus,
                                 tx = tx,
                             )
                         }
@@ -451,6 +454,7 @@ class UtbetalingPostgresRepository(
             basertPåBehandlingId = uuidOrNull("basert_paa_id"),
             vedtakstidspunkt = localDateTime("vedtakstidspunkt"),
             behandletHendelseId = string("behandlet_hendelse_id"),
+            behandletHendelseType = string("behandlet_hendelse_type"),
             sakId = uuid("sak_id"),
             sakIdBase64 = string("sak_id_base64"),
             person = Person(string("ident")),

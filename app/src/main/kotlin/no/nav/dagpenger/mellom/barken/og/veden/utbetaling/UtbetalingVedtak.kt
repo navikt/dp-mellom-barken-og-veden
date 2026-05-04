@@ -12,6 +12,7 @@ data class UtbetalingVedtak(
     val basertPåBehandlingId: UUID?,
     val vedtakstidspunkt: LocalDateTime,
     val behandletHendelseId: String,
+    val behandletHendelseType: String,
     val sakId: UUID,
     val sakIdBase64: String = sakId.tilBase64(),
     val person: Person,
