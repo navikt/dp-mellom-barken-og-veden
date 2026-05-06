@@ -65,8 +65,7 @@ class BehovsløserFerietilleggBeløpMottakTest {
         with(rapid.inspektør) {
             size shouldBe 1
             message(0)["@løsning"]["FerietilleggBeløp"]["verdi"].asInt() shouldBe 300
-            message(0)["@løsning"]["FerietilleggBeløp"]["gyldigFraOgMed"].asLocalDate() shouldBe LocalDate.of(2026, 1, 1)
-            message(0)["@løsning"]["FerietilleggBeløp"]["gyldigTilOgMed"].asLocalDate() shouldBe LocalDate.of(2026, 12, 31)
+            message(0)["@løsning"]["FerietilleggBeløp"]["gyldigFraOgMed"].asLocalDate() shouldBe LocalDate.of(2025, 1, 1)
         }
     }
 
@@ -92,8 +91,7 @@ class BehovsløserFerietilleggBeløpMottakTest {
         with(rapid.inspektør) {
             size shouldBe 1
             message(0)["@løsning"]["FerietilleggBeløp"]["verdi"].asInt() shouldBe 0
-            message(0)["@løsning"]["FerietilleggBeløp"]["gyldigFraOgMed"].asLocalDate() shouldBe LocalDate.of(2026, 1, 1)
-            message(0)["@løsning"]["FerietilleggBeløp"]["gyldigTilOgMed"].asLocalDate() shouldBe LocalDate.of(2026, 12, 31)
+            message(0)["@løsning"]["FerietilleggBeløp"]["gyldigFraOgMed"].asLocalDate() shouldBe LocalDate.of(2025, 1, 1)
         }
     }
 
@@ -149,8 +147,7 @@ class BehovsløserFerietilleggBeløpMottakTest {
         with(rapid.inspektør) {
             size shouldBe 1
             message(0)["@løsning"]["FerietilleggBeløp"]["verdi"].asInt() shouldBe 600
-            message(0)["@løsning"]["FerietilleggBeløp"]["gyldigFraOgMed"].asLocalDate() shouldBe LocalDate.of(2026, 1, 1)
-            message(0)["@løsning"]["FerietilleggBeløp"]["gyldigTilOgMed"].asLocalDate() shouldBe LocalDate.of(2026, 12, 31)
+            message(0)["@løsning"]["FerietilleggBeløp"]["gyldigFraOgMed"].asLocalDate() shouldBe LocalDate.of(2025, 1, 1)
         }
     }
 

@@ -62,8 +62,7 @@ internal class BehovsløserFerietilleggBeløpMottak(
             val løsning =
                 mapOf(
                     "verdi" to sumForAlleDagene,
-                    "gyldigFraOgMed" to LocalDate.of(opptjeningsår + 1, 1, 1),
-                    "gyldigTilOgMed" to LocalDate.of(opptjeningsår + 1, 12, 31),
+                    "gyldigFraOgMed" to LocalDate.of(opptjeningsår, 1, 1),
                 )
 
             packet["@løsning"] =
