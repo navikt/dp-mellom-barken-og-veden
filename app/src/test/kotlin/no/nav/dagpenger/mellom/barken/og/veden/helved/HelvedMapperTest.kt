@@ -1,6 +1,7 @@
 package no.nav.dagpenger.mellom.barken.og.veden.helved
 
 import io.kotest.assertions.json.shouldEqualJson
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.DagpengeType
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Opprinnelse
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Person
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
@@ -41,6 +42,7 @@ class HelvedMapperTest {
                             sats = 1000,
                             utbetaltBeløp = 1000,
                             opprinnelse = Opprinnelse.Ny,
+                            dagpengeType = DagpengeType.ORDINÆR,
                         ),
                     ),
                 status = Status.Mottatt(),

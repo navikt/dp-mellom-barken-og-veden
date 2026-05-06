@@ -160,6 +160,7 @@ class BehovsløserFerietilleggBeløpMottakTest {
         sats = beløp,
         utbetaltBeløp = beløp,
         opprinnelse = Opprinnelse.Ny,
+        dagpengeType = DagpengeType.FERIETILLEGG,
     )
 
     private fun nyttVedtak(

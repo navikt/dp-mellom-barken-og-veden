@@ -7167,127 +7167,152 @@
     "meldeperiode" : "132264559",
     "dato" : "2018-06-21",
     "sats" : 1259,
-    "utbetaling" : 719
+    "utbetaling" : 719,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132264559",
     "dato" : "2018-06-22",
     "sats" : 1259,
-    "utbetaling" : 719
+    "utbetaling" : 719,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132264559",
     "dato" : "2018-06-23",
     "sats" : 1259,
-    "utbetaling" : 0
+    "utbetaling" : 0,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132264559",
     "dato" : "2018-06-24",
     "sats" : 1259,
-    "utbetaling" : 0
+    "utbetaling" : 0,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132264559",
     "dato" : "2018-06-25",
     "sats" : 1259,
-    "utbetaling" : 719
+    "utbetaling" : 719,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132264559",
     "dato" : "2018-06-26",
     "sats" : 1259,
-    "utbetaling" : 719
+    "utbetaling" : 719,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132264559",
     "dato" : "2018-06-27",
     "sats" : 1259,
-    "utbetaling" : 719
+    "utbetaling" : 719,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132264559",
     "dato" : "2018-06-28",
     "sats" : 1259,
-    "utbetaling" : 719
+    "utbetaling" : 719,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132264559",
     "dato" : "2018-06-29",
     "sats" : 1259,
-    "utbetaling" : 722
+    "utbetaling" : 722,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132264559",
     "dato" : "2018-06-30",
     "sats" : 1259,
-    "utbetaling" : 0
+    "utbetaling" : 0,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132264559",
     "dato" : "2018-07-01",
     "sats" : 1259,
-    "utbetaling" : 0
+    "utbetaling" : 0,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132266061",
     "dato" : "2018-07-02",
     "sats" : 1259,
-    "utbetaling" : 1259
+    "utbetaling" : 1259,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132266061",
     "dato" : "2018-07-03",
     "sats" : 1259,
-    "utbetaling" : 1259
+    "utbetaling" : 1259,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132266061",
     "dato" : "2018-07-04",
     "sats" : 1259,
-    "utbetaling" : 1259
+    "utbetaling" : 1259,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132266061",
     "dato" : "2018-07-05",
     "sats" : 1259,
-    "utbetaling" : 1259
+    "utbetaling" : 1259,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132266061",
     "dato" : "2018-07-06",
     "sats" : 1259,
-    "utbetaling" : 1259
+    "utbetaling" : 1259,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132266061",
     "dato" : "2018-07-07",
     "sats" : 1259,
-    "utbetaling" : 0
+    "utbetaling" : 0,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132266061",
     "dato" : "2018-07-08",
     "sats" : 1259,
-    "utbetaling" : 0
+    "utbetaling" : 0,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132266061",
     "dato" : "2018-07-09",
     "sats" : 1259,
-    "utbetaling" : 1259
+    "utbetaling" : 1259,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132266061",
     "dato" : "2018-07-10",
     "sats" : 1259,
-    "utbetaling" : 1259
+    "utbetaling" : 1259,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132266061",
     "dato" : "2018-07-11",
     "sats" : 1259,
-    "utbetaling" : 1259
+    "utbetaling" : 1259,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132266061",
     "dato" : "2018-07-12",
     "sats" : 1259,
-    "utbetaling" : 1259
+    "utbetaling" : 1259,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132266061",
     "dato" : "2018-07-13",
     "sats" : 1259,
-    "utbetaling" : 1259
+    "utbetaling" : 1259,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132266061",
     "dato" : "2018-07-14",
     "sats" : 1259,
-    "utbetaling" : 0
+    "utbetaling" : 0,
+    "dagpengeType" : "OrdinæreDagpenger"
   }, {
     "meldeperiode" : "132266061",
     "dato" : "2018-07-15",
     "sats" : 1259,
-    "utbetaling" : 0
+    "utbetaling" : 0,
+    "dagpengeType" : "OrdinæreDagpenger"
   } ],
   "behandletAv" : [ {
     "rolle" : "saksbehandler",

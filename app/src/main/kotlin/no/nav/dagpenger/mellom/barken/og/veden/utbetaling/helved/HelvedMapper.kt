@@ -1,11 +1,13 @@
 package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved
 
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.DagpengeType
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.helved.kontrakt.api.models.UtbetalingDTO
 import no.nav.helved.kontrakt.api.models.UtbetalingsdagDTO
 import no.nav.helved.kontrakt.api.models.UtbetalingsdagDTORettighetstypeDTO.ORDINÆR
 import no.nav.helved.kontrakt.api.models.UtbetalingsdagDTOUtbetalingstypeDTO.DAGPENGER
+import no.nav.helved.kontrakt.api.models.UtbetalingsdagDTOUtbetalingstypeDTO.DAGPENGER_FERIETILLEGG
 
 fun UtbetalingVedtak.mapToVedtakDTO(): UtbetalingDTO =
     UtbetalingDTO(
@@ -22,7 +24,11 @@ fun UtbetalingVedtak.mapToVedtakDTO(): UtbetalingDTO =
                         sats = dag.sats,
                         utbetaltBeløp = dag.utbetaltBeløp,
                         rettighetstype = ORDINÆR,
-                        utbetalingstype = DAGPENGER,
+                        utbetalingstype =
+                            when (dag.dagpengeType) {
+                                DagpengeType.ORDINÆR -> DAGPENGER
+                                DagpengeType.FERIETILLEGG -> DAGPENGER_FERIETILLEGG
+                            },
                     )
                 }.filterNot { it.utbetaltBeløp == 0 },
     )

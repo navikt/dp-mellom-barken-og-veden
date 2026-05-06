@@ -7,6 +7,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.DagpengeType
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.MeldingOmUtbetalingVedtakMottak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Opprinnelse
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
@@ -59,6 +60,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
                     sats = 1259,
                     utbetaltBeløp = 719,
                     opprinnelse = Opprinnelse.Ukjent,
+                    dagpengeType = DagpengeType.ORDINÆR,
                 )
             utbetalinger.maxBy { it.dato } shouldBe
                 Utbetalingsdag(
@@ -67,6 +69,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
                     sats = 1259,
                     utbetaltBeløp = 0,
                     opprinnelse = Opprinnelse.Ukjent,
+                    dagpengeType = DagpengeType.ORDINÆR,
                 )
             utbetalinger.size shouldBe 25
             status.type shouldBe Status.Type.MOTTATT
@@ -120,6 +123,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
                     sats = 1259,
                     utbetaltBeløp = 719,
                     opprinnelse = Opprinnelse.Ukjent,
+                    dagpengeType = DagpengeType.ORDINÆR,
                 )
             utbetalinger.maxBy { it.dato } shouldBe
                 Utbetalingsdag(
@@ -128,6 +132,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
                     sats = 1259,
                     utbetaltBeløp = 0,
                     opprinnelse = Opprinnelse.Ukjent,
+                    dagpengeType = DagpengeType.ORDINÆR,
                 )
             utbetalinger.size shouldBe 25
             status.type shouldBe Status.Type.MOTTATT

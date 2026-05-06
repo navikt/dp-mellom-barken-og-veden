@@ -4,6 +4,7 @@ import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.nulls.shouldNotBeNull
 import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
 import no.nav.dagpenger.mellom.barken.og.veden.repository.Postgres.withMigratedDb
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.DagpengeType
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Opprinnelse
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Person
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
@@ -42,6 +43,7 @@ fun vedtak(
     ident: Person = Person("12345678910"),
     saksbehandletAv: String = "saksbehandler",
     besluttetAv: String = "beslutter",
+    dagpengeType: DagpengeType = DagpengeType.ORDINÆR,
     utbetalinger: List<Utbetalingsdag> =
         listOf(
             Utbetalingsdag(
@@ -50,6 +52,7 @@ fun vedtak(
                 sats = 1000,
                 utbetaltBeløp = 1000,
                 opprinnelse = Opprinnelse.Ny,
+                dagpengeType = dagpengeType,
             ),
         ),
     opprettet: LocalDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS),

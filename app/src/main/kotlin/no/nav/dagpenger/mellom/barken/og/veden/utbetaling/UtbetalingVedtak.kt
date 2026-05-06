@@ -32,7 +32,13 @@ data class Utbetalingsdag(
     val sats: Int,
     val utbetaltBeløp: Int,
     val opprinnelse: Opprinnelse,
+    val dagpengeType: DagpengeType,
 )
+
+enum class DagpengeType {
+    ORDINÆR,
+    FERIETILLEGG,
+}
 
 enum class Opprinnelse {
     Ny,

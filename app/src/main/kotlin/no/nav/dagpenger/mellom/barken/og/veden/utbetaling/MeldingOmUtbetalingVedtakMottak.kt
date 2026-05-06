@@ -13,6 +13,7 @@ import io.micrometer.core.instrument.MeterRegistry
 import kotlinx.coroutines.runBlocking
 import no.nav.dagpenger.behandling.api.models.BehandletAvDTORolleDTO
 import no.nav.dagpenger.behandling.api.models.BehandlingsresultatDTO
+import no.nav.dagpenger.behandling.api.models.UtbetalingDTODagpengeTypeDTO
 import no.nav.dagpenger.mellom.barken.og.veden.asUUID
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
@@ -110,6 +111,11 @@ internal class MeldingOmUtbetalingVedtakMottak(
                                 sats = utbetaling.sats,
                                 utbetaltBeløp = utbetaling.utbetaling,
                                 opprinnelse = utbetaling.opprinnelse?.let { Opprinnelse.valueOf(it.value) } ?: Opprinnelse.Ukjent,
+                                dagpengeType =
+                                    when (utbetaling.dagpengeType) {
+                                        UtbetalingDTODagpengeTypeDTO.ORDINÆRE_DAGPENGER -> DagpengeType.ORDINÆR
+                                        UtbetalingDTODagpengeTypeDTO.FERIETILLEGG -> DagpengeType.FERIETILLEGG
+                                    },
                             )
                         },
                     status =
