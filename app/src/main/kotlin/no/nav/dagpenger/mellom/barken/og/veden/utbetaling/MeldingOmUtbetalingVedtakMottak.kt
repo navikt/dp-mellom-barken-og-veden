@@ -60,7 +60,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
         ) {
             logger.info { "Mottok melding om utbetaling for meldekort" }
 
-            if (behandlingId.toString() == "019a0694-650f-7075-be14-1e76a3fe8437" && System.getenv()["NAIS_CLUSTER_NAME"] == "dev-gcp") {
+            if (behandlingId.toString() == "019e3a37-a124-7bc6-9ba2-2e929ee6c72e" && System.getenv()["NAIS_CLUSTER_NAME"] == "dev-gcp") {
                 logger.info { "Hopper over behandling med ID $behandlingId" }
                 return@withLoggingContext
             }
