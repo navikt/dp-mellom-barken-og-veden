@@ -143,4 +143,34 @@ class MeldingOmUtbetalingVedtakMottakTest {
             message(0)["@event_name"].asText() shouldBe "utbetaling_mottatt"
         }
     }
+
+    @Test
+    fun `kan ta imot resultat fra ferietillegg behandling`() {
+        val json = javaClass.getResource("/test-data/FerietilleggUtbetalingTest.json")!!.readText()
+
+        val capturedVedtak = slot<UtbetalingVedtak>()
+        every { repo.lagreVedtak(capture(capturedVedtak)) } returns Unit
+
+        rapid.sendTestMessage(json)
+
+        val vedtak = capturedVedtak.captured
+        with(vedtak) {
+            basertPåBehandlingId shouldBe null
+            utbetalinger.size shouldBe 1
+            utbetalinger.first() shouldBe
+                Utbetalingsdag(
+                    meldeperiode = "Ferietillegg-2025",
+                    dato = LocalDate.of(2026, 5, 1),
+                    sats = 4024,
+                    utbetaltBeløp = 4024,
+                    opprinnelse = Opprinnelse.Ny,
+                    dagpengeType = DagpengeType.FERIETILLEGG,
+                )
+            status.type shouldBe Status.Type.MOTTATT
+        }
+        with(rapid.inspektør) {
+            size shouldBe 1
+            message(0)["@event_name"].asText() shouldBe "utbetaling_mottatt"
+        }
+    }
 }

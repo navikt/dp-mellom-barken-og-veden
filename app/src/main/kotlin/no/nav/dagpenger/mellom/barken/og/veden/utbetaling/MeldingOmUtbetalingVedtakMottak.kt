@@ -36,7 +36,6 @@ internal class MeldingOmUtbetalingVedtakMottak(
                 validate {
                     it.requireKey(
                         "behandlingId",
-                        "basertPå",
                         "ident",
                         "opplysninger",
                         "behandletHendelse",
