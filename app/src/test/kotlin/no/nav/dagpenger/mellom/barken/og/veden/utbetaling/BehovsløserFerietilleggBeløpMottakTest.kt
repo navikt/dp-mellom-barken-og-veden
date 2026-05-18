@@ -31,9 +31,11 @@ class BehovsløserFerietilleggBeløpMottakTest {
             {
                 "@event_name": "behov",
                 "@behovId": "123e4567-e89b-12d3-a456-426614174000",
-                "@behov": ["FerietilleggBeløp"],
+                "@behov": ["OpptjeningsBeløp"],
                 "ident": "$ident",
-                "opptjeningsår": 2025
+                "OpptjeningsBeløp": {
+                   "OpptjeningsårFerietillegg": 2025
+                }
             }
             """.trimIndent()
 
@@ -64,8 +66,8 @@ class BehovsløserFerietilleggBeløpMottakTest {
 
         with(rapid.inspektør) {
             size shouldBe 1
-            message(0)["@løsning"]["FerietilleggBeløp"]["verdi"].asInt() shouldBe 300
-            message(0)["@løsning"]["FerietilleggBeløp"]["gyldigFraOgMed"].asLocalDate() shouldBe LocalDate.of(2025, 1, 1)
+            message(0)["@løsning"]["OpptjeningsBeløp"]["verdi"].asInt() shouldBe 300
+            message(0)["@løsning"]["OpptjeningsBeløp"]["gyldigFraOgMed"].asLocalDate() shouldBe LocalDate.of(2025, 1, 1)
         }
     }
 
@@ -78,9 +80,11 @@ class BehovsløserFerietilleggBeløpMottakTest {
             {
                 "@event_name": "behov",
                 "@behovId": "123e4567-e89b-12d3-a456-426614174000",
-                "@behov": ["FerietilleggBeløp"],
+                "@behov": ["OpptjeningsBeløp"],
                 "ident": "$ident",
-                "opptjeningsår": 2025
+                "OpptjeningsBeløp": {
+                   "OpptjeningsårFerietillegg": 2025
+                }
             }
             """.trimIndent()
 
@@ -90,8 +94,8 @@ class BehovsløserFerietilleggBeløpMottakTest {
 
         with(rapid.inspektør) {
             size shouldBe 1
-            message(0)["@løsning"]["FerietilleggBeløp"]["verdi"].asInt() shouldBe 0
-            message(0)["@løsning"]["FerietilleggBeløp"]["gyldigFraOgMed"].asLocalDate() shouldBe LocalDate.of(2025, 1, 1)
+            message(0)["@løsning"]["OpptjeningsBeløp"]["verdi"].asInt() shouldBe 0
+            message(0)["@løsning"]["OpptjeningsBeløp"]["gyldigFraOgMed"].asLocalDate() shouldBe LocalDate.of(2025, 1, 1)
         }
     }
 
@@ -104,9 +108,11 @@ class BehovsløserFerietilleggBeløpMottakTest {
             {
                 "@event_name": "behov",
                 "@behovId": "123e4567-e89b-12d3-a456-426614174000",
-                "@behov": ["FerietilleggBeløp"],
+                "@behov": ["OpptjeningsBeløp"],
                 "ident": "$ident",
-                "opptjeningsår": 2025
+                "OpptjeningsBeløp": {
+                   "OpptjeningsårFerietillegg": 2025
+                }
             }
             """.trimIndent()
 
@@ -146,8 +152,8 @@ class BehovsløserFerietilleggBeløpMottakTest {
 
         with(rapid.inspektør) {
             size shouldBe 1
-            message(0)["@løsning"]["FerietilleggBeløp"]["verdi"].asInt() shouldBe 600
-            message(0)["@løsning"]["FerietilleggBeløp"]["gyldigFraOgMed"].asLocalDate() shouldBe LocalDate.of(2025, 1, 1)
+            message(0)["@løsning"]["OpptjeningsBeløp"]["verdi"].asInt() shouldBe 600
+            message(0)["@løsning"]["OpptjeningsBeløp"]["gyldigFraOgMed"].asLocalDate() shouldBe LocalDate.of(2025, 1, 1)
         }
     }
 

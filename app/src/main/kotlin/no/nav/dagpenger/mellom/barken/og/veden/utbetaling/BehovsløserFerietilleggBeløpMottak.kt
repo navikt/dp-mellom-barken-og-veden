@@ -19,7 +19,7 @@ internal class BehovsløserFerietilleggBeløpMottak(
     private companion object {
         private val sikkerLogg = KotlinLogging.logger("tjenestekall.BehovMediator")
         private val log = KotlinLogging.logger {}
-        const val BEHOV = "FerietilleggBeløp"
+        const val BEHOV = "OpptjeningsBeløp"
     }
 
     init {
@@ -30,7 +30,7 @@ internal class BehovsløserFerietilleggBeløpMottak(
                     it.requireAllOrAny("@behov", listOf(BEHOV))
                     it.forbid("@løsning")
                 }
-                validate { it.requireKey("ident", "opptjeningsår") }
+                validate { it.requireKey("ident", "$BEHOV.OpptjeningsårFerietillegg") }
                 validate { it.interestedIn("@id", "@opprettet", "@behovId") }
             }.register(this)
     }
@@ -42,7 +42,7 @@ internal class BehovsløserFerietilleggBeløpMottak(
         meterRegistry: MeterRegistry,
     ) {
         val ident = packet["ident"].asText()
-        val opptjeningsår = packet["opptjeningsår"].asInt()
+        val opptjeningsår = packet["$BEHOV.OpptjeningsårFerietillegg"].asInt()
 
         withLoggingContext(
             "behovId" to packet["@behovId"].asText(),
