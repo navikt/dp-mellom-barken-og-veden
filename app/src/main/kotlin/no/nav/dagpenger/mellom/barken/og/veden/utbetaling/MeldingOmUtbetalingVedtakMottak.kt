@@ -136,6 +136,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                     ident = utbetalingVedtak.person.ident,
                     sakId = utbetalingVedtak.sakId,
                     behandletHendelseId = utbetalingVedtak.behandletHendelseId,
+                    behandletHendelseType = utbetalingVedtak.behandletHendelseType,
                     status = utbetalingVedtak.status,
                 ).tilHendelse(),
             )

@@ -9,6 +9,7 @@ data class UtbetalingStatusHendelse(
     val ident: String,
     val sakId: UUID,
     val behandletHendelseId: String,
+    val behandletHendelseType: String,
     val status: Status,
 ) {
     fun tilHendelse() =
@@ -17,14 +18,20 @@ data class UtbetalingStatusHendelse(
                 mapOf(
                     "@event_name" to
                         when (status.type) {
-                            Status.Type.MOTTATT -> "utbetaling_mottatt"
+                            Status.Type.MOTTATT -> {
+                                "utbetaling_mottatt"
+                            }
+
                             Status.Type.TIL_UTBETALING -> {
                                 when ((status as Status.TilUtbetaling).eksternStatus) {
                                     Status.UtbetalingStatus.FEILET -> "utbetaling_feilet"
                                     else -> "utbetaling_sendt"
                                 }
                             }
-                            Status.Type.FERDIG -> "utbetaling_utført"
+
+                            Status.Type.FERDIG -> {
+                                "utbetaling_utført"
+                            }
                         },
                     "ident" to ident,
                     "behandlingId" to behandlingId,
@@ -32,6 +39,7 @@ data class UtbetalingStatusHendelse(
                     "sakId" to sakId,
                     "eksternSakId" to sakId.tilBase64(),
                     "behandletHendelseId" to behandletHendelseId,
+                    "behandletHendelseType" to behandletHendelseType,
                     "meldekortId" to behandletHendelseId,
                     "status" to status.type.name,
                 ),
