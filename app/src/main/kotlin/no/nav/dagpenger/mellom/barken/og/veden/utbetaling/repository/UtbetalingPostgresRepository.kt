@@ -15,6 +15,7 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status.TilUtbetaling
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status.UtbetalingStatus
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Utbetalingsdag
+import java.time.LocalDate
 import java.time.Year
 import java.util.UUID
 import javax.sql.DataSource
@@ -69,6 +70,33 @@ class UtbetalingPostgresRepository(
                         """.trimIndent(),
                         mapOf(
                             "ident" to ident,
+                            "fom" to fom,
+                            "tom" to tom,
+                        ),
+                    ).map { row ->
+                        row.toUtbetalingVedtak(tx)
+                    }.asList,
+                )
+            }
+        }
+    }
+
+    override fun hentAlleFerdige(
+        fom: LocalDate,
+        tom: LocalDate,
+    ): List<UtbetalingVedtak> {
+        sessionOf(dataSource).use { session ->
+            return session.transaction { tx ->
+                tx.run(
+                    queryOf(
+                        // language=PostgreSQL
+                        """
+                        SELECT *
+                        FROM utbetaling
+                        WHERE status = 'FERDIG'
+                          AND opprettet BETWEEN :fom AND :tom
+                        """.trimIndent(),
+                        mapOf(
                             "fom" to fom,
                             "tom" to tom,
                         ),

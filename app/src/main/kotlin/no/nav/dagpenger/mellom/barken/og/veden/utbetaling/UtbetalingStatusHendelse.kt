@@ -12,27 +12,28 @@ data class UtbetalingStatusHendelse(
     val behandletHendelseType: String,
     val status: Status,
 ) {
-    fun tilHendelse() =
-        JsonMessage
+    fun tilHendelse(suffiks: String = ""): String {
+        val eventnavn =
+            when (status.type) {
+                Status.Type.MOTTATT -> {
+                    "utbetaling_mottatt"
+                }
+
+                Status.Type.TIL_UTBETALING -> {
+                    when ((status as Status.TilUtbetaling).eksternStatus) {
+                        Status.UtbetalingStatus.FEILET -> "utbetaling_feilet"
+                        else -> "utbetaling_sendt"
+                    }
+                }
+
+                Status.Type.FERDIG -> {
+                    "utbetaling_utført"
+                }
+            }
+        return JsonMessage
             .newMessage(
                 mapOf(
-                    "@event_name" to
-                        when (status.type) {
-                            Status.Type.MOTTATT -> {
-                                "utbetaling_mottatt"
-                            }
-
-                            Status.Type.TIL_UTBETALING -> {
-                                when ((status as Status.TilUtbetaling).eksternStatus) {
-                                    Status.UtbetalingStatus.FEILET -> "utbetaling_feilet"
-                                    else -> "utbetaling_sendt"
-                                }
-                            }
-
-                            Status.Type.FERDIG -> {
-                                "utbetaling_utført"
-                            }
-                        },
+                    "@event_name" to "$eventnavn$suffiks",
                     "ident" to ident,
                     "behandlingId" to behandlingId,
                     "eksternBehandlingId" to behandlingId.tilBase64(),
@@ -44,4 +45,5 @@ data class UtbetalingStatusHendelse(
                     "status" to status.type.name,
                 ),
             ).toJson()
+    }
 }
