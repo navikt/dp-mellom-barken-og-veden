@@ -94,7 +94,7 @@ class UtbetalingPostgresRepository(
                         SELECT *
                         FROM utbetaling
                         WHERE status = 'FERDIG'
-                          AND opprettet BETWEEN :fom AND :tom
+                          AND opprettet::date BETWEEN :fom::date AND :tom::date
                         """.trimIndent(),
                         mapOf(
                             "fom" to fom,
