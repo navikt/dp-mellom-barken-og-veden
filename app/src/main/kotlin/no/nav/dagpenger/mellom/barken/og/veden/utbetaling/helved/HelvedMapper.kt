@@ -30,7 +30,7 @@ fun UtbetalingVedtak.mapToVedtakDTO(): UtbetalingDTO =
                                 DagpengeType.FERIETILLEGG -> DAGPENGER_FERIETILLEGG
                             },
                     )
-                }.filterNot { it.utbetaltBeløp == 0 },
+                },
     )
 
 fun UtbetalingDTO.toJson(): String = objectMapper.writeValueAsString(this)
