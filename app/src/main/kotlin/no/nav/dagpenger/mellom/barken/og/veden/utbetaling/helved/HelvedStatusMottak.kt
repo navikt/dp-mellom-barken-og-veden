@@ -46,6 +46,8 @@ internal class HelvedStatusMottak(
             logger.info { "Mottok statusmelding for annet fagsystem ($fagsystem) ignorere denne, nøkkel ${metadata.key}" }
             return
         }
+        // logger meldinger midlertidig for å se hva som er feil med melding i dev
+        logger.sikkerlogg().info { "Mottok statusmelding med nøkkel ${metadata.key}, melding: ${packet.toJson()}" }
         val behandlingId =
             metadata.key?.let { UUID.fromString(it) }
                 ?: throw IllegalStateException("Mangler nøkkel i metadata, kan ikke prosessere melding uten behandlingId")
