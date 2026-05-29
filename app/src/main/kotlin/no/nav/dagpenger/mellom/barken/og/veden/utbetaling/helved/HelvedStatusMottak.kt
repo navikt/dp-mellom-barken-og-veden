@@ -48,8 +48,16 @@ internal class HelvedStatusMottak(
         }
         // logger meldinger midlertidig for å se hva som er feil med melding i dev
         logger.sikkerlogg().info { "Mottok statusmelding med nøkkel ${metadata.key}, melding: ${packet.toJson()}" }
+
         val behandlingId =
-            metadata.key?.let { UUID.fromString(it) }
+            metadata.key?.let {
+                try {
+                    UUID.fromString(it)
+                } catch (e: IllegalArgumentException) {
+                    logger.error(e) { "Mottok melding med ugyldig behandlingId i nøkkel: $it, ignorerer denne" }
+                    return
+                }
+            }
                 ?: throw IllegalStateException("Mangler nøkkel i metadata, kan ikke prosessere melding uten behandlingId")
 
         val statusDto: StatusReply =
