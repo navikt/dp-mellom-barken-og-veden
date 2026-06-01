@@ -2,8 +2,6 @@ package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
-import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDate
-import com.github.navikt.tbd_libs.rapids_and_rivers.isMissingOrNull
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
@@ -14,10 +12,8 @@ import io.micrometer.core.instrument.MeterRegistry
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingStatusHendelse
-import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.repository.Repo
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
-import java.time.LocalDate
 import java.util.UUID
 
 internal class HelvedStatusMottak(
@@ -51,14 +47,8 @@ internal class HelvedStatusMottak(
 
         val behandlingId =
             metadata.key?.let {
-                try {
-                    UUID.fromString(it)
-                } catch (e: IllegalArgumentException) {
-                    logger.error(e) { "Mottok melding med ugyldig behandlingId i nøkkel: $it, ignorerer denne" }
-                    return
-                }
-            }
-                ?: throw IllegalStateException("Mangler nøkkel i metadata, kan ikke prosessere melding uten behandlingId")
+                UUID.fromString(it)
+            } ?: throw IllegalStateException("Mangler nøkkel i metadata, kan ikke prosessere melding uten behandlingId")
 
         val statusDto: StatusReply =
             objectMapper.treeToValue(objectMapper.readTree(packet.toJson()), StatusReply::class.java)
@@ -76,9 +66,6 @@ internal class HelvedStatusMottak(
             logger.info { "Fått statusmelding: ${packet["status"].asText()}" }
             logger.sikkerlogg().info { "Fått statusmelding: $json, nøkkel: ${metadata.key}" }
 
-            // Verifiser at grensedatoene for utbetalingen til Helved stemmer med behandlingen
-            validerGrensedatoer(context, packet, utbetalingVedtak, behandlingId)
-
             val status =
                 when (statusDto.status) {
                     StatusReply.Status.OK -> Status.Ferdig(Status.UtbetalingStatus.OK)
@@ -94,60 +81,27 @@ internal class HelvedStatusMottak(
                     statusDto.status.name,
                 ).increment()
 
-            repo.lagreStatusFraHelved(
-                behandlingId = behandlingId,
-                status = status,
-                svar = statusDto,
-                json = json,
-            )
-            context.publish(
-                utbetalingVedtak.person.ident,
-                UtbetalingStatusHendelse(
+            val lagret =
+                repo.lagreStatusFraHelved(
                     behandlingId = behandlingId,
-                    ident = utbetalingVedtak.person.ident,
-                    sakId = utbetalingVedtak.sakId,
-                    behandletHendelseId = utbetalingVedtak.behandletHendelseId,
-                    behandletHendelseType = utbetalingVedtak.behandletHendelseType,
                     status = status,
-                ).tilHendelse(),
-            )
+                    svar = statusDto,
+                    json = json,
+                )
+            if (lagret) {
+                context.publish(
+                    utbetalingVedtak.person.ident,
+                    UtbetalingStatusHendelse(
+                        behandlingId = behandlingId,
+                        ident = utbetalingVedtak.person.ident,
+                        sakId = utbetalingVedtak.sakId,
+                        behandletHendelseId = utbetalingVedtak.behandletHendelseId,
+                        behandletHendelseType = utbetalingVedtak.behandletHendelseType,
+                        status = status,
+                    ).tilHendelse(),
+                )
+            }
         }
-    }
-
-    private fun validerGrensedatoer(
-        context: MessageContext,
-        packet: JsonMessage,
-        utbetalingVedtak: UtbetalingVedtak,
-        behandlingId: UUID,
-    ) {
-        if (packet["detaljer"].isMissingOrNull()) return
-        if (packet["detaljer"]["linjer"].isEmpty) return
-        val førsteDagFraHelVed = packet["detaljer"]["linjer"].minOf { it["fom"].asLocalDate() }
-        // Default for eksisterende behandlinger er LocalDate.MIN, hopp over de
-        if (utbetalingVedtak.førsteUtbetalingsdag.isEqual(LocalDate.MIN)) return
-        if (førsteDagFraHelVed.isEqual(utbetalingVedtak.førsteUtbetalingsdag)) return
-
-        logger.error {
-            """Første utbetalingsdag ($førsteDagFraHelVed) fra Hel Ved er ikke lik første 
-            |utbetalingsdag (${utbetalingVedtak.førsteUtbetalingsdag}) for behandling $behandlingId
-            """.trimMargin()
-        }
-
-        context.publish(
-            utbetalingVedtak.person.ident,
-            JsonMessage
-                .newMessage(
-                    "utbetaling_feil_grensedato",
-                    mapOf(
-                        "behandlingId" to behandlingId,
-                        "sakId" to utbetalingVedtak.sakId,
-                        "eksternBehandlingId" to behandlingId.tilBase64(),
-                        "eksternSakId" to utbetalingVedtak.sakId.tilBase64(),
-                        "førsteUtbetalingsdag" to utbetalingVedtak.førsteUtbetalingsdag,
-                        "førsteDagFraHelVed" to førsteDagFraHelVed,
-                    ),
-                ).toJson(),
-        )
     }
 
     private companion object {

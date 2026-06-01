@@ -33,7 +33,7 @@ class HelvedStatusMottakTest {
             }
         val repo =
             mockk<Repo>().also {
-                every { it.lagreStatusFraHelved(any(), any(), any(), any()) } returns Unit
+                every { it.lagreStatusFraHelved(any(), any(), any(), any()) } returns true
             }
         val helvedStatusMottak = HelvedStatusMottak(rapid, utbetalingRepo, repo)
 
@@ -60,39 +60,6 @@ class HelvedStatusMottakTest {
     }
 
     @Test
-    fun `sender ut melding om feil grensedato i status fra helved`() {
-        val behandlingId = UUID.randomUUID()
-        val sakId = UUID.randomUUID()
-        val utbetalingRepo =
-            mockk<UtbetalingRepo>().also {
-                every { it.hentVedtak(behandlingId) } returns vedtak(sakId = sakId, behandlingId = behandlingId)
-            }
-        val repo =
-            mockk<Repo>().also {
-                every { it.lagreStatusFraHelved(any(), any(), any(), any()) } returns Unit
-            }
-        val helvedStatusMottak = HelvedStatusMottak(rapid, utbetalingRepo, repo)
-
-        rapid.sendTestMessage(
-            message = statusMelding(LocalDate.of(2021, 4, 24)),
-            key = behandlingId.toString(),
-            headers = dagpengerHeader,
-        )
-
-        verify(exactly = 1) { utbetalingRepo.hentVedtak(behandlingId) }
-        verify(exactly = 1) { repo.lagreStatusFraHelved(any(), any(), any(), any()) }
-
-        with(rapid.inspektør) {
-            size shouldBe 2
-            key(0) shouldBe "12345678910"
-            val hendelse = message(0)
-            hendelse["@event_name"].asText() shouldBe "utbetaling_feil_grensedato"
-            hendelse["behandlingId"].asText() shouldBe behandlingId.toString()
-            hendelse["sakId"].asText() shouldBe sakId.toString()
-        }
-    }
-
-    @Test
     fun `hopper over statusmeldinger som ikke har klassekode som starter med DP`() {
         val behandlingId = UUID.randomUUID()
         val utbetalingRepo =
@@ -101,7 +68,7 @@ class HelvedStatusMottakTest {
             }
         val repo =
             mockk<Repo>().also {
-                every { it.lagreStatusFraHelved(any(), any(), any(), any()) } returns Unit
+                every { it.lagreStatusFraHelved(any(), any(), any(), any()) } returns true
             }
         val helvedStatusMottak = HelvedStatusMottak(rapid, utbetalingRepo, mockk())
 
@@ -124,7 +91,7 @@ class HelvedStatusMottakTest {
             }
         val repo =
             mockk<Repo>().also {
-                every { it.lagreStatusFraHelved(any(), any(), any(), any()) } returns Unit
+                every { it.lagreStatusFraHelved(any(), any(), any(), any()) } returns true
             }
         val helvedStatusMottak = HelvedStatusMottak(rapid, utbetalingRepo, mockk())
 
@@ -136,6 +103,31 @@ class HelvedStatusMottakTest {
 
         verify(exactly = 0) { utbetalingRepo.hentVedtak(behandlingId) }
         verify(exactly = 0) { repo.lagreStatusFraHelved(any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `sender ikke status melding på rapid hvis vi får en ferdig status vi allerede har lagret `() {
+        val behandlingId = UUID.randomUUID()
+        val sakId = UUID.randomUUID()
+        val utbetalingRepo =
+            mockk<UtbetalingRepo>().also {
+                every { it.hentVedtak(any()) } returns vedtak(sakId = sakId, behandlingId = behandlingId)
+            }
+        val repo =
+            mockk<Repo>().also {
+                every { it.lagreStatusFraHelved(any(), any(), any(), any()) } returns false
+            }
+
+        val helvedStatusMottak = HelvedStatusMottak(rapid, utbetalingRepo, repo)
+        rapid.sendTestMessage(
+            message = statusMelding(LocalDate.of(2025, 5, 22)),
+            key = behandlingId.toString(),
+            headers = dagpengerHeader,
+        )
+
+        verify(exactly = 1) { repo.lagreStatusFraHelved(any(), any(), any(), any()) }
+
+        rapid.inspektør.size shouldBe 0
     }
 
     //language=JSON

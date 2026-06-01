@@ -27,7 +27,7 @@ interface UtbetalingRepo {
         behandlingId: UUID,
         status: Status,
         tx: TransactionalSession,
-    )
+    ): Boolean
 
     fun harUtbetalingerSomVenterPåSvar(sakId: UUID): Boolean
 

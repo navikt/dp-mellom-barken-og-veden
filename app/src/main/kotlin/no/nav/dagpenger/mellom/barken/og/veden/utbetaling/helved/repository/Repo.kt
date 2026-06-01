@@ -17,12 +17,13 @@ internal class Repo(
         status: Status,
         svar: StatusReply,
         json: String,
-    ) {
+    ): Boolean {
         sessionOf(dataSource).use { session ->
             return session.transaction { tx ->
-                utbetalingRepo.oppdaterStatus(behandlingId, status, tx)
+                val lagret = utbetalingRepo.oppdaterStatus(behandlingId, status, tx)
                 helvedRepo.lagreStatusSvar(behandlingId, svar, tx)
                 utbetalingRepo.lagreMelding(behandlingId, "HELVED_STATUS_SVAR", json, tx)
+                lagret
             }
         }
     }

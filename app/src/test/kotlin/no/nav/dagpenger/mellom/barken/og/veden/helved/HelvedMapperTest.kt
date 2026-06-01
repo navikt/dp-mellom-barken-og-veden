@@ -12,7 +12,6 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.tilBase64
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.toJson
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 import java.util.UUID
 import kotlin.test.Test
 
@@ -22,7 +21,7 @@ class HelvedMapperTest {
         val behandlingId = UUID.randomUUID()
         val sakId = UUID.randomUUID()
         val utbetalingId = behandlingId.tilBase64()
-        val vedtakstidspunkt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
+        val vedtakstidspunkt = LocalDateTime.now()
         val utbetaling =
             UtbetalingVedtak(
                 behandlingId = behandlingId,

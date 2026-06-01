@@ -290,7 +290,7 @@ class UtbetalingPostgresRepository(
         behandlingId: UUID,
         status: Status,
         tx: TransactionalSession,
-    ) {
+    ): Boolean {
         tx
             .run(
                 queryOf(
@@ -329,6 +329,8 @@ class UtbetalingPostgresRepository(
                 if (status is TilUtbetaling) {
                     lagreEksternStatus(behandlingId, status.eksternStatus, tx)
                 }
+
+                return updatedRows == 1
             }
     }
 
