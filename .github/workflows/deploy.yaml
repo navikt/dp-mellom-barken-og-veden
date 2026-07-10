@@ -57,7 +57,6 @@ jobs:
     steps:
       - uses: navikt/dagpenger/actions/attest-sign@master
         with:
-          digest: ${{ needs.build.outputs.digest }}
           image: ${{ needs.build.outputs.image }}
           team: teamdagpenger
 
