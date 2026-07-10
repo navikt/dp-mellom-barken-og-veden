@@ -3810,7 +3810,8 @@
         "søknadBarnId" : "019a9b85-bc01-7053-a90a-d470ee3182e8",
         "verdi" : [ {
           "fødselsdato" : "2000-01-01",
-          "kvalifiserer" : true
+          "kvalifiserer" : true,
+          "forsørgeransvar" : true
         } ],
         "datatype" : "barn"
       },
