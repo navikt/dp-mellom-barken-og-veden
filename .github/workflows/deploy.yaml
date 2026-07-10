@@ -25,7 +25,6 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - uses: gradle/actions/wrapper-validation@v6.2.0
       - uses: gradle/actions/setup-gradle@v6.2.0
         env:
           # Eksluder test dependencies
@@ -33,6 +32,7 @@ jobs:
         with:
           dependency-graph: generate-and-submit
           cache-encryption-key: ${{ secrets.GradleEncryptionKey }}
+          cache-write-only: true
       - run: ./gradlew --configuration-cache installDist
 
       - name: docker-build-push
