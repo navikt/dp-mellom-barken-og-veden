@@ -45,6 +45,11 @@ internal class HelvedStatusMottak(
         // logger meldinger midlertidig for å se hva som er feil med melding i dev
         logger.sikkerlogg().info { "Mottok statusmelding med nøkkel ${metadata.key}, melding: ${packet.toJson()}" }
 
+        if (metadata.key?.contains("AZ6M2KLZfmOCyWnleGOMzg==") == true) {
+            logger.warn { "Skipper melding med nøkkel ${metadata.key}" }
+            return
+        }
+
         val behandlingId =
             metadata.key?.let {
                 UUID.fromString(it)
