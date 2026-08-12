@@ -4,6 +4,7 @@ import kotliquery.TransactionalSession
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.Year
 import java.util.UUID
 
@@ -29,7 +30,7 @@ interface UtbetalingRepo {
         tx: TransactionalSession,
     ): Boolean
 
-    fun harUtbetalingerSomVenterPåSvar(sakId: UUID): Boolean
+    fun hentUtbetalingerSomVenterPåSvar(sakId: UUID): List<VedtakSomVenterPåSvar>
 
     fun hentAlleUtbetalingerForSak(sakId: UUID): List<UtbetalingVedtak>
 
@@ -56,3 +57,8 @@ interface UtbetalingRepo {
         tx: TransactionalSession,
     )
 }
+
+data class VedtakSomVenterPåSvar(
+    val vedtak: UtbetalingVedtak,
+    val sistEndretTilstand: LocalDateTime,
+)

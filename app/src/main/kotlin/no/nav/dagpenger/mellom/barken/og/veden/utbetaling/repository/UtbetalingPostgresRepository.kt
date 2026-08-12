@@ -133,7 +133,7 @@ class UtbetalingPostgresRepository(
 
     override fun hentAlleMottatte(): List<UtbetalingVedtak> = hentAlleVedtakMedStatus(Status.Type.MOTTATT)
 
-    override fun harUtbetalingerSomVenterPåSvar(sakId: UUID): Boolean {
+    override fun hentUtbetalingerSomVenterPåSvar(sakId: UUID): List<VedtakSomVenterPåSvar> {
         sessionOf(dataSource).use { session ->
             return session
                 .transaction { tx ->
@@ -152,10 +152,13 @@ class UtbetalingPostgresRepository(
                                 "sakId" to sakId,
                             ),
                         ).map { row ->
-                            row.toUtbetalingVedtak(tx)
+                            VedtakSomVenterPåSvar(
+                                vedtak = row.toUtbetalingVedtak(tx),
+                                sistEndretTilstand = row.localDateTime("sist_endret_tilstand"),
+                            )
                         }.asList,
                     )
-                }.isNotEmpty()
+                }
         }
     }
 

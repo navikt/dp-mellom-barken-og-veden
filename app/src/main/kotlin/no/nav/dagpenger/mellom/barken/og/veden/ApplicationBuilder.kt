@@ -35,7 +35,6 @@ internal class ApplicationBuilder(
     private val consumerProducerFactory = ConsumerProducerFactory(AivenConfig.default)
     private val producer = consumerProducerFactory.createProducer()
     private val helvedUtsender = HelvedUtsender(Configuration.utbetalingTopic, producer)
-    private val utsendingsHjelper = UtsendingsHjelper(utbetalingRepo, helvedUtsender)
 
     companion object {
         private val logger = KotlinLogging.logger { }
@@ -67,10 +66,6 @@ internal class ApplicationBuilder(
                     }
                 },
             ).apply {
-                BehandleMottatteUtbetalinger(
-                    leaderElection = createLeaderElectionClient(),
-                    utsendingsHjelper = utsendingsHjelper,
-                ).start()
                 MeldingOmUtbetalingVedtakMottak(
                     rapidsConnection = this,
                     repo = utbetalingRepo,
@@ -87,8 +82,14 @@ internal class ApplicationBuilder(
                 )
             }
 
+    private val utsendingsHjelper = UtsendingsHjelper(utbetalingRepo, helvedUtsender, rapidsConnection)
+
     init {
         rapidsConnection.register(this)
+        BehandleMottatteUtbetalinger(
+            leaderElection = createLeaderElectionClient(),
+            utsendingsHjelper = utsendingsHjelper,
+        ).start()
     }
 
     fun start() = rapidsConnection.start()
