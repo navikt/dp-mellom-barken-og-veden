@@ -29,7 +29,7 @@ ktlint {
 }
 
 dependencies {
-    implementation(libs.jackson.annotation)
+    implementation("com.fasterxml.jackson.core:jackson-annotations:2.22")
 }
 
 tasks.register<Download>("hentOpenAPI") {

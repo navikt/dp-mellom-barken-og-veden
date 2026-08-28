@@ -1,6 +1,5 @@
 package no.nav.dagpenger.mellom.barken.og.veden.utbetaling
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
 import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDateTime
@@ -17,6 +16,7 @@ import no.nav.dagpenger.behandling.api.models.UtbetalingDTODagpengeTypeDTO
 import no.nav.dagpenger.mellom.barken.og.veden.asUUID
 import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
+import tools.jackson.module.kotlin.readValue
 import java.time.LocalDateTime
 import java.util.UUID
 
