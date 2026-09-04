@@ -20,7 +20,7 @@ dependencies {
 
     implementation("io.ktor:ktor-server-sse:$ktorVersion")
     implementation("com.github.navikt.tbd-libs:naisful-app:20260826.1506")
-    implementation("com.github.navikt.tbd-libs:kafka:20260826.1506")
+    implementation("com.github.navikt.tbd-libs:kafka:20260827.1253")
     implementation("io.ktor:ktor-server-swagger:$ktorVersion")
 
     testImplementation("io.ktor:ktor-server-test-host-jvm:$ktorVersion")
