@@ -19,7 +19,7 @@ dependencies {
     implementation(libs.bundles.postgres)
 
     implementation("io.ktor:ktor-server-sse:$ktorVersion")
-    implementation("com.github.navikt.tbd-libs:naisful-app:20260826.1506")
+    implementation("com.github.navikt.tbd-libs:naisful-app:20260827.1253")
     implementation("com.github.navikt.tbd-libs:kafka:20260826.1506")
     implementation("io.ktor:ktor-server-swagger:$ktorVersion")
 
