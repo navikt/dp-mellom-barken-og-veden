@@ -3,10 +3,16 @@ package no.nav.dagpenger.mellom.barken.og.veden.utbetaling.api
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.OutgoingMessage
 import io.github.oshai.kotlinlogging.withLoggingContext
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.serialization.jackson3.JacksonConverter
 import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.auth.AuthenticationConfig
 import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.plugins.BadRequestException
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.swagger.swaggerUI
 import io.ktor.server.response.respond
 import io.ktor.server.routing.RoutingContext
@@ -14,14 +20,32 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.server.util.getOrFail
+import no.nav.dagpenger.mellom.barken.og.veden.objectMapper
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.Status
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingStatusHendelse
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.UtbetalingVedtak
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.api.auth.AuthFactory.azureAd
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingRepo
 import no.nav.dagpenger.utbetaling.api.models.UtbetalingStatusDTO
 import no.nav.dagpenger.utbetaling.api.models.UtbetalingsdagDTO
 import java.time.LocalDate
 import java.util.UUID
+
+/**
+ * Selve API-et, delt mellom [no.nav.dagpenger.mellom.barken.og.veden.ApplicationBuilder] og tester,
+ * slik at begge kjører nøyaktig samme oppsett av json-serialisering, autentisering og ruter.
+ */
+internal fun Application.utbetalingApiModule(
+    repo: UtbetalingRepo,
+    rapid: MessageContext,
+    authConfig: AuthenticationConfig.() -> Unit = { jwt("azureAd") { azureAd() } },
+) {
+    install(ContentNegotiation) {
+        register(ContentType.Application.Json, JacksonConverter(objectMapper))
+    }
+    authenticationConfig(authConfig)
+    utbetalingApi(repo, rapid)
+}
 
 internal fun Application.utbetalingApi(
     repo: UtbetalingRepo,

@@ -2,20 +2,14 @@ package no.nav.dagpenger.mellom.barken.og.veden
 
 import com.github.navikt.tbd_libs.kafka.AivenConfig
 import com.github.navikt.tbd_libs.kafka.ConsumerProducerFactory
-import com.github.navikt.tbd_libs.naisful.naisApp
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
-import io.micrometer.core.instrument.Clock
-import io.micrometer.prometheusmetrics.PrometheusConfig
-import io.micrometer.prometheusmetrics.PrometheusMeterRegistry
-import io.prometheus.metrics.model.registry.PrometheusRegistry
 import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration.dataSource
 import no.nav.dagpenger.mellom.barken.og.veden.leaderelection.LeaderElectionClient
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.BehovsløserFerietilleggBeløpMottak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.MeldingOmUtbetalingVedtakMottak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.SakIdHenter
-import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.api.authenticationConfig
-import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.api.utbetalingApi
+import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.api.utbetalingApiModule
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.HelvedStatusMottak
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.HelvedUtsender
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.helved.repository.HelvedPostgresRepository
@@ -24,7 +18,6 @@ import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber.BehandleMottatt
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.jobber.UtsendingsHjelper
 import no.nav.dagpenger.mellom.barken.og.veden.utbetaling.repository.UtbetalingPostgresRepository
 import no.nav.helse.rapids_rivers.RapidApplication
-import org.slf4j.LoggerFactory
 
 internal class ApplicationBuilder(
     config: Map<String, String>,
@@ -45,25 +38,7 @@ internal class ApplicationBuilder(
             .create(
                 env = config,
                 builder = {
-                    withKtor { preStopHook, rapid ->
-                        naisApp(
-                            meterRegistry =
-                                PrometheusMeterRegistry(
-                                    PrometheusConfig.DEFAULT,
-                                    PrometheusRegistry.defaultRegistry,
-                                    Clock.SYSTEM,
-                                ),
-                            objectMapper = objectMapper,
-                            applicationLogger = LoggerFactory.getLogger("ApplicationLogger"),
-                            callLogger = LoggerFactory.getLogger("CallLogger"),
-                            aliveCheck = rapid::isReady,
-                            readyCheck = rapid::isReady,
-                            preStopHook = preStopHook::handlePreStopRequest,
-                        ) {
-                            authenticationConfig()
-                            utbetalingApi(utbetalingRepo, rapid)
-                        }
-                    }
+                    withKtorModule { utbetalingApiModule(utbetalingRepo, rapidsConnection) }
                 },
             ).apply {
                 MeldingOmUtbetalingVedtakMottak(
