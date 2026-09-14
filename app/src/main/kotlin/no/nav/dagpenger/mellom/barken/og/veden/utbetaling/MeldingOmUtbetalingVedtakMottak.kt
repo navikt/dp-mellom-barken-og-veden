@@ -30,8 +30,6 @@ internal class MeldingOmUtbetalingVedtakMottak(
             .apply {
                 precondition {
                     it.requireValue("@event_name", "behandlingsresultat")
-                    // kanskje vi også vil ta vare på "rammevedtaket"?
-//                    it.requireValue("behandletHendelse.type", "Meldekort")
                 }
                 validate {
                     it.requireKey(
@@ -65,10 +63,6 @@ internal class MeldingOmUtbetalingVedtakMottak(
                 return@withLoggingContext
             }
 
-            if (behandlingId.toString() == "01a09cc9-5c19-716c-a3bb-fbad008667c7" && System.getenv()["NAIS_CLUSTER_NAME"] == "prod-gcp") {
-                logger.info { "Hopper over behandling med ID $behandlingId" }
-                return@withLoggingContext
-            }
             // her kan vi kalle dp-behandling for å hente utbetalinger
             val behandlingsresultatDTO: BehandlingsresultatDTO =
                 objectMapper.readValue<BehandlingsresultatDTO>(packet.toJson())
