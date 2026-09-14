@@ -40,6 +40,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
         val json = javaClass.getResource("/test-data/behandlingresultatMedUtbetalinger.json")!!.readText()
 
         val capturedVedtak = slot<UtbetalingVedtak>()
+        every { repo.hentVedtak(any()) } returns null
         every { repo.lagreVedtak(capture(capturedVedtak)) } returns Unit
 
         rapid.sendTestMessage(json)
@@ -86,6 +87,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
         val json = javaClass.getResource("/test-data/behandlingresultatUtenUtbetalinger.json")!!.readText()
 
         val capturedVedtak = slot<UtbetalingVedtak>()
+        every { repo.hentVedtak(any()) } returns null
         every { repo.lagreVedtak(capture(capturedVedtak)) } returns Unit
 
         rapid.sendTestMessage(json)
@@ -103,6 +105,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
         val json = javaClass.getResource("/test-data/behandlingresultatManuellMedUtbetalinger.json")!!.readText()
 
         val capturedVedtak = slot<UtbetalingVedtak>()
+        every { repo.hentVedtak(any()) } returns null
         every { repo.lagreVedtak(capture(capturedVedtak)) } returns Unit
 
         rapid.sendTestMessage(json)
@@ -149,6 +152,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
         val json = javaClass.getResource("/test-data/FerietilleggUtbetalingTest.json")!!.readText()
 
         val capturedVedtak = slot<UtbetalingVedtak>()
+        every { repo.hentVedtak(any()) } returns null
         every { repo.lagreVedtak(capture(capturedVedtak)) } returns Unit
 
         rapid.sendTestMessage(json)
@@ -172,5 +176,18 @@ class MeldingOmUtbetalingVedtakMottakTest {
             size shouldBe 1
             message(0)["@event_name"].asText() shouldBe "utbetaling_mottatt"
         }
+    }
+
+    @Test
+    fun `Hopper over doble utbetalinger som er sendt `() {
+        val json = javaClass.getResource("/test-data/FerietilleggUtbetalingTest.json")!!.readText()
+        val utbetalingVedtak = mockk<UtbetalingVedtak>()
+        every { repo.lagreVedtak(any()) } returns Unit
+        every { repo.hentVedtak(UUID.fromString("019e3a37-a124-7bc6-9ba2-2e929ee6c72e")) } returns utbetalingVedtak
+        rapid.sendTestMessage(json)
+        with(rapid.inspektør) {
+            size shouldBe 0
+        }
+        verify(exactly = 0) { repo.lagreVedtak(any()) }
     }
 }

@@ -60,6 +60,11 @@ internal class MeldingOmUtbetalingVedtakMottak(
         ) {
             logger.info { "Mottok melding om utbetaling for meldekort" }
 
+            repo.hentVedtak(behandlingId)?.let {
+                logger.warn { "Har allerede lagret utbetaling for behandling=$behandlingId, hopper over" }
+                return@withLoggingContext
+            }
+
             if (behandlingId.toString() == "01a09cc9-5c19-716c-a3bb-fbad008667c7" && System.getenv()["NAIS_CLUSTER_NAME"] == "prod-gcp") {
                 logger.info { "Hopper over behandling med ID $behandlingId" }
                 return@withLoggingContext
