@@ -12,6 +12,3 @@ azure:
   tenant: trygdeetaten.no
 
 wonderwalled: true
-
-dp-saksbehandling:
-    scope: "api://dev-gcp.teamdagpenger.dp-saksbehandling/.default"

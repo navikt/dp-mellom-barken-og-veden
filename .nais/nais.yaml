@@ -77,7 +77,6 @@ spec:
   accessPolicy:
     outbound:
       rules:
-        - application: dp-saksbehandling
         - application: logging
           namespace: nais-system
     inbound:

@@ -6,9 +6,6 @@ import com.natpryce.konfig.EnvironmentVariables
 import com.natpryce.konfig.Key
 import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
-import kotlinx.coroutines.runBlocking
-import no.nav.dagpenger.oauth2.CachedOauth2Client
-import no.nav.dagpenger.oauth2.OAuth2Config
 import kotlin.String
 
 object Configuration {
@@ -24,7 +21,6 @@ object Configuration {
                 "KAFKA_EXTRA_TOPIC" to "helved.status.v1",
                 "KAFKA_RESET_POLICY" to "EARLIEST",
                 "UTBETALING_TOPIC" to "teamdagpenger.utbetaling.v1",
-                "DP_SAKSBEHANDLING_URL" to "http://dp-saksbehandling/",
             ),
         )
 
@@ -40,22 +36,5 @@ object Configuration {
 
     val utbetalingTopic: String = properties[Key("UTBETALING_TOPIC", stringType)]
 
-    val sakApiBaseUrl: String = properties[Key("DP_SAKSBEHANDLING_URL", stringType)]
-    val sakApiToken: () -> String = azureAdTokenSupplier(properties[Key("DP_SAKSBEHANDLING_SCOPE", stringType)])
-
     fun electorPath(): String = properties[Key("ELECTOR_GET_URL", stringType)]
-
-    private val azureAdClient: CachedOauth2Client by lazy {
-        val azureAdConfig = OAuth2Config.AzureAd(config)
-        CachedOauth2Client(
-            tokenEndpointUrl = azureAdConfig.tokenEndpointUrl,
-            authType = azureAdConfig.clientSecret(),
-        )
-    }
-
-    private fun azureAdTokenSupplier(scope: String): () -> String =
-        {
-            runBlocking { azureAdClient.clientCredentials(scope).access_token }
-                ?: throw RuntimeException("Kunne ikke hente 'access_token' fra Azure AD for scope $scope")
-        }
 }

@@ -2,7 +2,6 @@ package no.nav.dagpenger.mellom.barken.og.veden.mottak
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
 import io.kotest.matchers.shouldBe
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -28,9 +27,9 @@ class MeldingOmUtbetalingVedtakMottakTest {
             MeldingOmUtbetalingVedtakMottak(
                 rapidsConnection = this,
                 repo = repo,
-                sakIdHenter =
+                sakIdMapper =
                     mockk {
-                        coEvery { hentSakId(any()) } returns testSakId
+                        every { sakIdFor(any()) } returns testSakId
                     },
             )
         }
