@@ -10,6 +10,3 @@ gcp:
 
 azure:
   tenant: nav.no
-
-dp-saksbehandling:
-  scope: "api://prod-gcp.teamdagpenger.dp-saksbehandling/.default"

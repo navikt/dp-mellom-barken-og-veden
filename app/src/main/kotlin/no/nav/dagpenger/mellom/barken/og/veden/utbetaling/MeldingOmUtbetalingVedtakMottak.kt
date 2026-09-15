@@ -9,7 +9,6 @@ import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.github.oshai.kotlinlogging.withLoggingContext
 import io.micrometer.core.instrument.MeterRegistry
-import kotlinx.coroutines.runBlocking
 import no.nav.dagpenger.behandling.api.models.BehandletAvDTORolleDTO
 import no.nav.dagpenger.behandling.api.models.BehandlingsresultatDTO
 import no.nav.dagpenger.behandling.api.models.UtbetalingDTODagpengeTypeDTO
@@ -22,7 +21,7 @@ import java.util.UUID
 
 internal class MeldingOmUtbetalingVedtakMottak(
     rapidsConnection: RapidsConnection,
-    private val sakIdHenter: SakIdHenter,
+    private val sakIdMapper: SakIdMapper = SakIdMapper(),
     private val repo: UtbetalingRepo,
 ) : River.PacketListener {
     init {
@@ -72,13 +71,7 @@ internal class MeldingOmUtbetalingVedtakMottak(
                 return@withLoggingContext
             }
 
-            val sakId: UUID =
-                try {
-                    runBlocking { sakIdHenter.hentSakId(behandlingId) }
-                } catch (e: Exception) {
-                    logger.error(e) { "Klarte ikke hente sakId for behandling=$behandlingId" }
-                    if (System.getenv("NAIS_CLUSTER_NAME") == "prod-gcp") throw e else return@withLoggingContext
-                }
+            val sakId: UUID = sakIdMapper.sakIdFor(behandlingsresultatDTO.behandlingskjedeId)
 
             val utbetalingVedtak =
                 UtbetalingVedtak(
