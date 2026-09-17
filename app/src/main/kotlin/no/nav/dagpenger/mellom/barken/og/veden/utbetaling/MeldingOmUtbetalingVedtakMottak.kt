@@ -57,11 +57,6 @@ internal class MeldingOmUtbetalingVedtakMottak(
         ) {
             logger.info { "Mottok melding om utbetaling for meldekort" }
 
-            if (behandlingId.toString() == "01a0a9e8-e56f-7325-91f3-987d1308eb89" && System.getenv()["NAIS_CLUSTER_NAME"] == "dev-gcp") {
-                logger.warn { "Skipper utbetaling" }
-                return@withLoggingContext
-            }
-
             repo.hentVedtak(behandlingId)?.let {
                 logger.warn { "Har allerede lagret utbetaling for behandling=$behandlingId, hopper over" }
                 return@withLoggingContext
