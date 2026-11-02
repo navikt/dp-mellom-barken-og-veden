@@ -51,6 +51,11 @@ internal class MeldingOmUtbetalingVedtakMottak(
         val behandlingId = packet["behandlingId"].asUUID()
         val hendelseId = packet["behandletHendelse"]["id"].asText()
 
+        if (behandlingId.toString() == "01a0a9e8-7edf-75fe-b39f-90dc5f3f8db0") {
+            logger.warn { "Hopper over behandlingId=$behandlingId på grunn av duplikater dager" }
+            return
+        }
+
         withLoggingContext(
             "behandlingId" to behandlingId.toString(),
             "hendelseId" to hendelseId.toString(),
