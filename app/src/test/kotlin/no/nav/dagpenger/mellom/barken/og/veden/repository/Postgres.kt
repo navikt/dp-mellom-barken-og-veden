@@ -3,14 +3,13 @@ package no.nav.dagpenger.mellom.barken.og.veden.repository
 import com.zaxxer.hikari.HikariDataSource
 import no.nav.dagpenger.mellom.barken.og.veden.PostgresConfiguration
 import org.flywaydb.core.internal.configuration.ConfigUtils
-import org.testcontainers.containers.PostgreSQLContainer
-import kotlin.also
+import org.testcontainers.postgresql.PostgreSQLContainer
 import kotlin.apply
 import kotlin.run
 
 internal object Postgres {
     val instance by lazy {
-        PostgreSQLContainer<Nothing>("postgres:17.4").apply {
+        PostgreSQLContainer("postgres:18.6").apply {
             withReuse(true)
             start()
         }
