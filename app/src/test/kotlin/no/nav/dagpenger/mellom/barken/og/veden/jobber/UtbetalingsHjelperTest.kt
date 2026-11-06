@@ -160,8 +160,8 @@ class UtbetalingsHjelperTest {
             hjelper.behandleUtbetalingVedtak()
 
             rapid.inspektør.size shouldBe 1
-            rapid.inspektør.field(0, "@event_name").asText() shouldBe "utbetaling_henger"
-            rapid.inspektør.field(0, "sakId").asText() shouldBe sak1.toString()
+            rapid.inspektør.field(0, "@event_name").asString() shouldBe "utbetaling_henger"
+            rapid.inspektør.field(0, "sakId").asString() shouldBe sak1.toString()
         }
     }
 

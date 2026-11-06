@@ -31,7 +31,7 @@ class LeaderElectionClient(
                     }
 
             if (response.status.value in 200..299) {
-                val leaderElection = objectMapper.readTree(response.body<String>()).get("name").asText(null)
+                val leaderElection = objectMapper.readTree(response.body<String>()).get("name").asString(null)
                 val leader = leaderElection == localHostName
                 logger.debug { "$localHostName fant ElectionLeader : $leaderElection. Leaderelection er $leader" }
                 return leader

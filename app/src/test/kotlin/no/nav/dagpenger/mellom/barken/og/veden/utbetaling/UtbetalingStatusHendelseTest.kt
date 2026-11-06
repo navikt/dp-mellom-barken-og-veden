@@ -32,16 +32,16 @@ class UtbetalingStatusHendelseTest {
             )
 
         val hendelse = objectMapper.readTree(utbetalingStatusHendelse.tilHendelse())
-        hendelse["@event_name"].asText() shouldBeEqual forventetEventNavn
-        hendelse["ident"].asText() shouldBeEqual "12345678901"
-        hendelse["behandlingId"].asText() shouldBeEqual behandlingId.toString()
-        hendelse["eksternBehandlingId"].asText() shouldBeEqual behandlingId.tilBase64()
-        hendelse["sakId"].asText() shouldBeEqual sakId.toString()
-        hendelse["eksternSakId"].asText() shouldBeEqual sakId.tilBase64()
-        hendelse["meldekortId"].asText() shouldBeEqual "m1"
-        hendelse["behandletHendelseId"].asText() shouldBeEqual "m1"
-        hendelse["behandletHendelseType"].asText() shouldBeEqual "type_m1"
-        hendelse["status"].asText() shouldBeEqual forventetStatusTekst
+        hendelse["@event_name"].asString() shouldBeEqual forventetEventNavn
+        hendelse["ident"].asString() shouldBeEqual "12345678901"
+        hendelse["behandlingId"].asString() shouldBeEqual behandlingId.toString()
+        hendelse["eksternBehandlingId"].asString() shouldBeEqual behandlingId.tilBase64()
+        hendelse["sakId"].asString() shouldBeEqual sakId.toString()
+        hendelse["eksternSakId"].asString() shouldBeEqual sakId.tilBase64()
+        hendelse["meldekortId"].asString() shouldBeEqual "m1"
+        hendelse["behandletHendelseId"].asString() shouldBeEqual "m1"
+        hendelse["behandletHendelseType"].asString() shouldBeEqual "type_m1"
+        hendelse["status"].asString() shouldBeEqual forventetStatusTekst
     }
 
     companion object {

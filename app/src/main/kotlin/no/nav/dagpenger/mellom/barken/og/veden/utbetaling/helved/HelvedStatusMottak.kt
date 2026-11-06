@@ -63,7 +63,7 @@ internal class HelvedStatusMottak(
                 }
 
             val json = packet.toJson()
-            logger.info { "Fått statusmelding: ${packet["status"].asText()}" }
+            logger.info { "Fått statusmelding: ${packet["status"].asString()}" }
             logger.sikkerlogg().info { "Fått statusmelding: $json, nøkkel: ${metadata.key}" }
 
             val status =

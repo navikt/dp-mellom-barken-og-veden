@@ -53,9 +53,9 @@ class HelvedStatusMottakTest {
             size shouldBe 1
             key(0) shouldBe "12345678910"
             val hendelse = message(0)
-            hendelse["@event_name"].asText() shouldBe "utbetaling_utført"
-            hendelse["behandlingId"].asText() shouldBe behandlingId.toString()
-            hendelse["sakId"].asText() shouldBe sakId.toString()
+            hendelse["@event_name"].asString() shouldBe "utbetaling_utført"
+            hendelse["behandlingId"].asString() shouldBe behandlingId.toString()
+            hendelse["sakId"].asString() shouldBe sakId.toString()
         }
     }
 

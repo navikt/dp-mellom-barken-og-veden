@@ -4,4 +4,4 @@ import tools.jackson.databind.JsonNode
 import java.util.UUID
 import kotlin.let
 
-fun JsonNode.asUUID(): UUID = this.asText().let { UUID.fromString(it) }
+fun JsonNode.asUUID(): UUID = this.asString().let { UUID.fromString(it) }

@@ -41,11 +41,11 @@ internal class BehovsløserFerietilleggBeløpMottak(
         metadata: MessageMetadata,
         meterRegistry: MeterRegistry,
     ) {
-        val ident = packet["ident"].asText()
+        val ident = packet["ident"].asString()
         val opptjeningsår = packet["$BEHOV.OpptjeningsårFerietillegg"].asInt()
 
         withLoggingContext(
-            "behovId" to packet["@behovId"].asText(),
+            "behovId" to packet["@behovId"].asString(),
         ) {
             log.info { "Skal løse behov '$BEHOV" }
             sikkerLogg.info { "Skal løse behov '$BEHOV' for ident '$ident' og opptjeningsår '$opptjeningsår'" }

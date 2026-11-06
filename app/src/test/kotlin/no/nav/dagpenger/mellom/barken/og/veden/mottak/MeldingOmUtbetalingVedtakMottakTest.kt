@@ -77,7 +77,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
         }
         with(rapid.inspektør) {
             size shouldBe 1
-            message(0)["@event_name"].asText() shouldBe "utbetaling_mottatt"
+            message(0)["@event_name"].asString() shouldBe "utbetaling_mottatt"
         }
     }
 
@@ -142,7 +142,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
         }
         with(rapid.inspektør) {
             size shouldBe 1
-            message(0)["@event_name"].asText() shouldBe "utbetaling_mottatt"
+            message(0)["@event_name"].asString() shouldBe "utbetaling_mottatt"
         }
     }
 
@@ -173,7 +173,7 @@ class MeldingOmUtbetalingVedtakMottakTest {
         }
         with(rapid.inspektør) {
             size shouldBe 1
-            message(0)["@event_name"].asText() shouldBe "utbetaling_mottatt"
+            message(0)["@event_name"].asString() shouldBe "utbetaling_mottatt"
         }
     }
 
