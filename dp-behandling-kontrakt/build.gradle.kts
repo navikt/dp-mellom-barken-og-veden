@@ -2,7 +2,7 @@ import de.undercouch.gradle.tasks.download.Download
 
 plugins {
     id("common")
-    id("ch.acanda.gradle.fabrikt") version "1.45.0"
+    id("ch.acanda.gradle.fabrikt") version "2.1.0"
     id("de.undercouch.download") version "5.7.0"
     `java-library`
 }
@@ -59,10 +59,9 @@ fabrikt {
             generate = enabled
             validationLibrary = NoValidation
             extensibleEnums = disabled
-            sealedInterfacesForOneOf = enabled
             ignoreUnknownProperties = disabled
             nonNullMapValues = enabled
-            serializationLibrary = Jackson
+            serializationLibrary = Jackson3
             suffix = "DTO"
         }
     }
