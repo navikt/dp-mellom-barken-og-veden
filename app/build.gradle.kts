@@ -18,7 +18,7 @@ dependencies {
     implementation(libs.bundles.postgres)
 
     implementation("io.ktor:ktor-server-sse:$ktorVersion")
-    implementation("com.github.navikt.tbd-libs:kafka:20261029.1843")
+    implementation("com.github.navikt.tbd-libs:kafka:20261123.1112")
     implementation("io.ktor:ktor-server-swagger:$ktorVersion")
 
     testImplementation("io.ktor:ktor-server-test-host-jvm:$ktorVersion")
